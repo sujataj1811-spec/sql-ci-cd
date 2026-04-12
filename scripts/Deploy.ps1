@@ -53,7 +53,13 @@ if (!(Test-Path $sqlPath)) { throw "Project root not found!" }
 # Debug
 Write-Output "Looking for file at: $dbListFile"
 
-# Check file
+# Set database file path
+$dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
+
+# Debug path
+Write-Output "Looking for file at: $dbListFile"
+
+# Check if file exists
 if (!(Test-Path $dbListFile)) {
     throw "databases.txt not found!"
 }
