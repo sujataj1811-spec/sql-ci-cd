@@ -1,25 +1,20 @@
+deploy.ps1
+
 Write-Output "===== SQL CI/CD Deployment Started ====="
 $ErrorActionPreference = "Stop"
 
 # ================= CONFIG =================
-$server       = $env:DB_SERVER
-$user         = $env:DB_USER
-$password     = $env:DB_PASSWORD
-$maxParallel  = 1
+$server = $env:DB_SERVER
+$user = $env:DB_USER
+$password = $env:DB_PASSWORD
+$maxParallel = 3
 
-# ================= EMAIL CONFIG =================
-$smtpServer   = "smtp.gmail.com"
-$smtpPort     = 587
-$emailFrom    = "your_email@gmail.com"
-$emailTo      = "your_email@gmail.com"
-$emailPassword= "your_app_password"
-
-# ================= PATHS =================
-$basePath   = Get-Location
-$sqlPath    = $basePath
-$dbListFile = Join-Path $basePath "scripts\databases.txt"
-$logDir     = Join-Path $basePath "logs"
-$tempDir    = Join-Path $basePath "temp"
+# PATHS
+$basePath = Get-Location
+$sqlPath = Join-Path $basePath "sql-ci-cd"
+$dbListFile = Join-Path $basePath "databases.txt"
+$logDir = Join-Path $basePath "logs"
+$tempDir = Join-Path $basePath "temp"
 
 # Create folders
 @($logDir, $tempDir) | ForEach-Object {
@@ -28,36 +23,10 @@ $tempDir    = Join-Path $basePath "temp"
     }
 }
 
-# ================= EMAIL FUNCTION =================
-function Send-Email {
-    param ($subject, $body)
-
-    $securePassword = ConvertTo-SecureString $emailPassword -AsPlainText -Force
-    $cred = New-Object System.Management.Automation.PSCredential ($emailFrom, $securePassword)
-
-    Send-MailMessage `
-        -From $emailFrom `
-        -To $emailTo `
-        -Subject $subject `
-        -Body $body `
-        -SmtpServer $smtpServer `
-        -Port $smtpPort `
-        -UseSsl `
-        -Credential $cred
-}
-
 # ================= VALIDATION =================
-if (!(Test-Path $sqlPath)) { throw "Project root not found!" }
+if (!(Test-Path $sqlPath)) { throw "sql-ci-cd folder not found!" }
+if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
 
-# DEBUG PATH
-Write-Output "Looking for DB file at: $dbListFile"
-
-# CHECK FILE
-if (!(Test-Path $dbListFile)) {
-    throw "databases.txt not found!"
-}
-
-# READ DATABASES
 $databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
 
 # ================= FOLDER ORDER =================
@@ -82,14 +51,31 @@ foreach ($db in $databases) {
         function Write-Log {
             param ($message, $logFile)
             $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-            Add-Content -Path $logFile -Value "$time - $message"
+            $line = "$time - $message"
+            Add-Content -Path $logFile -Value $line
         }
 
         $database = $database.Trim()
-        $logFile  = Join-Path $logDir "deployment_$database.log"
+        $logFile = Join-Path $logDir "deployment_$database.log"
 
         try {
             Write-Log "===== START: $database =====" $logFile
+
+            # Create version table
+            $createTable = @"
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
+BEGIN
+    CREATE TABLE SchemaVersions (
+        Id INT IDENTITY(1,1) PRIMARY KEY,
+        ScriptName NVARCHAR(255),
+        DatabaseName NVARCHAR(100),
+        ExecutedOn DATETIME DEFAULT GETDATE(),
+        Status NVARCHAR(20),
+        ErrorMessage NVARCHAR(MAX)
+    )
+END
+"@
+            sqlcmd -S $server -d $database -U $user -P $password -Q $createTable
 
             foreach ($folder in $folders) {
 
@@ -98,24 +84,98 @@ foreach ($db in $databases) {
 
                 Write-Log "Processing Folder: $folder" $logFile
 
-                $files = Get-ChildItem "$folderPath\*.sql" -ErrorAction SilentlyContinue
+                $files = Get-ChildItem "$folderPath\*.sql" -ErrorAction SilentlyContinue | Sort-Object Name
+                if (!$files) { continue }
 
                 foreach ($file in $files) {
 
-                    Write-Log "Executing $($file.Name)" $logFile
+                    if (!$file.FullName) { continue }
 
-                    $output = sqlcmd -S $server `
-                                     -U $user `
-                                     -P $password `
-                                     -d $database `
-                                     -i $file.FullName 2>&1 | Out-String
+                    $fileName = $file.Name
+                    $fileSafe = $fileName.Replace("'","''")
+                    $dbSafe = $database.Replace("'","''")
 
-                    if ($output -match "Msg\s+\d+") {
-                        Write-Log "ERROR: $output" $logFile
-                        throw "SQL execution failed"
+                    # Skip already executed
+                    $checkQuery = @"
+IF EXISTS (
+    SELECT 1 FROM SchemaVersions 
+    WHERE ScriptName = '$fileSafe' 
+    AND DatabaseName = '$dbSafe'
+    AND Status = 'SUCCESS'
+)
+SELECT 1 ELSE SELECT 0
+"@
+
+                    $result = sqlcmd -S $server -d $database -U $user -P $password -Q $checkQuery -h -1 -W | Out-String
+                    if ($result.Trim() -eq "1") {
+                        Write-Log "Skipping $fileName" $logFile
+                        continue
                     }
 
-                    Write-Log "Completed $($file.Name)" $logFile
+                    Write-Log "Executing $fileName..." $logFile
+
+                    # Ensure temp folder exists
+                    if (!(Test-Path $tempDir)) {
+                        New-Item -ItemType Directory -Path $tempDir | Out-Null
+                    }
+
+                    # Temp file
+                    $tempFile = Join-Path $tempDir "$($file.BaseName).$database.$([guid]::NewGuid()).sql"
+
+@"
+USE [$database]
+GO
+:r "$($file.FullName)"
+"@ | Out-File -Encoding utf8 $tempFile
+
+# ================= EXECUTE =================
+$startTime = Get-Date   # ⏱ Start timing
+
+$output = sqlcmd -S $server `
+                 -U $user `
+                 -P $password `
+                 -i "$tempFile" `
+                 -b -W 2>&1 | Out-String
+
+$endTime = Get-Date     # ⏱ End timing
+$duration = ($endTime - $startTime).TotalSeconds
+
+Write-Log "Execution Time: $duration sec" $logFile
+
+                    # ================= CLEAN OUTPUT =================
+                    $clean = $output -replace "[^\x20-\x7E\r\n]", ""
+                    $lines = $clean -split "`r?`n"
+
+                    foreach ($line in $lines) {
+                        if ($line.Trim() -ne "") {
+                            Write-Log $line.Trim() $logFile
+                        }
+                    }
+
+                    # ================= ERROR HANDLING =================
+                    if ($output -match "Msg\s+\d+, Level\s+\d+") {
+
+                        $err = $clean.Replace("'", "''")
+
+                        $insertFail = @"
+INSERT INTO SchemaVersions (ScriptName, DatabaseName, ExecutedOn, Status, ErrorMessage)
+VALUES ('$fileSafe', '$dbSafe', GETDATE(), 'FAILED', '$err')
+"@
+
+                        sqlcmd -S $server -d $database -U $user -P $password -Q $insertFail
+
+                        throw "Error executing $fileName"
+                    }
+
+                    # ================= SUCCESS =================
+                    $insertSuccess = @"
+INSERT INTO SchemaVersions (ScriptName, DatabaseName, ExecutedOn, Status)
+VALUES ('$fileSafe', '$dbSafe', GETDATE(), 'SUCCESS')
+"@
+
+                    sqlcmd -S $server -d $database -U $user -P $password -Q $insertSuccess
+
+                    Write-Log "Completed $fileName ✅" $logFile
                 }
             }
 
@@ -123,7 +183,7 @@ foreach ($db in $databases) {
         }
         catch {
             Write-Log "===== FAILED: $database =====" $logFile
-            Write-Log $_.Exception.Message $logFile
+            Write-Log "Error: $($_.Exception.Message)" $logFile
             throw
         }
 
@@ -134,8 +194,15 @@ foreach ($db in $databases) {
 foreach ($job in $jobs) {
     Wait-Job $job
     Receive-Job $job -ErrorAction Continue
-    Remove-Job $job
 }
 
 # ================= FINAL STATUS =================
-Write-Output "Deployment Completed"
+$failed = $jobs | Where-Object { $_.State -ne "Completed" }
+
+if ($failed.Count -gt 0) {
+    Write-Output "❌ Deployment FAILED"
+    exit 1
+}
+else {
+    Write-Output "✅ Deployment SUCCESS"
+}
