@@ -9,7 +9,7 @@ $maxParallel = 3
 
 # PATHS
 $basePath = Get-Location
-$sqlPath = Join-Path $basePath "sql-ci-cd"
+$sqlPath = $sqlPath = Get-Location
 $dbListFile = Join-Path $basePath "databases.txt"
 $logDir = Join-Path $basePath "logs"
 $tempDir = Join-Path $basePath "temp"
@@ -22,7 +22,6 @@ $tempDir = Join-Path $basePath "temp"
 }
 
 # ================= VALIDATION =================
-if (!(Test-Path $sqlPath)) { throw "sql-ci-cd folder not found!" }
 if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
 
 $databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
