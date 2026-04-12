@@ -1,5 +1,3 @@
-deploy.ps1
-
 Write-Output "===== SQL CI/CD Deployment Started ====="
 $ErrorActionPreference = "Stop"
 
