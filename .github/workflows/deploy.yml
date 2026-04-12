@@ -1,0 +1,21 @@
+name: SQL CI/CD Auto Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Show files (DEBUG)
+      run: dir
+
+    - name: Run Deploy Script
+      shell: powershell
+      run: .\Deploy.ps1
