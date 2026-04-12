@@ -19,7 +19,7 @@ $emailPassword= "your_app_password"
 # ================= PATHS =================
 $basePath   = Get-Location
 $sqlPath = "$PSScriptRoot"
-$dbListFile = Join-Path $PSScriptRoot "databases.txt"
+$dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
 $logDir     = Join-Path $basePath "logs"
 $tempDir    = Join-Path $basePath "temp"
 
@@ -50,9 +50,12 @@ function Send-Email {
 
 # ================= VALIDATION =================
 if (!(Test-Path $sqlPath)) { throw "Project root not found!" }
-if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
+if (!(Test-Path $dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
+Write-Output "Looking for file at: $dbListFile")) { throw "databases.txt not found!" }
 
-$databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
+$databases = Get-Content $dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
+Write-Output "Looking for file at: $dbListFile" = Join-Path (Get-Location) "scripts/databases.txt"
+Write-Output "Looking for file at: $dbListFile" | Where-Object { $_.Trim() -ne "" }
 
 # ================= FOLDER ORDER =================
 $folders = @(
