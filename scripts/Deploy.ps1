@@ -10,7 +10,7 @@ $maxParallel = 3
 # PATHS
 $basePath = Get-Location
 $sqlPath = $sqlPath = Get-Location
-$dbListFile = Join-Path $basePath "databases.txt"
+$dbListFile = Join-Path $basePath "scripts\databases.txt"
 $logDir = Join-Path $basePath "logs"
 $tempDir = Join-Path $basePath "temp"
 
