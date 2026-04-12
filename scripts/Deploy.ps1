@@ -19,7 +19,7 @@ $emailPassword= "your_app_password"
 # ================= PATHS =================
 $basePath   = Get-Location
 $sqlPath = "$PSScriptRoot"
-$dbListFile = Join-Path $basePath "databases.txt"
+$dbListFile = Join-Path $PSScriptRoot "databases.txt"
 $logDir     = Join-Path $basePath "logs"
 $tempDir    = Join-Path $basePath "temp"
 
