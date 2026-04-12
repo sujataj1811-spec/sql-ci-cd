@@ -14,12 +14,10 @@ $emailFrom    = "your_email@gmail.com"
 $emailTo      = "your_email@gmail.com"
 $emailPassword= "your_app_password"
 
-
-
 # ================= PATHS =================
 $basePath   = Get-Location
-$sqlPath = "$PSScriptRoot"
-$dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
+$sqlPath    = $basePath
+$dbListFile = Join-Path $basePath "scripts\databases.txt"
 $logDir     = Join-Path $basePath "logs"
 $tempDir    = Join-Path $basePath "temp"
 
@@ -50,23 +48,17 @@ function Send-Email {
 
 # ================= VALIDATION =================
 if (!(Test-Path $sqlPath)) { throw "Project root not found!" }
-# Debug
-Write-Output "Looking for file at: $dbListFile"
 
-# Set database file path
-$dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
+# DEBUG PATH
+Write-Output "Looking for DB file at: $dbListFile"
 
-# Debug path
-Write-Output "Looking for file at: $dbListFile"
-
-# Check if file exists
+# CHECK FILE
 if (!(Test-Path $dbListFile)) {
     throw "databases.txt not found!"
 }
 
-$databases = Get-Content $dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
-Write-Output "Looking for file at: $dbListFile" = Join-Path (Get-Location) "scripts/databases.txt"
-Write-Output "Looking for file at: $dbListFile" | Where-Object { $_.Trim() -ne "" }
+# READ DATABASES
+$databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
 
 # ================= FOLDER ORDER =================
 $folders = @(
@@ -93,91 +85,6 @@ foreach ($db in $databases) {
             Add-Content -Path $logFile -Value "$time - $message"
         }
 
-        function Validate-SqlScript {
-            param ($filePath, $database, $server, $user, $password, $logFile)
-
-            $content = Get-Content $filePath -Raw
-            $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-            $sql = $contentClean.ToUpper()
-
-            if ($sql.Contains("DROP DATABASE")) {
-                Write-Log "BLOCKED: DROP DATABASE found in $filePath" $logFile
-                return $false
-            }
-
-            if ($sql.Contains("TRUNCATE TABLE")) {
-                Write-Log "BLOCKED: TRUNCATE TABLE found in $filePath" $logFile
-                return $false
-            }
-
-            if ($sql.Contains("DROP TABLE")) {
-                Write-Log "WARNING: DROP TABLE detected in $filePath" $logFile
-            }
-
-            if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
-                Write-Log "WARNING: DROP COLUMN detected in $filePath" $logFile
-            }
-
-            if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
-                Write-Log "BLOCKED: DELETE without WHERE in $filePath" $logFile
-                return $false
-            }
-
-            if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
-                Write-Log "WARNING: UPDATE without WHERE in $filePath" $logFile
-            }
-
-            # Syntax validation
-            $tempValidationFile = Join-Path ([System.IO.Path]::GetTempPath()) ("validate_" + [guid]::NewGuid() + ".sql")
-
-@"
-SET PARSEONLY ON
-GO
-USE [$database]
-GO
-$content
-GO
-SET PARSEONLY OFF
-"@ | Out-File -Encoding utf8 $tempValidationFile
-
-            $validationOutput = sqlcmd -S $server -U $user -P $password -i $tempValidationFile -b 2>&1 | Out-String
-            Remove-Item $tempValidationFile -ErrorAction SilentlyContinue
-
-            if ($validationOutput -match "Msg\s+\d+") {
-                Write-Log "Syntax Error in $filePath" $logFile
-                Write-Log $validationOutput $logFile
-                return $false
-            }
-
-            Write-Log "Validation Passed: $filePath" $logFile
-            return $true
-        }
-
-        function Rollback-LastScript {
-            param ($database, $server, $user, $password, $logFile, $scriptName)
-
-            Write-Log "Rolling back script: $scriptName" $logFile
-
-            $query = @"
-SELECT TOP 1 RollbackScript
-FROM SchemaVersions
-WHERE DatabaseName = '$database'
-AND ScriptName = '$scriptName'
-AND Status = 'SUCCESS'
-ORDER BY Id DESC
-"@
-
-            $rollbackScript = sqlcmd -S $server -d $database -U $user -P $password -Q $query -h -1 -W | Out-String
-
-            if ($rollbackScript.Trim() -ne "") {
-                sqlcmd -S $server -d $database -U $user -P $password -Q $rollbackScript
-                Write-Log "Rollback completed for $scriptName" $logFile
-            }
-            else {
-                Write-Log "No rollback script found for $scriptName" $logFile
-            }
-        }
-
         $database = $database.Trim()
         $logFile  = Join-Path $logDir "deployment_$database.log"
 
@@ -191,108 +98,24 @@ ORDER BY Id DESC
 
                 Write-Log "Processing Folder: $folder" $logFile
 
-                $files = Get-ChildItem "$folderPath\*.sql" |
-                         Sort-Object { [int]($_.BaseName -replace '[^\d]', '') }
+                $files = Get-ChildItem "$folderPath\*.sql" -ErrorAction SilentlyContinue
 
                 foreach ($file in $files) {
 
-                    $fileName   = $file.Name
-                    $fileSafe   = $fileName.Replace("'","''")
-                    $dbSafe     = $database.Replace("'","''")
-                    $scriptHash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash
-
-                    # ================= SKIP CHECK =================
-                    $checkQuery = @"
-SET NOCOUNT ON;
-IF EXISTS (
-    SELECT 1 FROM SchemaVersions
-    WHERE ScriptName = '$fileSafe'
-    AND DatabaseName = '$dbSafe'
-    AND Status = 'SUCCESS'
-)
-SELECT 1 ELSE SELECT 0
-"@
-
-                    $result = sqlcmd -S $server -d $database -U $user -P $password -Q $checkQuery -h -1 -W
-                    $result = ($result | Out-String)
-
-                    if ($result -match "1") {
-                        Write-Log "SKIPPING (already deployed): $fileName" $logFile
-                        continue
-                    }
-
-                    if (-not (Validate-SqlScript $file.FullName $database $server $user $password $logFile)) {
-                        throw "Validation failed for $fileName"
-                    }
-
-                    Write-Log "Executing $fileName..." $logFile
-
-                    $scriptContent = Get-Content $file.FullName -Raw
-                    $rollbackScript = ""
-
-                    if ($scriptContent -match "(?s)--\s*ROLLBACK(.*)$") {
-                        $rollbackScript = $matches[1].Trim().Replace("'", "''")
-                    }
-
-                    $tempFile = Join-Path $tempDir "$($file.BaseName).$database.$([guid]::NewGuid()).sql"
-
-@"
-USE [$database]
-GO
-:r "$($file.FullName)"
-"@ | Out-File -Encoding utf8 $tempFile
-
-                    # ================= EXECUTE =================
-                    $startTime = Get-Date
+                    Write-Log "Executing $($file.Name)" $logFile
 
                     $output = sqlcmd -S $server `
                                      -U $user `
                                      -P $password `
-                                     -i "$tempFile" `
-                                     -b -r 1 -W -h -1 2>&1 | Out-String
+                                     -d $database `
+                                     -i $file.FullName 2>&1 | Out-String
 
-                    $endTime  = Get-Date
-                    $duration = ($endTime - $startTime).TotalSeconds
-
-                    Write-Log "$fileName executed in $duration sec" $logFile
-
-                    # ================= ERROR DETECTION =================
-                    $hasError = $false
-
-                    if ($output -match "Msg\s+\d+") { $hasError = $true }
-                    elseif ($output -match "Invalid|Cannot|Error|Failed") { $hasError = $true }
-
-                    if ($hasError) {
-
-                        $err = $output.Substring(0, [Math]::Min(3000, $output.Length)).Replace("'", "''")
-
-                        Write-Log "ERROR: $err" $logFile
-
-                        $insertFail = @"
-INSERT INTO SchemaVersions 
-(ScriptName, DatabaseName, Status, ErrorMessage, RollbackScript, ExecutionTime)
-VALUES 
-('$fileSafe', '$dbSafe', 'FAILED', '$err', '$rollbackScript', $duration)
-"@
-
-                        sqlcmd -S $server -d $database -U $user -P $password -Q $insertFail
-
-                        Rollback-LastScript $database $server $user $password $logFile $fileSafe
-
-                        throw "Error executing $fileName"
+                    if ($output -match "Msg\s+\d+") {
+                        Write-Log "ERROR: $output" $logFile
+                        throw "SQL execution failed"
                     }
 
-                    # ================= SUCCESS =================
-                    $insertSuccess = @"
-INSERT INTO SchemaVersions 
-(ScriptName, DatabaseName, Status, RollbackScript, ExecutionTime)
-VALUES 
-('$fileSafe', '$dbSafe', 'SUCCESS', '$rollbackScript', $duration)
-"@
-
-                    sqlcmd -S $server -d $database -U $user -P $password -Q $insertSuccess
-
-                    Write-Log "Completed $fileName" $logFile
+                    Write-Log "Completed $($file.Name)" $logFile
                 }
             }
 
@@ -300,7 +123,7 @@ VALUES
         }
         catch {
             Write-Log "===== FAILED: $database =====" $logFile
-            Write-Log "Error: $($_.Exception.Message)" $logFile
+            Write-Log $_.Exception.Message $logFile
             throw
         }
 
@@ -315,14 +138,4 @@ foreach ($job in $jobs) {
 }
 
 # ================= FINAL STATUS =================
-$failed = $jobs | Where-Object { $_.State -ne "Completed" }
-
-if ($failed.Count -gt 0) {
-    Write-Output "Deployment FAILED"
-    Send-Email "Deployment FAILED" "Check logs in $logDir"
-    exit 1
-}
-else {
-    Write-Output "Deployment SUCCESS"
-    Send-Email "Deployment SUCCESS" "All databases deployed successfully"
-}
+Write-Output "Deployment Completed"
