@@ -50,8 +50,13 @@ function Send-Email {
 
 # ================= VALIDATION =================
 if (!(Test-Path $sqlPath)) { throw "Project root not found!" }
-if (!(Test-Path $dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
-Write-Output "Looking for file at: $dbListFile")) { throw "databases.txt not found!" }
+# Debug
+Write-Output "Looking for file at: $dbListFile"
+
+# Check file
+if (!(Test-Path $dbListFile)) {
+    throw "databases.txt not found!"
+}
 
 $databases = Get-Content $dbListFile = Join-Path (Get-Location) "scripts/databases.txt"
 Write-Output "Looking for file at: $dbListFile" = Join-Path (Get-Location) "scripts/databases.txt"
