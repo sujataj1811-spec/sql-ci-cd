@@ -11,7 +11,7 @@ Write-Host "USER=$user"
 
 # ================= PATHS =================
 $basePath   = Get-Location
-$sqlPath    = Join-Path $basePath ""
+$sqlPath = Join-Path $basePath "sql-ci-cd"
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
 $logDir     = Join-Path $basePath "logs"
 $tempDir    = Join-Path $basePath "temp"
