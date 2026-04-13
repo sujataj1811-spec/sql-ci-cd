@@ -1,11 +1,13 @@
 Write-Output "===== SQL CI/CD Deployment Started ====="
+Write-Host "SERVER=$server"
+Write-Host "USER=$user"
 $ErrorActionPreference = "Stop"
 
 # ================= CONFIG =================
 $server = $env:DB_SERVER
 $user = $env:DB_USER
 $password = $env:DB_PASSWORD
-$maxParallel = 3
+
 
 # PATHS
 $basePath = Get-Location
@@ -40,7 +42,12 @@ foreach ($db in $databases) {
     while (($jobs | Where-Object { $_.State -eq "Running" }).Count -ge $maxParallel) {
         Start-Sleep -Seconds 2
     }
-$jobs += Start-Job -ScriptBlock {
+foreach ($db in $databases) {
+    Write-Host "Processing DB: $db"
+
+    sqlcmd -S $server -U $user -P $password -Q "SELECT GETDATE()"
+}
+#$jobs += Start-Job -ScriptBlock {
 
    param($database, $folders, $sqlPath, $server, $user, $password, $logDir, $tempDir)
 
