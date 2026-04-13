@@ -42,7 +42,7 @@ foreach ($db in $databases) {
     }
 $jobs += Start-Job -ScriptBlock {
 
-    param($database, $folders, $sqlPath, $server, $user, $password)
+   param($database, $folders, $sqlPath, $server, $user, $password, $logDir, $tempDir)
 
         function Write-Log {
             param ($message, $logFile)
@@ -183,7 +183,7 @@ VALUES ('$fileSafe', '$dbSafe', GETDATE(), 'SUCCESS')
             throw
         }
 
-    } -ArgumentList $db, $folders, $sqlPath, $server, $user, $password
+    } -ArgumentList $db, $folders, $sqlPath, $server, $user, $password, $logDir, $tempDir
 }
 
 # ================= WAIT =================
