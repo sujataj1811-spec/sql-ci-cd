@@ -1,31 +1,19 @@
-name: SQL CI/CD Auto Deploy
+- name: Run Deploy Script
+  shell: powershell
+  env:
+    DB_SERVER: ${{ secrets.DB_SERVER }}
+    DB_USER: ${{ secrets.DB_USER }}
+    DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  run: |
+    Write-Host "SERVER=$env:DB_SERVER"
+    Write-Host "USER=$env:DB_USER"
 
-on:
-  push:
+    cd $env:GITHUB_WORKSPACE
 
-jobs:
-  deploy:
-    runs-on: self-hosted
+    Write-Host "Current Directory:"
+    dir
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    Write-Host "Scripts Folder:"
+    dir .\scripts
 
-      - name: Show files
-        shell: powershell
-        run: |
-          dir
-          dir .\scripts
-
-      - name: Run Deploy Script
-        shell: powershell
-        env:
-          DB_SERVER: ${{ secrets.DB_SERVER }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          Write-Host "SERVER=$env:DB_SERVER"
-          Write-Host "USER=$env:DB_USER"
-
-          cd $env:GITHUB_WORKSPACE
-          .\scripts\Deploy.ps1
+    .\scripts\Deploy.ps1
