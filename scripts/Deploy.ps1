@@ -6,12 +6,16 @@ $server   = $env:DB_SERVER
 $user     = $env:DB_USER
 $password = $env:DB_PASSWORD
 
+if (-not $server -or -not $user -or -not $password) {
+    throw "Database credentials not set in GitHub Secrets!"
+}
+
 Write-Host "SERVER=$server"
 Write-Host "USER=$user"
 
 # ================= PATHS =================
 $basePath   = Get-Location
-$sqlPath = Join-Path $basePath "sql-ci-cd"
+$sqlPath    = $basePath   # SQL folders are in root
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
 $logDir     = Join-Path $basePath "logs"
 $tempDir    = Join-Path $basePath "temp"
@@ -36,38 +40,50 @@ $folders = @(
     "04_Functions","05_Triggers","06_Indexes","07_Data"
 )
 
-# ================= MAIN EXECUTION =================
-foreach ($database in $databases) {
+# ================= MAIN =================
+foreach ($db in $databases) {
 
-    $database = $database.Trim()
+    $database = $db.Trim()
     $logFile  = Join-Path $logDir "deployment_$database.log"
 
     function Write-Log {
-        param ($message)
+        param ($msg)
         $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        Add-Content -Path $logFile -Value "$time - $message"
+        $line = "$time - $msg"
+        Add-Content -Path $logFile -Value $line
+        Write-Host $line
     }
 
     try {
         Write-Log "===== START: $database ====="
 
-        # TEST CONNECTION
-        sqlcmd -S $server -U $user -P $password -Q "SELECT GETDATE()"
+        # 🔥 TEST CONNECTION (FAIL FAST)
+        sqlcmd -S $server -U $user -P $password -Q "SELECT GETDATE()" | Out-Null
+        Write-Log "Connection SUCCESS"
 
         foreach ($folder in $folders) {
 
             $folderPath = Join-Path $sqlPath $folder
-            if (!(Test-Path $folderPath)) { continue }
+
+            if (!(Test-Path $folderPath)) {
+                Write-Log "Skipping (not found): $folder"
+                continue
+            }
 
             Write-Log "Processing Folder: $folder"
 
             $files = Get-ChildItem "$folderPath\*.sql" -ErrorAction SilentlyContinue | Sort-Object Name
 
+            if (!$files) {
+                Write-Log "No SQL files in $folder"
+                continue
+            }
+
             foreach ($file in $files) {
 
-                Write-Log "Executing $($file.Name)..."
+                Write-Log "Executing: $($file.Name)"
 
-                $tempFile = Join-Path $tempDir "$($file.BaseName).$database.sql"
+                $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
 
 @"
 USE [$database]
@@ -79,10 +95,13 @@ GO
                                  -U $user `
                                  -P $password `
                                  -i "$tempFile" `
-                                 -b 2>&1 | Out-String
+                                 -b -r 1 2>&1 | Out-String
 
-                Write-Log $output
-                Write-Log "Completed $($file.Name)"
+                # Clean output
+                $clean = $output -replace "[^\x20-\x7E\r\n]", ""
+
+                Write-Log $clean
+                Write-Log "Completed: $($file.Name)"
             }
         }
 
@@ -95,4 +114,4 @@ GO
     }
 }
 
-Write-Output "Deployment Completed"
+Write-Output "===== Deployment Completed ====="
