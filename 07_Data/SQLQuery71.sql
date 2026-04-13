@@ -1,0 +1,2 @@
+ALTER TABLE DatabaseLog
+ADD ABC VARCHAR (25);;
