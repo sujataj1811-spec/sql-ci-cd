@@ -1,26 +1,9 @@
-name: SQL CI/CD Auto Deploy
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
-    - name: Show directory (DEBUG)
-      run: dir
-
-    - name: Show scripts folder (DEBUG)
-      run: dir .\scripts
-
-    - name: Run Deploy Script
-      shell: powershell
-      run: |
-        cd $env:GITHUB_WORKSPACE
-        .\scripts\Deploy.ps1
+- name: Run Deploy Script
+  shell: pwsh
+  env:
+    DB_SERVER: ${{ secrets.DB_SERVER }}
+    DB_USER: ${{ secrets.DB_USER }}
+    DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  run: |
+    cd $env:GITHUB_WORKSPACE
+    .\scripts\Deploy.ps1
