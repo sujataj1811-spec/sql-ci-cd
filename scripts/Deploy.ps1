@@ -40,10 +40,9 @@ foreach ($db in $databases) {
     while (($jobs | Where-Object { $_.State -eq "Running" }).Count -ge $maxParallel) {
         Start-Sleep -Seconds 2
     }
+$jobs += Start-Job -ScriptBlock {
 
-    $jobs += Start-Job -ScriptBlock {
-
-        param($database, $folders, $sqlPath, $server, $user, $password, $logDir, $tempDir)
+    param($database, $folders, $sqlPath, $server, $user, $password)
 
         function Write-Log {
             param ($message, $logFile)
@@ -184,7 +183,7 @@ VALUES ('$fileSafe', '$dbSafe', GETDATE(), 'SUCCESS')
             throw
         }
 
-    } -ArgumentList $db, $folders, $sqlPath, $server, $user, $password, $logDir, $tempDir
+    } -ArgumentList $db, $folders, $sqlPath, $server, $user, $password
 }
 
 # ================= WAIT =================
