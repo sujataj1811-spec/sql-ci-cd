@@ -85,10 +85,11 @@ GO
                 Write-Log $output
 
                 # ✅ ONLY FAIL IF REAL SQL ERROR
-                if ($output -match "Msg\s+\d+") {
-                    Write-Log "❌ ERROR in $($file.Name)"
-                    throw "SQL Error detected"
-                }
+              if ($output -match "Msg\s+\d+") {
+    Write-Host "===== SQL ERROR OUTPUT ====="
+    Write-Host $output
+    throw "SQL execution failed"
+}
 
                 Write-Log "✅ Completed: $($file.Name)"
             }
