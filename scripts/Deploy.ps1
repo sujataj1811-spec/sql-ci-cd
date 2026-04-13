@@ -91,19 +91,24 @@ GO
 :r "$($file.FullName)"
 "@ | Out-File -Encoding utf8 $tempFile
 
-                $output = sqlcmd -S $server `
-                                 -U $user `
-                                 -P $password `
-                                 -i "$tempFile" `
-                                 -b -r 1 2>&1 | Out-String
+$output = sqlcmd -S $server `
+                 -U $user `
+                 -P $password `
+                 -i "$tempFile" `
+                 2>&1 | Out-String
 
-                # Clean output
-                $clean = $output -replace "[^\x20-\x7E\r\n]", ""
+# Clean output
+$clean = $output -replace "[^\x20-\x7E\r\n]", ""
 
-                Write-Log $clean
-                Write-Log "Completed: $($file.Name)"
-            }
-        }
+Write-Log $clean
+
+# ✅ REAL ERROR CHECK (PUT HERE)
+if ($output -match "Msg\s+\d+") {
+    Write-Log "❌ SQL ERROR in $($file.Name)"
+    throw "SQL Error detected in $($file.Name)"
+}
+
+Write-Log "Completed: $($file.Name)"
 
         Write-Log "===== SUCCESS: $database ====="
     }
