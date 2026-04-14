@@ -13,7 +13,7 @@ $emailFrom    = "your_email@gmail.com"
 $emailTo      = "your_email@gmail.com"
 $emailPassword= "your_app_password"
 
-# ================= PATHS =================
+
 # ================= PATHS =================
 $basePath   = Get-Location
 $sqlPath    = $basePath
@@ -185,16 +185,28 @@ $output = sqlcmd -S $server `
     -U $user `
     -P $password `
     -i "$($file.FullName)" `
-    -b -h -1 -W 2>&1 | Out-String
+    -b -r 1 -h -1 -W 2>&1 | Out-String
 
 $duration = ((Get-Date) - $start).TotalSeconds
 
-                Write-Log $output
+                $cleanOutput = $output -replace "sqlcmd :.*", "" `
+                       -replace "At line:.*", "" `
+                       -replace "\+.*", "" `
+                       -replace "CategoryInfo.*", "" `
+                       -replace "FullyQualifiedErrorId.*", ""
+
+$cleanOutput = $cleanOutput.Trim()
+
+if ($cleanOutput) {
+    Write-Log $cleanOutput
+}
 
                 # ================= ERROR CHECK =================
                 if ($output -match "Msg\s+\d+") {
 
-                    Write-Log "ERROR: $output"
+                    $errClean = $cleanOutput
+
+Write-Log "ERROR: $errClean"
 
                     sqlcmd -S $server -d $database -U $user -P $password `
                         -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ExecutionTime) VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$output',$duration)"
