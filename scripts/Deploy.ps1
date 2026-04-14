@@ -136,18 +136,19 @@ GO
                  -U $user `
                  -P $password `
                  -i "$tempFile" `
-                 -r 1 -W -h -1 2>&1 | Out-String
+                 -W -h -1 2>&1 | Out-String
 
                 $duration = ((Get-Date) - $start).TotalSeconds
 
                 Write-Log $output
 
                 # ================= ERROR CHECK =================
-               if ($output -match "Msg\s+\d+") {
+if ($cleanOutput -match "Msg\s+\d+") {
     Write-Host "===== SQL ERROR OUTPUT ====="
-    Write-Host $output
+    Write-Host $cleanOutput
     throw "SQL execution failed"
-} {
+}
+{
 
                     Write-Log "ERROR: $output"
 
