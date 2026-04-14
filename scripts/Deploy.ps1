@@ -14,11 +14,20 @@ $emailTo      = "your_email@gmail.com"
 $emailPassword= "your_app_password"
 
 # ================= PATHS =================
+# ================= PATHS =================
 $basePath   = Get-Location
 $sqlPath    = $basePath
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
-$logDir     = Join-Path $PSScriptRoot "..\logs"
+$logDir     = Join-Path $basePath "logs"
 $tempDir    = Join-Path $basePath "temp"
+
+# ✅ DEBUG (add here)
+Write-Host "Using Log Directory: $logDir"
+
+# ✅ ENSURE log folder exists (add here)
+if (!(Test-Path $logDir)) {
+    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+}
 
 # Create folders
 @($logDir, $tempDir) | ForEach-Object {
@@ -169,14 +178,16 @@ SELECT 1 ELSE SELECT 0
                 }
 
 
-    $output = sqlcmd -S $server `
+$start = Get-Date
+
+$output = sqlcmd -S $server `
     -d $database `
     -U $user `
     -P $password `
     -i "$($file.FullName)" `
     -b -h -1 -W 2>&1 | Out-String
 
-                $duration = ((Get-Date) - $start).TotalSeconds
+$duration = ((Get-Date) - $start).TotalSeconds
 
                 Write-Log $output
 
