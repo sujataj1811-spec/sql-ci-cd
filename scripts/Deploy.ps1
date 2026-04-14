@@ -143,7 +143,15 @@ GO
                 Write-Log $output
 
                 # ================= ERROR CHECK =================
-               if ($output -match "Msg\s+\d+") {
+              $hasError = $false
+
+if ($output -match "Msg\s+\d+") { $hasError = $true }
+
+# Ignore harmless messages
+if ($output -match "Changed database context") {
+    $hasError = $false
+}
+{
     Write-Host "===== SQL ERROR OUTPUT ====="
     Write-Host $output
     throw "SQL execution failed"
