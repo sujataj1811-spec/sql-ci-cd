@@ -16,10 +16,14 @@ $emailPassword= "your_app_password"
 
 # ================= PATHS =================
 $basePath   = Get-Location
-$sqlPath    = $basePath   # ✅ FIXED
+$sqlPath    = $basePath
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
-$logFile = Join-Path $logDir "deployment_$database.log"
-$tempDir    = Join-Path $basePath "temp"
+
+# Set log directory
+$logDir = Join-Path $PSScriptRoot "..\logs"
+Write-Host "LogDir value: $logDir"
+
+$tempDir = Join-Path $basePath "temp"
 
 # Create folders
 @($logDir, $tempDir) | ForEach-Object {
@@ -143,24 +147,22 @@ GO
                 Write-Log $output
 
                 # ================= ERROR CHECK =================
-if ($cleanOutput -match "Msg\s+\d+") {
+if ($output -match "Msg\s+\d+") {
+
     Write-Host "===== SQL ERROR OUTPUT ====="
-    Write-Host $cleanOutput
-    throw "SQL execution failed"
+    Write-Host $output
+
+    if (!(Test-Path $logFile)) {
+        New-Item -ItemType File -Path $logFile -Force | Out-Null
+    }
+
+    Write-Log "ERROR: $output"
+
+    sqlcmd -S $server -d $database -U $user -P $password `
+        -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,Status,ErrorMessage,ExecutionTime) VALUES ('$fileName','$database','FAILED','$output',$duration)"
+
+    throw "SQL FAILED: $fileName"
 }
-
-if (!(Test-Path $logFile)) {
-    New-Item -ItemType File -Path $logFile -Force | Out-Null
-}
-{
-
-                    Write-Log "ERROR: $output"
-
-                    sqlcmd -S $server -d $database -U $user -P $password `
-                        -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,Status,ErrorMessage,ExecutionTime) VALUES ('$fileName','$database','FAILED','$output',$duration)"
-
-                    throw "SQL FAILED: $fileName"
-                }
 
                 # ================= SUCCESS =================
                 sqlcmd -S $server -d $database -U $user -P $password `
