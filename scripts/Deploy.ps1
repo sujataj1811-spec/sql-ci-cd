@@ -5,7 +5,6 @@ $ErrorActionPreference = "Stop"
 $server       = $env:DB_SERVER
 $user         = $env:DB_USER
 $password     = $env:DB_PASSWORD
-$maxParallel  = 1
 
 # ================= EMAIL CONFIG =================
 $smtpServer   = "smtp.gmail.com"
@@ -18,12 +17,10 @@ $emailPassword= "your_app_password"
 $basePath   = Get-Location
 $sqlPath    = $basePath
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
+$logDir     = Join-Path $PSScriptRoot "..\logs"
+$tempDir    = Join-Path $basePath "temp"
 
-# Set log directory
-$logDir = Join-Path $PSScriptRoot "..\logs"
 Write-Host "LogDir value: $logDir"
-
-$tempDir = Join-Path $basePath "temp"
 
 # Create folders
 @($logDir, $tempDir) | ForEach-Object {
@@ -55,6 +52,46 @@ function Send-Email {
     }
 }
 
+# ================= VALIDATION FUNCTION =================
+function Validate-SqlScript {
+    param ($filePath, $logFile)
+
+    $content = Get-Content $filePath -Raw
+
+    # Remove comments
+    $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
+    $sql = $contentClean.ToUpper()
+
+    if ($sql.Contains("DROP DATABASE")) {
+        Write-Log "BLOCKED: DROP DATABASE found in $filePath"
+        return $false
+    }
+
+    if ($sql.Contains("TRUNCATE TABLE")) {
+        Write-Log "BLOCKED: TRUNCATE TABLE found in $filePath"
+        return $false
+    }
+
+    if ($sql.Contains("DROP TABLE")) {
+        Write-Log "WARNING: DROP TABLE detected in $filePath"
+    }
+
+    if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
+        Write-Log "WARNING: DROP COLUMN detected in $filePath"
+    }
+
+    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
+        Write-Log "BLOCKED: DELETE without WHERE in $filePath"
+        return $false
+    }
+
+    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
+        Write-Log "WARNING: UPDATE without WHERE in $filePath"
+    }
+
+    return $true
+}
+
 # ================= VALIDATION =================
 if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
 
@@ -72,6 +109,11 @@ foreach ($database in $databases) {
     $database = $database.Trim()
     $logFile  = Join-Path $logDir "deployment_$database.log"
 
+    # Ensure log file exists
+    if (!(Test-Path $logFile)) {
+        New-Item -ItemType File -Path $logFile -Force | Out-Null
+    }
+
     function Write-Log {
         param ($msg)
         $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -81,7 +123,7 @@ foreach ($database in $databases) {
     try {
         Write-Log "===== START: $database ====="
 
-        # ✅ Ensure SchemaVersions table exists
+        # Ensure SchemaVersions table exists
         $createTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
 BEGIN
@@ -89,9 +131,9 @@ BEGIN
         Id INT IDENTITY(1,1) PRIMARY KEY,
         ScriptName NVARCHAR(255),
         DatabaseName NVARCHAR(100),
+        ScriptHash NVARCHAR(64),
         Status NVARCHAR(20),
         ErrorMessage NVARCHAR(MAX),
-        RollbackScript NVARCHAR(MAX),
         ExecutionTime FLOAT,
         ExecutedOn DATETIME DEFAULT GETDATE()
     )
@@ -111,16 +153,35 @@ END
 
             foreach ($file in $files) {
 
-                $fileName = $file.Name
+                $fileName   = $file.Name
+                $fileSafe   = $fileName.Replace("'","''")
+                $dbSafe     = $database.Replace("'","''")
+                $scriptHash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash
+
                 Write-Log "Executing: $fileName"
 
+                # ✅ VALIDATION STEP
+                if (-not (Validate-SqlScript $file.FullName $logFile)) {
+                    throw "Validation failed for $fileName"
+                }
+
                 # ================= SKIP =================
+                $checkQuery = @"
+IF EXISTS (
+    SELECT 1 FROM SchemaVersions 
+    WHERE ScriptName='$fileSafe' 
+    AND DatabaseName='$dbSafe'
+    AND ScriptHash='$scriptHash'
+    AND Status='SUCCESS'
+)
+SELECT 1 ELSE SELECT 0
+"@
+
                 $check = sqlcmd -S $server -d $database -U $user -P $password `
-                    -Q "IF EXISTS (SELECT 1 FROM SchemaVersions WHERE ScriptName='$fileName' AND Status='SUCCESS') SELECT 1 ELSE SELECT 0" `
-                    -h -1 -W | Out-String
+                    -Q $checkQuery -h -1 -W | Out-String
 
                 if ($check.Trim() -eq "1") {
-                    Write-Log "SKIPPED: $fileName"
+                    Write-Log "SKIPPED: $fileName (No changes)"
                     continue
                 }
 
@@ -129,7 +190,6 @@ END
 
 @"
 USE [$database]
-GO
 :r "$($file.FullName)"
 "@ | Out-File -Encoding utf8 $tempFile
 
@@ -140,33 +200,29 @@ GO
                  -U $user `
                  -P $password `
                  -i "$tempFile" `
-                 -W -h -1 2>&1 | Out-String
+                 -W -h -1 -b 2>&1 | Out-String
 
                 $duration = ((Get-Date) - $start).TotalSeconds
 
                 Write-Log $output
 
                 # ================= ERROR CHECK =================
-if ($output -match "Msg\s+\d+") {
+                if ($output -match "Msg\s+\d+") {
 
-    Write-Host "===== SQL ERROR OUTPUT ====="
-    Write-Host $output
+                    Write-Host "===== SQL ERROR OUTPUT ====="
+                    Write-Host $output
 
-    if (!(Test-Path $logFile)) {
-        New-Item -ItemType File -Path $logFile -Force | Out-Null
-    }
+                    Write-Log "ERROR: $output"
 
-    Write-Log "ERROR: $output"
+                    sqlcmd -S $server -d $database -U $user -P $password `
+                        -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ExecutionTime) VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$output',$duration)"
 
-    sqlcmd -S $server -d $database -U $user -P $password `
-        -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,Status,ErrorMessage,ExecutionTime) VALUES ('$fileName','$database','FAILED','$output',$duration)"
-
-    throw "SQL FAILED: $fileName"
-}
+                    throw "SQL FAILED: $fileName"
+                }
 
                 # ================= SUCCESS =================
                 sqlcmd -S $server -d $database -U $user -P $password `
-                    -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,Status,ExecutionTime) VALUES ('$fileName','$database','SUCCESS',$duration)"
+                    -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ExecutionTime) VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS',$duration)"
 
                 Write-Log "SUCCESS: $fileName"
             }
