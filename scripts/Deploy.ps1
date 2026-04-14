@@ -133,17 +133,21 @@ GO
                 $start = Get-Date
 
                 $output = sqlcmd -S $server `
-                                 -U $user `
-                                 -P $password `
-                                 -i "$tempFile" `
-                                 -b -r 1 -h -1 2>&1 | Out-String
+                 -U $user `
+                 -P $password `
+                 -i "$tempFile" `
+                 -r 1 -W -h -1 2>&1 | Out-String
 
                 $duration = ((Get-Date) - $start).TotalSeconds
 
                 Write-Log $output
 
                 # ================= ERROR CHECK =================
-                if ($output -match "Msg\s+\d+") {
+               if ($output -match "Msg\s+\d+") {
+    Write-Host "===== SQL ERROR OUTPUT ====="
+    Write-Host $output
+    throw "SQL execution failed"
+} {
 
                     Write-Log "ERROR: $output"
 
