@@ -2,9 +2,9 @@ Write-Output "===== SQL CI/CD Deployment Started ====="
 $ErrorActionPreference = "Stop"
 
 # ================= CONFIG =================
-$server       = $env:DB_SERVER
-$user         = $env:DB_USER
-$password     = $env:DB_PASSWORD
+$server   = $env:DB_SERVER
+$user     = $env:DB_USER
+$password = $env:DB_PASSWORD
 
 # ================= EMAIL CONFIG =================
 $smtpServer   = "smtp.gmail.com"
@@ -20,8 +20,6 @@ $dbListFile = Join-Path $basePath "scripts\databases.txt"
 $logDir     = Join-Path $PSScriptRoot "..\logs"
 $tempDir    = Join-Path $basePath "temp"
 
-Write-Host "Log file path: $logFile"
-
 # Create folders
 @($logDir, $tempDir) | ForEach-Object {
     if (!(Test-Path $_)) {
@@ -32,7 +30,6 @@ Write-Host "Log file path: $logFile"
 # ================= EMAIL FUNCTION =================
 function Send-Email {
     param ($subject, $body)
-
     try {
         $securePassword = ConvertTo-SecureString $emailPassword -AsPlainText -Force
         $cred = New-Object System.Management.Automation.PSCredential ($emailFrom, $securePassword)
@@ -57,37 +54,14 @@ function Validate-SqlScript {
     param ($filePath, $logFile)
 
     $content = Get-Content $filePath -Raw
-
-    # Remove comments
     $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
     $sql = $contentClean.ToUpper()
 
-    if ($sql.Contains("DROP DATABASE")) {
-        Write-Log "BLOCKED: DROP DATABASE found in $filePath"
-        return $false
-    }
-
-    if ($sql.Contains("TRUNCATE TABLE")) {
-        Write-Log "BLOCKED: TRUNCATE TABLE found in $filePath"
-        return $false
-    }
-
-    if ($sql.Contains("DROP TABLE")) {
-        Write-Log "WARNING: DROP TABLE detected in $filePath"
-    }
-
-    if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
-        Write-Log "WARNING: DROP COLUMN detected in $filePath"
-    }
-
-    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
-        Write-Log "BLOCKED: DELETE without WHERE in $filePath"
-        return $false
-    }
-
-    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
-        Write-Log "WARNING: UPDATE without WHERE in $filePath"
-    }
+    if ($sql.Contains("DROP DATABASE")) { Add-Content $logFile "BLOCKED: DROP DATABASE in $filePath"; return $false }
+    if ($sql.Contains("TRUNCATE TABLE")) { Add-Content $logFile "BLOCKED: TRUNCATE TABLE in $filePath"; return $false }
+    if ($sql.Contains("DROP TABLE")) { Add-Content $logFile "WARNING: DROP TABLE in $filePath" }
+    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) { Add-Content $logFile "BLOCKED: DELETE without WHERE"; return $false }
+    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) { Add-Content $logFile "WARNING: UPDATE without WHERE" }
 
     return $true
 }
@@ -107,9 +81,11 @@ $folders = @(
 foreach ($database in $databases) {
 
     $database = $database.Trim()
-    $logFile  = Join-Path $logDir "deployment_$database.log"
+    if ([string]::IsNullOrWhiteSpace($database)) { continue }
 
-    # Ensure log file exists
+    $logFile = Join-Path $logDir "deployment_$database.log"
+    Write-Host "Log file path: $logFile"
+
     if (!(Test-Path $logFile)) {
         New-Item -ItemType File -Path $logFile -Force | Out-Null
     }
@@ -138,6 +114,11 @@ BEGIN
         ExecutedOn DATETIME DEFAULT GETDATE()
     )
 END
+ELSE
+BEGIN
+    IF COL_LENGTH('SchemaVersions','ScriptHash') IS NULL
+        ALTER TABLE SchemaVersions ADD ScriptHash NVARCHAR(64)
+END
 "@
 
         sqlcmd -S $server -d $database -U $user -P $password -Q $createTable
@@ -160,24 +141,32 @@ END
 
                 Write-Log "Executing: $fileName"
 
-                # ✅ VALIDATION STEP
                 if (-not (Validate-SqlScript $file.FullName $logFile)) {
                     throw "Validation failed for $fileName"
                 }
 
                 # ================= SKIP =================
-$check = sqlcmd -S $server -d $database -U $user -P $password `
-    -Q $checkQuery -h -1 -W | Out-String
+                $checkQuery = @"
+SET NOCOUNT ON;
+IF EXISTS (
+    SELECT 1 FROM SchemaVersions 
+    WHERE ScriptName = '$fileSafe'
+    AND DatabaseName = '$dbSafe'
+    AND ScriptHash = '$scriptHash'
+    AND Status = 'SUCCESS'
+)
+SELECT 1 ELSE SELECT 0
+"@
 
-$cleanCheck = $check -replace "[^0-9]", ""
+                $check = sqlcmd -S $server -d $database -U $user -P $password `
+                    -Q $checkQuery -h -1 -W | Out-String
 
-Write-Log "Skip Check Raw: $check"
-Write-Log "Skip Check Clean: $cleanCheck"
+                $cleanCheck = $check -replace "[^0-9]", ""
 
-if ($cleanCheck -eq "1") {
-    Write-Log "SKIPPED: $fileName (No changes)"
-    continue
-}
+                if ($cleanCheck -eq "1") {
+                    Write-Log "SKIPPED: $fileName (No changes)"
+                    continue
+                }
 
                 # ================= TEMP FILE =================
                 $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
@@ -191,10 +180,10 @@ USE [$database]
                 $start = Get-Date
 
                 $output = sqlcmd -S $server `
-                 -U $user `
-                 -P $password `
-                 -i "$tempFile" `
-                 -W -h -1 -b 2>&1 | Out-String
+                    -U $user `
+                    -P $password `
+                    -i "$tempFile" `
+                    -b -h -1 -W 2>&1 | Out-String
 
                 $duration = ((Get-Date) - $start).TotalSeconds
 
@@ -202,9 +191,6 @@ USE [$database]
 
                 # ================= ERROR CHECK =================
                 if ($output -match "Msg\s+\d+") {
-
-                    Write-Host "===== SQL ERROR OUTPUT ====="
-                    Write-Host $output
 
                     Write-Log "ERROR: $output"
 
