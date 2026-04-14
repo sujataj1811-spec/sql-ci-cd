@@ -168,22 +168,13 @@ SELECT 1 ELSE SELECT 0
                     continue
                 }
 
-                # ================= TEMP FILE =================
-                $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
 
-@"
-USE [$database]
-:r "$($file.FullName)"
-"@ | Out-File -Encoding utf8 $tempFile
-
-                # ================= EXECUTION =================
-                $start = Get-Date
-
-                $output = sqlcmd -S $server `
-                    -U $user `
-                    -P $password `
-                    -i "$tempFile" `
-                    -b -h -1 -W 2>&1 | Out-String
+    $output = sqlcmd -S $server `
+    -d $database `
+    -U $user `
+    -P $password `
+    -i "$($file.FullName)" `
+    -b -h -1 -W 2>&1 | Out-String
 
                 $duration = ((Get-Date) - $start).TotalSeconds
 
