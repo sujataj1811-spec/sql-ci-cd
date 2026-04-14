@@ -18,7 +18,7 @@ $emailPassword= "your_app_password"
 $basePath   = Get-Location
 $sqlPath    = $basePath   # ✅ FIXED
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
-$logDir     = Join-Path $basePath "logs"
+$logFile = Join-Path $logDir "deployment_$database.log"
 $tempDir    = Join-Path $basePath "temp"
 
 # Create folders
@@ -147,6 +147,10 @@ if ($cleanOutput -match "Msg\s+\d+") {
     Write-Host "===== SQL ERROR OUTPUT ====="
     Write-Host $cleanOutput
     throw "SQL execution failed"
+}
+
+if (!(Test-Path $logFile)) {
+    New-Item -ItemType File -Path $logFile -Force | Out-Null
 }
 {
 
