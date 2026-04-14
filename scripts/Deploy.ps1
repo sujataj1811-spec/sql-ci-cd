@@ -20,7 +20,7 @@ $dbListFile = Join-Path $basePath "scripts\databases.txt"
 $logDir     = Join-Path $PSScriptRoot "..\logs"
 $tempDir    = Join-Path $basePath "temp"
 
-Write-Host "LogDir value: $logDir"
+Write-Host "Log file path: $logFile"
 
 # Create folders
 @($logDir, $tempDir) | ForEach-Object {
@@ -166,24 +166,18 @@ END
                 }
 
                 # ================= SKIP =================
-                $checkQuery = @"
-IF EXISTS (
-    SELECT 1 FROM SchemaVersions 
-    WHERE ScriptName='$fileSafe' 
-    AND DatabaseName='$dbSafe'
-    AND ScriptHash='$scriptHash'
-    AND Status='SUCCESS'
-)
-SELECT 1 ELSE SELECT 0
-"@
+$check = sqlcmd -S $server -d $database -U $user -P $password `
+    -Q $checkQuery -h -1 -W | Out-String
 
-                $check = sqlcmd -S $server -d $database -U $user -P $password `
-                    -Q $checkQuery -h -1 -W | Out-String
+$cleanCheck = $check -replace "[^0-9]", ""
 
-                if ($check.Trim() -eq "1") {
-                    Write-Log "SKIPPED: $fileName (No changes)"
-                    continue
-                }
+Write-Log "Skip Check Raw: $check"
+Write-Log "Skip Check Clean: $cleanCheck"
+
+if ($cleanCheck -eq "1") {
+    Write-Log "SKIPPED: $fileName (No changes)"
+    continue
+}
 
                 # ================= TEMP FILE =================
                 $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
