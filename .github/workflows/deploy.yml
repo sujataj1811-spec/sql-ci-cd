@@ -12,11 +12,6 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-	- name: Upload Logs
-  	uses: actions/upload-artifact@v4
- 	 with:
-    	name: sql-logs
-    	path: logs/
 
       - name: Run Deploy Script
         shell: powershell
@@ -37,3 +32,10 @@ jobs:
           dir .\scripts
 
           .\scripts\Deploy.ps1
+
+      - name: Upload Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sql-logs
+          path: logs/
