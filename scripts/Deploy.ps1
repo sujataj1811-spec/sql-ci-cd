@@ -22,7 +22,7 @@ $tempDir    = Join-Path $basePath "temp"
         New-Item -ItemType Directory -Path $_ | Out-Null
     }
 }
-
+Write-Host "Running file: $($file.FullName)"
 # ================= VALIDATION =================
 if (!(Test-Path $dbListFile)) {
     throw "databases.txt not found!"
