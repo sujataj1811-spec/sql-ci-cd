@@ -60,18 +60,17 @@ $deployScript = {
     }
 
     Write-Log "===== START: $database ====="
-function Test-UsesGO {
-    param ([string]$content)
 
-    $lines = $content -split "`r?`n"
-
-    foreach ($line in $lines) {
-        if ($line.Trim().ToUpper() -eq "GO") {
-            return $true
+    function Test-UsesGO {
+        param ([string]$content)
+        $lines = $content -split "`r?`n"
+        foreach ($line in $lines) {
+            if ($line.Trim().ToUpper() -eq "GO") {
+                return $true
+            }
         }
+        return $false
     }
-    return $false
-}
 
     # ================= TRACKING TABLE =================
     $createTable = @"
@@ -122,10 +121,8 @@ END
             Write-Log "Executing $fileName..."
 
             # ================= VALIDATION =================
-
-
-$sqlContent = Get-Content $file.FullName -Raw
-$sql = $sqlContent.ToUpper()
+            $sqlContent = Get-Content $file.FullName -Raw
+            $sql = $sqlContent.ToUpper()
 
             if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
                 Write-Log "BLOCKED SCRIPT: $fileName"
@@ -157,49 +154,45 @@ SELECT 1 ELSE SELECT 0
                 continue
             }
 
-          # ================= EXECUTION (HYBRID MODE) =================
+            # ================= EXECUTION =================
+            $start = Get-Date
+            $script:LastError = $false
 
-$start = Get-Date
-$sqlContent = Get-Content $file.FullName -Raw
+            $usesGO = Test-UsesGO -content $sqlContent
 
-# ✅ ADD HERE
-$script:LastError = $false
+            Write-Log "Execution Mode: $(if ($usesGO) { 'sqlcmd (multi-batch)' } else { 'Invoke-Sqlcmd (single-batch)' })"
 
-$usesGO = Test-UsesGO -content $sqlContent
+            if ($usesGO) {
+                Write-Log "Using sqlcmd (GO detected)"
 
-Write-Log "Execution Mode: $(if ($usesGO) { 'sqlcmd (multi-batch)' } else { 'Invoke-Sqlcmd (single-batch)' })"
+                $output = sqlcmd `
+                    -S $server `
+                    -d $database `
+                    -U $user `
+                    -P $password `
+                    -i $file.FullName `
+                    -b 2>&1 | Out-String
+            }
+            else {
+                Write-Log "Using Invoke-Sqlcmd (single batch)"
 
-if ($usesGO) {
-    Write-Log "Using sqlcmd (GO detected)"
+                try {
+                    $output = Invoke-Sqlcmd `
+                        -ServerInstance $server `
+                        -Database $database `
+                        -Username $user `
+                        -Password $password `
+                        -Query $sqlContent `
+                        -ErrorAction Stop | Out-String
+                }
+                catch {
+                    $output = $_.Exception.Message
+                    $script:LastError = $true
+                }
+            }
 
-    $output = sqlcmd `
-        -S $server `
-        -d $database `
-        -U $user `
-        -P $password `
-        -i $file.FullName `
-        -b 2>&1 | Out-String
-}
-else {
-    Write-Log "Using Invoke-Sqlcmd (single batch)"
-
-    try {
-        $output = Invoke-Sqlcmd `
-            -ServerInstance $server `
-            -Database $database `
-            -Username $user `
-            -Password $password `
-            -Query $sqlContent `
-            -ErrorAction Stop | Out-String
-    }
-catch {
-    $output = $_.Exception.Message
-    $script:LastError = $true
-}
-}
-
-$duration = ((Get-Date) - $start).TotalSeconds
-Write-Log $output
+            $duration = ((Get-Date) - $start).TotalSeconds
+            Write-Log $output
 
             # ================= ERROR CHECK =================
             if ($LASTEXITCODE -ne 0 -or $script:LastError) {
@@ -226,9 +219,8 @@ Write-Log $output
     Write-Log "===== SUCCESS: $database ====="
 }
 
-# ================= PARALLEL EXECUTION (SAFE) =================
+# ================= PARALLEL EXECUTION =================
 $global:DeploymentFailed = $false
-
 $jobs = New-Object System.Collections.ArrayList
 
 foreach ($db in $databases) {
@@ -243,23 +235,18 @@ foreach ($db in $databases) {
     [void]$jobs.Add($job)
 }
 
-$jobs | ForEach-Object {
-if ($jobs) {
-    foreach ($job in @($jobs)) {
-
-        if ($null -eq $job) { continue }
-
-        try {
-            Wait-Job -Job $job -ErrorAction SilentlyContinue
-            Receive-Job -Job $job -ErrorAction SilentlyContinue
-        }
 foreach ($job in $jobs) {
 
     if ($null -eq $job) { continue }
 
-    Wait-Job $job | Out-Null
-
-    Receive-Job $job -ErrorAction SilentlyContinue | Out-Null
+    try {
+        Wait-Job -Job $job -ErrorAction SilentlyContinue
+        Receive-Job -Job $job -ErrorAction SilentlyContinue | Out-Null
+    }
+    catch {
+        Write-Host "Job failed"
+        $global:DeploymentFailed = $true
+    }
 
     if ($job.State -eq "Failed") {
         Write-Host "Job FAILED: $($job.Id)"
@@ -267,6 +254,7 @@ foreach ($job in $jobs) {
     }
 }
 
+# ================= EMAIL =================
 function Send-DeploymentEmail {
     param (
         [string]$status,
