@@ -161,3 +161,28 @@ At line:126 char:27
 Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Cannot open database "DB3" requested by the login. The login 
 failed..
 
+2026-04-16 00:41:11 - ===== START: DB3 =====
+2026-04-16 00:41:12 - Processing Folder: 01_Tables
+2026-04-16 00:41:12 - Executing 00_dbo.DatabaseLog.Table.sql...
+2026-04-16 00:41:12 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 00:41:12 - Using sqlcmd (GO detected)
+2026-04-16 00:41:12 - sqlcmd : Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Login failed for user 'API'..
+At line:126 char:27
++                 $output = sqlcmd `
++                           ~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Sqlcmd: Error: ...or user 'API'..:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Cannot open database "DB3" requested by the login. The login 
+failed..
+
+2026-04-16 00:41:12 - ERROR: sqlcmd : Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Login failed for user 'API'..
+At line:126 char:27
++                 $output = sqlcmd `
++                           ~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Sqlcmd: Error: ...or user 'API'..:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Cannot open database "DB3" requested by the login. The login 
+failed..
+

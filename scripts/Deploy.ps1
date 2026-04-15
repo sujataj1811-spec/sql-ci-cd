@@ -10,11 +10,11 @@ $maxParallel = 3
 # ================= EMAIL CONFIG =================
 $smtpServer = "smtp.gmail.com"
 $smtpPort   = 587
-$smtpUser   = "your_email@gmail.com"
+$smtpUser   = "sujataj1811@gmail.com"
 $smtpPass = "uunf fggb jkbf rmbz"
 
-$fromEmail  = "your_email@gmail.com"
-$toEmail    = "receiver_email@gmail.com"
+$fromEmail  = "sujataj1811@gmail.com"
+$toEmail    = "sujataj1918@gmail.com"
 
 # ================= PATHS =================
 $basePath   = Get-Location
