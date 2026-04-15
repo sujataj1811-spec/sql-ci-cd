@@ -101,12 +101,16 @@ END
             Write-Log "Executing $fileName..."
 
             # ================= VALIDATION =================
-$sql = $clean.ToUpper()
+function Test-UsesGO {
+    param ([string]$content)
 
-$lines = $clean -split "`r?`n"
+    $lines = $content -split "`r?`n"
 
-if ($lines | Where-Object { $_.Trim().ToUpper() -eq "GO" }) {
-    Add-Content $logFile "$(Get-Date) - BLOCKED: GO statement found in $filePath"
+    foreach ($line in $lines) {
+        if ($line.Trim().ToUpper() -eq "GO") {
+            return $true
+        }
+    }
     return $false
 }
             if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
@@ -139,35 +143,46 @@ SELECT 1 ELSE SELECT 0
                 continue
             }
 
-            # ================= EXECUTION =================
-            $start = Get-Date
+          # ================= EXECUTION (HYBRID MODE) =================
 
-            $sqlContent = Get-Content $file.FullName -Raw
-            $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
+$start = Get-Date
+$sqlContent = Get-Content $file.FullName -Raw
 
-            $sqlWrapper = @"
-USE [$database];
-SET XACT_ABORT ON;
+$usesGO = Test-UsesGO -content $sqlContent
 
-BEGIN TRY
-    BEGIN TRAN;
+Write-Log "Execution Mode: $(if ($usesGO) { 'sqlcmd (multi-batch)' } else { 'Invoke-Sqlcmd (single-batch)' })"
 
-$sqlContent
+if ($usesGO) {
+    Write-Log "Using sqlcmd (GO detected)"
 
-    COMMIT TRAN;
-END TRY
-BEGIN CATCH
-    IF @@TRANCOUNT > 0 ROLLBACK TRAN;
-    THROW;
-END CATCH
-"@
+    $output = sqlcmd `
+        -S $server `
+        -d $database `
+        -U $user `
+        -P $password `
+        -i $file.FullName `
+        -b 2>&1 | Out-String
+}
+else {
+    Write-Log "Using Invoke-Sqlcmd (single batch)"
 
-            $sqlWrapper | Out-File -Encoding utf8 $tempFile
+    try {
+        $output = Invoke-Sqlcmd `
+            -ServerInstance $server `
+            -Database $database `
+            -Username $user `
+            -Password $password `
+            -Query $sqlContent `
+            -ErrorAction Stop | Out-String
+    }
+    catch {
+        $output = $_.Exception.Message
+        $LASTEXITCODE = 1
+    }
+}
 
-            $output = sqlcmd -S $server -U $user -P $password -i $tempFile -b 2>&1 | Out-String
-            $duration = ((Get-Date) - $start).TotalSeconds
-
-            Write-Log $output
+$duration = ((Get-Date) - $start).TotalSeconds
+Write-Log $output
 
             # ================= ERROR CHECK =================
             if ($LASTEXITCODE -ne 0) {
