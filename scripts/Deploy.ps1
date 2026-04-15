@@ -243,7 +243,7 @@ END CATCH
 }
 
 # ================= PARALLEL =================
-$jobs = @()
+$jobs = New-Object System.Collections.ArrayList
 
 foreach ($db in $databases) {
 
@@ -252,8 +252,11 @@ foreach ($db in $databases) {
         Start-Sleep 2
     }
 
-    $jobs += Start-Job -ScriptBlock $deployScript `
-        -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
+    $job = Start-Job -ScriptBlock $deployScript `
+    -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
+
+[void]$jobs.Add($job)
+        
 }
 
 $jobs | Wait-Job | Receive-Job
