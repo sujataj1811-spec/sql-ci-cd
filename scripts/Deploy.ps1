@@ -139,7 +139,14 @@ END
             Write-Log "Executing $fileName..."
 
             # ================= VALIDATION =================
-            if (-not (Validate-SqlScript $file.FullName $logFile)) {
+            $content = Get-Content $file.FullName -Raw
+$contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
+$sql = $contentClean.ToUpper()
+
+if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
+    Write-Log "BLOCKED SCRIPT: $fileName"
+    continue
+} {
                 throw "Validation failed: $fileName"
             }
 
