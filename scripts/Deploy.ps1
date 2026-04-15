@@ -2,9 +2,9 @@ Write-Output "===== SQL CI/CD Deployment Started ====="
 $ErrorActionPreference = "Stop"
 
 # ================= CONFIG =================
-$server   = $env:DB_SERVER
-$user     = $env:DB_USER
-$password = $env:DB_PASSWORD
+$server      = $env:DB_SERVER
+$user        = $env:DB_USER
+$password    = $env:DB_PASSWORD
 $maxParallel = 3
 
 # ================= PATHS =================
@@ -23,45 +23,55 @@ Write-Host "Using Log Directory: $logDir"
     }
 }
 
-# ================= VALIDATION =================
+# ================= VALIDATION FUNCTION =================
+function Validate-SqlScript {
+    param ($filePath, $logFile)
 
-    # ✅ MOVE FUNCTION HERE (IMPORTANT FIX)
-    function Validate-SqlScript {
-        param ($filePath, $logFile)
+    $content = Get-Content $filePath -Raw
+    $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
+    $sql = $contentClean.ToUpper()
 
-        $content = Get-Content $filePath -Raw
-        $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-        $sql = $contentClean.ToUpper()
-
-        if ($sql.Contains("DROP DATABASE")) {
-            Add-Content $logFile "$(Get-Date) - BLOCKED: DROP DATABASE in $filePath"
-            return $false
-        }
-
-        if ($sql.Contains("TRUNCATE TABLE")) {
-            Add-Content $logFile "$(Get-Date) - BLOCKED: TRUNCATE TABLE in $filePath"
-            return $false
-        }
-
-        if ($sql.Contains("DROP TABLE")) {
-            Add-Content $logFile "$(Get-Date) - WARNING: DROP TABLE in $filePath"
-        }
-
-        if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
-            Add-Content $logFile "$(Get-Date) - WARNING: DROP COLUMN in $filePath"
-        }
-
-        if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
-            Add-Content $logFile "$(Get-Date) - BLOCKED: DELETE without WHERE"
-            return $false
-        }
-
-        if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
-            Add-Content $logFile "$(Get-Date) - WARNING: UPDATE without WHERE"
-        }
-
-        return $true
+    if ($sql.Contains("DROP DATABASE")) {
+        Add-Content $logFile "$(Get-Date) - BLOCKED: DROP DATABASE in $filePath"
+        return $false
     }
+
+    if ($sql.Contains("TRUNCATE TABLE")) {
+        Add-Content $logFile "$(Get-Date) - BLOCKED: TRUNCATE TABLE in $filePath"
+        return $false
+    }
+
+    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
+        Add-Content $logFile "$(Get-Date) - BLOCKED: DELETE without WHERE"
+        return $false
+    }
+
+    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
+        Add-Content $logFile "$(Get-Date) - WARNING: UPDATE without WHERE"
+    }
+
+    if ($sql.Contains("DROP TABLE")) {
+        Add-Content $logFile "$(Get-Date) - WARNING: DROP TABLE in $filePath"
+    }
+
+    if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
+        Add-Content $logFile "$(Get-Date) - WARNING: DROP COLUMN in $filePath"
+    }
+
+    return $true
+}
+
+# ================= DB LIST =================
+if (!(Test-Path $dbListFile)) {
+    throw "databases.txt not found!"
+}
+
+$databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
+
+# ================= DEPLOY SCRIPT =================
+$deployScript = {
+
+    param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir)
 
     $database = $database.Trim()
     if ([string]::IsNullOrWhiteSpace($database)) { return }
@@ -80,39 +90,7 @@ Write-Host "Using Log Directory: $logDir"
 
     Write-Log "===== START: $database ====="
 
-    # (rest of your script stays SAME…)
-
-}
-# ================= CHECK =================
-if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
-$databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
-
-# ================= DEPLOY FUNCTION =================
-$deployScript = {
-    param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir)
-
-    $database = $database.Trim()
-    if ([string]::IsNullOrWhiteSpace($database)) { return }
-
-    $logFile = Join-Path $logDir "deployment_$database.log"
-
-    # ✅ Create log file only if not exists (append mode)
-    if (!(Test-Path $logFile)) {
-        New-Item -ItemType File -Path $logFile | Out-Null
-    }
-
-    function Write-Log {
-        param ($msg)
-        $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        Add-Content -Path $logFile -Value "$time - $msg"
-    }
-
-    Write-Log "==============================================="
-    Write-Log "START NEW DEPLOYMENT RUN"
-    Write-Log "DATABASE: $database"
-    Write-Log "==============================================="
-
-    # ================= SchemaVersions =================
+    # ================= CREATE TRACKING TABLE =================
     $createTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
 BEGIN
@@ -131,7 +109,7 @@ END
 
     sqlcmd -S $server -d $database -U $user -P $password -Q $createTable
 
-    # ================= ORDER =================
+    # ================= EXECUTION ORDER =================
     $folders = @(
         "01_Tables",
         "02_Views",
@@ -161,11 +139,11 @@ END
             Write-Log "Executing $fileName..."
 
             # ================= VALIDATION =================
-            if (-not (& Validate-SqlScript $file.FullName $logFile $file.FullName $logFile)) {
+            if (-not (Validate-SqlScript $file.FullName $logFile)) {
                 throw "Validation failed: $fileName"
             }
 
-            # ================= SKIP =================
+            # ================= SKIP CHECK =================
             $checkQuery = @"
 SET NOCOUNT ON;
 IF EXISTS (
@@ -188,16 +166,17 @@ SELECT 1 ELSE SELECT 0
             # ================= EXECUTION =================
             $start = Get-Date
 
+            $sqlContent = Get-Content $file.FullName -Raw
             $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
-$sqlContent = Get-Content $file.FullName -Raw
+
             $sqlWrapper = @"
-USE [$database]
-GO
+USE [$database];
 SET XACT_ABORT ON;
+
 BEGIN TRY
     BEGIN TRAN;
 
-     $sqlContent
+$sqlContent
 
     COMMIT TRAN;
 END TRY
@@ -214,11 +193,10 @@ END CATCH
 
             Write-Log $output
 
-            # ================= ERROR =================
-            if ($output -match "Msg \d+, Level \d+, State \d+") {
+            # ================= ERROR CHECK =================
+            if ($LASTEXITCODE -ne 0) {
 
                 Write-Log "ERROR: $output"
-
                 $safeOutput = $output.Replace("'", "''")
 
                 sqlcmd -S $server -d $database -U $user -P $password `
@@ -240,7 +218,7 @@ END CATCH
     Write-Log "===== SUCCESS: $database ====="
 }
 
-# ================= PARALLEL =================
+# ================= PARALLEL EXECUTION =================
 $jobs = @()
 
 foreach ($db in $databases) {
@@ -251,10 +229,9 @@ foreach ($db in $databases) {
     }
 
     $job = Start-Job -ScriptBlock $deployScript `
-    -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
+        -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
 
-$jobs += $job
-        
+    $jobs += $job
 }
 
 $jobs | Wait-Job | Receive-Job
