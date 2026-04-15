@@ -24,43 +24,67 @@ Write-Host "Using Log Directory: $logDir"
 }
 
 # ================= VALIDATION =================
-function Validate-SqlScript {
-    param ($filePath, $logFile)
+$deployScript = {
+    param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir)
 
-    $content = Get-Content $filePath -Raw
-    $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-    $sql = $contentClean.ToUpper()
+    # ✅ MOVE FUNCTION HERE (IMPORTANT FIX)
+    function Validate-SqlScript {
+        param ($filePath, $logFile)
 
-    if ($sql.Contains("DROP DATABASE")) {
-        Add-Content $logFile "$(Get-Date) - BLOCKED: DROP DATABASE in $filePath"
-        return $false
+        $content = Get-Content $filePath -Raw
+        $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
+        $sql = $contentClean.ToUpper()
+
+        if ($sql.Contains("DROP DATABASE")) {
+            Add-Content $logFile "$(Get-Date) - BLOCKED: DROP DATABASE in $filePath"
+            return $false
+        }
+
+        if ($sql.Contains("TRUNCATE TABLE")) {
+            Add-Content $logFile "$(Get-Date) - BLOCKED: TRUNCATE TABLE in $filePath"
+            return $false
+        }
+
+        if ($sql.Contains("DROP TABLE")) {
+            Add-Content $logFile "$(Get-Date) - WARNING: DROP TABLE in $filePath"
+        }
+
+        if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
+            Add-Content $logFile "$(Get-Date) - WARNING: DROP COLUMN in $filePath"
+        }
+
+        if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
+            Add-Content $logFile "$(Get-Date) - BLOCKED: DELETE without WHERE"
+            return $false
+        }
+
+        if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
+            Add-Content $logFile "$(Get-Date) - WARNING: UPDATE without WHERE"
+        }
+
+        return $true
     }
 
-    if ($sql.Contains("TRUNCATE TABLE")) {
-        Add-Content $logFile "$(Get-Date) - BLOCKED: TRUNCATE TABLE in $filePath"
-        return $false
+    $database = $database.Trim()
+    if ([string]::IsNullOrWhiteSpace($database)) { return }
+
+    $logFile = Join-Path $logDir "deployment_$database.log"
+
+    if (!(Test-Path $logFile)) {
+        New-Item -ItemType File -Path $logFile | Out-Null
     }
 
-    if ($sql.Contains("DROP TABLE")) {
-        Add-Content $logFile "$(Get-Date) - WARNING: DROP TABLE in $filePath"
+    function Write-Log {
+        param ($msg)
+        $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        Add-Content -Path $logFile -Value "$time - $msg"
     }
 
-    if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
-        Add-Content $logFile "$(Get-Date) - WARNING: DROP COLUMN in $filePath"
-    }
+    Write-Log "===== START: $database ====="
 
-    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
-        Add-Content $logFile "$(Get-Date) - BLOCKED: DELETE without WHERE"
-        return $false
-    }
+    # (rest of your script stays SAME…)
 
-    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
-        Add-Content $logFile "$(Get-Date) - WARNING: UPDATE without WHERE"
-    }
-
-    return $true
 }
-
 # ================= CHECK =================
 if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
 $databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
@@ -139,7 +163,7 @@ END
             Write-Log "Executing $fileName..."
 
             # ================= VALIDATION =================
-            if (-not (& $using:Validate-SqlScript $file.FullName $logFile)) {
+            if (-not (& Validate-SqlScript $file.FullName $logFile $file.FullName $logFile)) {
                 throw "Validation failed: $fileName"
             }
 
