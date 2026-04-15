@@ -210,7 +210,20 @@ foreach ($db in $databases) {
 }
 
 $jobs | ForEach-Object {
-    $_ | Wait-Job | Receive-Job
+if ($jobs) {
+    foreach ($job in @($jobs)) {
+
+        if ($null -eq $job) { continue }
+
+        try {
+            Wait-Job -Job $job -ErrorAction SilentlyContinue
+            Receive-Job -Job $job -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-Host "Job skipped due to error"
+        }
+    }
+}
 }
 
 Write-Output "===== Deployment Completed ====="
