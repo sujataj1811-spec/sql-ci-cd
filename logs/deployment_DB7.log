@@ -1,555 +1,0 @@
-﻿2026-03-29 00:00:12 - ===== START: DB7 =====
-2026-03-29 00:00:12 -            
------------
-          1
-
-(1 rows affected)
-
-2026-03-29 00:00:12 - Database connection OK âœ…
-2026-03-29 00:00:12 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 00:00:13 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 00:00:13 - There is already an object named 'DatabaseLog' in the database.
-2026-03-29 00:00:13 - ===== FAILED: DB7 =====
-2026-03-29 00:00:13 - Error: Error executing dbo.DatabaseLog.Table.sql
-2026-03-29 00:03:30 - ===== START: DB7 =====
-2026-03-29 00:03:30 -            
------------
-          1
-
-(1 rows affected)
-
-2026-03-29 00:03:30 - Database connection OK âœ…
-2026-03-29 00:03:30 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 00:03:30 - ===== FAILED: DB7 =====
-2026-03-29 00:03:30 - Error: You cannot call a method on a null-valued expression.
-2026-03-29 00:06:50 - ===== START: DB7 =====
-2026-03-29 00:06:50 -            
------------
-          1
-
-(1 rows affected)
-
-2026-03-29 00:06:50 - Database connection OK âœ…
-2026-03-29 00:06:50 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 00:06:50 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 00:06:50 - There is already an object named 'DatabaseLog' in the database.
-2026-03-29 00:06:50 - ===== FAILED: DB7 =====
-2026-03-29 00:06:50 - Error: Error executing dbo.DatabaseLog.Table.sql
-2026-03-29 00:12:35 - ===== START: DB7 =====
-2026-03-29 00:12:35 -            
------------
-          1
-
-(1 rows affected)
-
-2026-03-29 00:12:35 - Database connection OK âœ…
-2026-03-29 00:12:35 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 00:12:35 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 00:12:35 - There is already an object named 'DatabaseLog' in the database.
-2026-03-29 00:12:35 - ===== FAILED: DB7 =====
-2026-03-29 00:12:35 - Error: Error executing dbo.DatabaseLog.Table.sql
-2026-03-29 09:58:50 - ===== START: DB7 =====
-2026-03-29 09:58:50 -            
------------
-          1
-
-(1 rows affected)
-
-2026-03-29 09:58:50 - Database connection OK âœ…
-2026-03-29 09:58:50 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 09:58:51 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 09:58:51 - There is already an object named 'DatabaseLog' in the database.
-2026-03-29 09:58:51 - ===== FAILED: DB7 =====
-2026-03-29 09:58:51 - Error: Error executing dbo.DatabaseLog.Table.sql
-2026-03-29 10:02:17 - ===== START: DB7 =====
-2026-03-29 10:02:17 -            
------------
-          1
-
-(1 rows affected)
-
-2026-03-29 10:02:17 - Database connection OK âœ…
-2026-03-29 10:02:17 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 10:02:17 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 10:02:17 - There is already an object named 'DatabaseLog' in the database.
-2026-03-29 10:02:17 - ===== FAILED: DB7 =====
-2026-03-29 10:02:17 - Error: Error executing dbo.DatabaseLog.Table.sql
-2026-03-29 10:03:34 - ===== START: DB7 =====
-2026-03-29 10:03:34 -            
------------
-          1
-
-(1 rows affected)
-
-2026-03-29 10:03:34 - Database connection OK âœ…
-2026-03-29 10:03:34 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 10:03:34 - Msg 102, Level 15, State 1, Server SUJATAJADHAV, Line 2
-2026-03-29 10:03:34 - Incorrect syntax near ','.
-2026-03-29 10:03:34 - ===== FAILED: DB7 =====
-2026-03-29 10:03:34 - Error: Error executing dbo.DatabaseLog.Table.sql
-2026-03-29 18:09:35 - ===== START: DB7 =====
-2026-03-29 18:09:35 - ===== SUCCESS: DB7 =====
-2026-03-29 18:12:52 - ===== START: DB7 =====
-2026-03-29 18:12:52 - ===== SUCCESS: DB7 =====
-2026-03-29 18:15:52 - ===== START: DB7 =====
-2026-03-29 18:15:52 - ===== SUCCESS: DB7 =====
-2026-03-29 18:27:07 - ===== START: DB7 =====
-2026-03-29 18:27:07 - ===== SUCCESS: DB7 =====
-2026-03-29 18:40:26 - ===== START: DB7 =====
-2026-03-29 18:40:26 - ===== SUCCESS: DB7 =====
-2026-03-29 18:42:45 - ===== START: DB7 =====
-2026-03-29 18:42:45 - Processing Folder: 01_Tables
-2026-03-29 18:42:45 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 18:42:45 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 18:42:45 - Msg 102, Level 15, State 1, Server SUJATAJADHAV, Line 11
-2026-03-29 18:42:45 - Incorrect syntax near 'THROW'.
-2026-03-29 18:42:45 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 18:42:45 - ===== FAILED: DB7 =====
-2026-03-29 18:42:45 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 18:47:27 - ===== START: DB7 =====
-2026-03-29 18:47:27 - Processing Folder: 01_Tables
-2026-03-29 18:47:27 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 18:47:27 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 18:47:28 - Completed dbo.AdventureWorksDWBuildVersion.Table.sql âœ…
-2026-03-29 18:47:28 - Checking dbo.DatabaseLog.Table.sql...
-2026-03-29 18:47:28 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 18:47:28 - Completed dbo.DatabaseLog.Table.sql âœ…
-2026-03-29 18:47:28 - Checking dbo.DimAccount.Table.sql...
-2026-03-29 18:47:28 - Executing dbo.DimAccount.Table.sql...
-2026-03-29 18:47:28 - Completed dbo.DimAccount.Table.sql âœ…
-2026-03-29 18:47:28 - Checking dbo.DimCurrency.Table.sql...
-2026-03-29 18:47:28 - Executing dbo.DimCurrency.Table.sql...
-2026-03-29 18:47:28 - Completed dbo.DimCurrency.Table.sql âœ…
-2026-03-29 18:47:28 - Checking dbo.DimCustomer.Table.sql...
-2026-03-29 18:47:28 - Executing dbo.DimCustomer.Table.sql...
-2026-03-29 18:47:28 - Completed dbo.DimCustomer.Table.sql âœ…
-2026-03-29 18:47:28 - Checking dbo.DimDate.Table.sql...
-2026-03-29 18:47:28 - Executing dbo.DimDate.Table.sql...
-2026-03-29 18:47:29 - Completed dbo.DimDate.Table.sql âœ…
-2026-03-29 18:47:29 - Checking dbo.DimDepartmentGroup.Table.sql...
-2026-03-29 18:47:29 - Executing dbo.DimDepartmentGroup.Table.sql...
-2026-03-29 18:47:29 - Completed dbo.DimDepartmentGroup.Table.sql âœ…
-2026-03-29 18:47:29 - Checking dbo.DimEmployee.Table.sql...
-2026-03-29 18:47:29 - Executing dbo.DimEmployee.Table.sql...
-2026-03-29 18:47:29 - Completed dbo.DimEmployee.Table.sql âœ…
-2026-03-29 18:47:29 - Checking dbo.DimGeography.Table.sql...
-2026-03-29 18:47:29 - Executing dbo.DimGeography.Table.sql...
-2026-03-29 18:47:29 - Completed dbo.DimGeography.Table.sql âœ…
-2026-03-29 18:47:29 - Checking dbo.DimOrganization.Table.sql...
-2026-03-29 18:47:29 - Executing dbo.DimOrganization.Table.sql...
-2026-03-29 19:04:23 - ===== START: DB7 =====
-2026-03-29 19:04:24 - Processing Folder: 01_Tables
-2026-03-29 19:04:24 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:04:24 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:04:24 - Msg 102, Level 15, State 1, Server SUJATAJADHAV, Line 1
-2026-03-29 19:04:24 - Incorrect syntax near ':'.
-2026-03-29 19:04:24 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 19:04:24 - ===== FAILED: DB7 =====
-2026-03-29 19:04:24 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 19:08:42 - ===== START: DB7 =====
-2026-03-29 19:08:42 - Processing Folder: 01_Tables
-2026-03-29 19:08:42 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:08:42 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:08:42 - Changed database context to 'DB7'.
-2026-03-29 19:08:42 - Completed dbo.AdventureWorksDWBuildVersion.Table.sql âœ…
-2026-03-29 19:08:42 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql.run.sql...
-2026-03-29 19:08:42 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql.run.sql...
-2026-03-29 19:08:42 - Changed database context to 'DB7'.
-2026-03-29 19:08:42 - sqlcmd : 'C:\ESD\sql-ci-cd\01_Tables\dbo.AdventureWorksDWBuildVersion.Table.sql.run.sql': Invalid filename.
-2026-03-29 19:08:42 - At line:111 char:11
-2026-03-29 19:08:42 - + $output = sqlcmd -S $server `
-2026-03-29 19:08:42 - +           ~~~~~~~~~~~~~~~~~~~
-2026-03-29 19:08:42 -     + CategoryInfo          : NotSpecified: ('C:\ESD\sql-ci-...valid filename.:String) [], RemoteException
-2026-03-29 19:08:42 -     + FullyQualifiedErrorId : NativeCommandError
-2026-03-29 19:08:42 -  
-2026-03-29 19:08:42 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql.run.sql
-2026-03-29 19:08:42 - ===== FAILED: DB7 =====
-2026-03-29 19:08:42 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql.run.sql
-2026-03-29 19:24:34 - ===== START: DB7 =====
-2026-03-29 19:24:34 - Processing Folder: 01_Tables
-2026-03-29 19:24:34 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:24:34 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:24:34 - Changed database context to 'DB7'.
-2026-03-29 19:24:34 - Completed dbo.AdventureWorksDWBuildVersion.Table.sql âœ…
-2026-03-29 19:24:34 - Checking dbo.DatabaseLog.Table.sql...
-2026-03-29 19:24:34 - Executing dbo.DatabaseLog.Table.sql...
-2026-03-29 19:24:34 - Changed database context to 'DB7'.
-2026-03-29 19:24:34 - Completed dbo.DatabaseLog.Table.sql âœ…
-2026-03-29 19:24:34 - Checking dbo.DimAccount.Table.sql...
-2026-03-29 19:24:35 - Executing dbo.DimAccount.Table.sql...
-2026-03-29 19:24:35 - Changed database context to 'DB7'.
-2026-03-29 19:24:35 - Completed dbo.DimAccount.Table.sql âœ…
-2026-03-29 19:24:35 - Checking dbo.DimCurrency.Table.sql...
-2026-03-29 19:24:35 - Executing dbo.DimCurrency.Table.sql...
-2026-03-29 19:24:35 - Changed database context to 'DB7'.
-2026-03-29 19:24:35 - Completed dbo.DimCurrency.Table.sql âœ…
-2026-03-29 19:24:35 - Checking dbo.DimCustomer.Table.sql...
-2026-03-29 19:24:35 - Executing dbo.DimCustomer.Table.sql...
-2026-03-29 19:24:35 - Changed database context to 'DB7'.
-2026-03-29 19:24:35 - Completed dbo.DimCustomer.Table.sql âœ…
-2026-03-29 19:24:35 - Checking dbo.DimDate.Table.sql...
-2026-03-29 19:24:35 - Executing dbo.DimDate.Table.sql...
-2026-03-29 19:24:36 - Changed database context to 'DB7'.
-2026-03-29 19:24:36 - Completed dbo.DimDate.Table.sql âœ…
-2026-03-29 19:24:36 - Checking dbo.DimDepartmentGroup.Table.sql...
-2026-03-29 19:24:36 - Executing dbo.DimDepartmentGroup.Table.sql...
-2026-03-29 19:24:36 - Changed database context to 'DB7'.
-2026-03-29 19:40:40 - ===== START: DB7 =====
-2026-03-29 19:40:40 - Processing Folder: 01_Tables
-2026-03-29 19:40:40 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:40:40 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:40:40 - ===== FAILED: DB7 =====
-2026-03-29 19:40:40 - Error: Cannot bind argument to parameter 'Path' because it is null.
-2026-03-29 19:49:50 - ===== START: DB7 =====
-2026-03-29 19:49:50 - Processing Folder: 01_Tables
-2026-03-29 19:49:50 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:49:51 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:49:51 - Changed database context to 'DB7'.
-2026-03-29 19:49:51 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 19:49:51 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 19:49:51 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 19:49:51 - ===== FAILED: DB7 =====
-2026-03-29 19:49:51 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 19:52:08 - ===== START: DB7 =====
-2026-03-29 19:52:08 - Processing Folder: 01_Tables
-2026-03-29 19:52:08 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:52:08 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 19:52:08 - Changed database context to 'DB7'.
-2026-03-29 19:52:08 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 19:52:08 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 19:52:08 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 19:52:08 - ===== FAILED: DB7 =====
-2026-03-29 19:52:08 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 20:03:23 - ===== START: DB7 =====
-2026-03-29 20:03:23 - Processing Folder: 01_Tables
-2026-03-29 20:03:23 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 20:10:45 - ===== START: DB7 =====
-2026-03-29 20:10:45 - Processing Folder: 01_Tables
-2026-03-29 20:10:45 - Checking dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 20:10:45 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 20:10:45 - Changed database context to 'DB7'.
-2026-03-29 20:10:45 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 20:10:45 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 20:10:45 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 20:10:45 - ===== FAILED: DB7 =====
-2026-03-29 20:10:45 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 0   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 0   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 0   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 1   -   C h a n g e d   d a t a b a s e   c o n t e x t   t o   ' D B 7 ' .  
- 2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 1   -   M s g   2 7 1 4 ,   L e v e l   1 6 ,   S t a t e   6 ,   S e r v e r   S U J A T A J A D H A V ,   L i n e   1  
- 2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 1   -   T h e r e   i s   a l r e a d y   a n   o b j e c t   n a m e d   ' A d v e n t u r e W o r k s D W B u i l d V e r s i o n '   i n   t h e   d a t a b a s e .  
- 2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 1   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 0 : 5 1 : 1 1   -   E r r o r :   E r r o r   e x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 6   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 6   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 6   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 7   -   C h a n g e d   d a t a b a s e   c o n t e x t   t o   ' D B 7 ' .   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 7   -   M s g   2 7 1 4 ,   L e v e l   1 6 ,   S t a t e   6 ,   S e r v e r   S U J A T A J A D H A V ,   L i n e   1   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 7   -   T h e r e   i s   a l r e a d y   a n   o b j e c t   n a m e d   ' A d v e n t u r e W o r k s D W B u i l d V e r s i o n '   i n   t h e   d a t a b a s e .   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 7   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 0 3 : 1 7   -   E r r o r :   E r r o r   e x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   C h a n g e d   d a t a b a s e   c o n t e x t   t o   ' D B 7 ' .   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   M s g   2 7 1 4 ,   L e v e l   1 6 ,   S t a t e   6 ,   S e r v e r   S U J A T A J A D H A V ,   L i n e   1   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   T h e r e   i s   a l r e a d y   a n   o b j e c t   n a m e d   ' A d v e n t u r e W o r k s D W B u i l d V e r s i o n '   i n   t h e   d a t a b a s e .   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -     
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 1 : 1 3   -   E r r o r :   E r r o r   e x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 2   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 2   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 2   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 3   -   C h a n g e d   d a t a b a s e   c o n t e x t   t o   ' D B 7 ' .   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 3   -   M s g   2 7 1 4 ,   L e v e l   1 6 ,   S t a t e   6 ,   S e r v e r   S U J A T A J A D H A V ,   L i n e   1   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 3   -   T h e r e   i s   a l r e a d y   a n   o b j e c t   n a m e d   ' A d v e n t u r e W o r k s D W B u i l d V e r s i o n '   i n   t h e   d a t a b a s e .   
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 3   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 1 8 : 3 3   -   E r r o r :   E r r o r   e x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 2 8 : 5 3   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 2 8 : 5 3   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 2 8 : 5 3   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 2 8 : 5 3   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 2 8 : 5 3   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 3 8 : 2 8   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 3 8 : 2 8   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 3 8 : 2 9   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 3 8 : 2 9   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 3 8 : 2 9   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 5 5 : 5 8   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 5 5 : 5 8   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 5 5 : 5 8   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 5 5 : 5 8   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 5 5 : 5 8   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 1 : 5 5 : 5 8   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 4 : 0 0   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 4 : 0 0   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 4 : 0 0   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 4 : 0 0   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 4 : 0 0   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 4 : 0 0   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 6 : 1 0   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 6 : 1 0   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 6 : 1 0   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 6 : 1 0   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 6 : 1 0   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 6 : 1 0   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 7 : 3 9   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 7 : 3 9   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 7 : 3 9   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 7 : 3 9   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 7 : 3 9   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 0 7 : 3 9   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2026-03-29 22:11:51 - ===== START: DB7 =====
-2026-03-29 22:11:51 - Processing Folder: 01_Tables
-2026-03-29 22:11:51 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 22:11:51 - Changed database context to 'DB7'.
-2026-03-29 22:11:51 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 22:11:51 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 22:11:51 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 22:11:51 - ===== FAILED: DB7 =====
-2026-03-29 22:11:51 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 22:15:09 - ===== START: DB7 =====
-2026-03-29 22:15:09 - Processing Folder: 01_Tables
-2026-03-29 22:15:09 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 22:15:10 - Changed database context to 'DB7'.
-2026-03-29 22:15:10 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 22:15:10 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 22:15:10 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 22:15:10 - ===== FAILED: DB7 =====
-2026-03-29 22:15:10 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 22:30:43 - ===== START: DB7 =====
-2026-03-29 22:30:43 - Processing Folder: 01_Tables
-2026-03-29 22:30:43 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 22:30:43 - Changed database context to 'DB7'.
-2026-03-29 22:30:43 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 22:30:43 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 22:30:43 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 22:30:43 - ===== FAILED: DB7 =====
-2026-03-29 22:30:43 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   C h a n g e d   d a t a b a s e   c o n t e x t   t o   ' D B 7 ' .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   M s g   2 7 1 4 ,   L e v e l   1 6 ,   S t a t e   6 ,   S e r v e r   S U J A T A J A D H A V ,   L i n e   1  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   T h e r e   i s   a l r e a d y   a n   o b j e c t   n a m e d   ' A d v e n t u r e W o r k s D W B u i l d V e r s i o n '   i n   t h e   d a t a b a s e .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   F A I L E D :   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 3 8 : 4 1   -   E r r o r :   E r r o r   e x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l  
- 2026-03-29 22:41:32 - ===== START: DB7 =====
-2026-03-29 22:41:32 - Processing Folder: 01_Tables
-2026-03-29 22:41:32 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 22:41:32 - Changed database context to 'DB7'.
-2026-03-29 22:41:32 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 22:41:32 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 22:41:32 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 22:41:32 - ===== FAILED: DB7 =====
-2026-03-29 22:41:32 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2 0 2 6 - 0 3 - 2 9   2 2 : 4 4 : 5 1   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 4 4 : 5 1   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 4 4 : 5 1   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 4 4 : 5 1   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 4 4 : 5 1   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 4 4 : 5 1   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2026-03-29 22:46:19 - ===== START: DB7 =====
-2026-03-29 22:46:19 - Processing Folder: 01_Tables
-2026-03-29 22:46:19 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 22:46:19 - Changed database context to 'DB7'.
-2026-03-29 22:46:19 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 22:46:19 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 22:46:19 - FAILED: dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 22:46:19 - ===== FAILED: DB7 =====
-2026-03-29 22:46:19 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2 0 2 6 - 0 3 - 2 9   2 2 : 5 0 : 1 2   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 0 : 1 2   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 0 : 1 2   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 0 : 1 2   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 0 : 1 2   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 0 : 1 2   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 5 : 4 0   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 5 : 4 0   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 5 : 4 0   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 5 : 4 0   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 5 : 4 0   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 2 9   2 2 : 5 5 : 4 0   -   E r r o r :   C a n n o t   b i n d   a r g u m e n t   t o   p a r a m e t e r   ' P a t h '   b e c a u s e   i t   i s   n u l l .  
- 2026-03-29 23:10:15 - ===== START: DB7 =====
-2026-03-29 23:10:15 - Processing Folder: 01_Tables
-2026-03-29 23:10:15 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 23:10:15 - Changed database context to 'DB7'.
-2026-03-29 23:10:15 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 23:10:15 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 23:10:15 - ===== FAILED: DB7 =====
-2026-03-29 23:10:15 - Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 23:12:32 - ===== START: DB7 =====
-2026-03-29 23:12:32 - Processing Folder: 01_Tables
-2026-03-29 23:12:33 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 23:12:33 - Changed database context to 'DB7'.
-2026-03-29 23:12:33 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 23:12:33 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 23:12:33 - ===== FAILED: DB7 =====
-2026-03-29 23:12:33 - Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 23:14:58 - ===== START: DB7 =====
-2026-03-29 23:14:58 - Processing Folder: 01_Tables
-2026-03-29 23:14:59 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 23:14:59 - Changed database context to 'DB7'.
-2026-03-29 23:14:59 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 23:14:59 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 23:14:59 - ===== FAILED: DB7 =====
-2026-03-29 23:14:59 - Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 23:22:13 - ===== START: DB7 =====
-2026-03-29 23:22:13 - Processing Folder: 01_Tables
-2026-03-29 23:22:13 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 23:22:13 - Changed database context to 'DB7'.
-2026-03-29 23:22:13 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 23:22:13 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 23:22:13 - ===== FAILED: DB7 =====
-2026-03-29 23:22:13 - Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-29 23:30:30 - ===== START: DB7 =====
-2026-03-29 23:30:30 - Processing Folder: 01_Tables
-2026-03-29 23:30:30 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-29 23:30:30 - Changed database context to 'DB7'.
-2026-03-29 23:30:30 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-29 23:30:30 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-29 23:30:30 - ===== FAILED: DB7 =====
-2026-03-29 23:30:30 - Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   = = = = =   S T A R T :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   P r o c e s s i n g   F o l d e r :   0 1 _ T a b l e s  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   C h e c k i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   E x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l . . .  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   C h a n g e d   d a t a b a s e   c o n t e x t   t o   ' D B 7 ' .  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   M s g   2 7 1 4 ,   L e v e l   1 6 ,   S t a t e   6 ,   S e r v e r   S U J A T A J A D H A V ,   L i n e   1  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   T h e r e   i s   a l r e a d y   a n   o b j e c t   n a m e d   ' A d v e n t u r e W o r k s D W B u i l d V e r s i o n '   i n   t h e   d a t a b a s e .  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   = = = = =   F A I L E D :   D B 7   = = = = =  
- 2 0 2 6 - 0 3 - 3 0   1 0 : 2 7 : 5 8   -   E r r o r :   E r r o r   e x e c u t i n g   d b o . A d v e n t u r e W o r k s D W B u i l d V e r s i o n . T a b l e . s q l  
- 2026-03-30 10:29:06 - ===== START: DB7 =====
-2026-03-30 10:29:06 - Processing Folder: 01_Tables
-2026-03-30 10:29:06 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-30 10:29:06 - Changed database context to 'DB7'.
-2026-03-30 10:29:06 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-30 10:29:06 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-30 10:29:06 - ===== FAILED: DB7 =====
-2026-03-30 10:29:06 - Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-30 10:32:39 - ===== START: DB7 =====
-2026-03-30 10:32:39 - Processing Folder: 01_Tables
-2026-03-30 10:32:39 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-30 10:32:39 - Changed database context to 'DB7'.
-2026-03-30 10:32:39 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-30 10:32:39 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-30 10:32:39 - ===== FAILED: DB7 =====
-2026-03-30 10:32:39 - Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-30 10:36:07 - ===== START: DB7 =====
-2026-03-30 10:36:07 - Processing Folder: 01_Tables
-2026-03-30 10:36:07 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-30 10:36:07 - Changed database context to 'DB7'.
-2026-03-30 10:36:07 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-30 10:36:07 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-30 10:36:07 - ===== FAILED: DB7 =====
-2026-03-30 10:36:07 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-30 10:41:08 - ===== START: DB7 =====
-2026-03-30 10:41:08 - Processing Folder: 01_Tables
-2026-03-30 10:41:08 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-30 10:41:08 - Changed database context to 'DB7'.
-2026-03-30 10:41:08 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-30 10:41:08 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-30 10:41:08 - ===== FAILED: DB7 =====
-2026-03-30 10:41:08 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-30 10:44:42 - ===== START: DB7 =====
-2026-03-30 10:44:42 - Processing Folder: 01_Tables
-2026-03-30 10:44:42 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-30 10:44:42 - Changed database context to 'DB7'.
-2026-03-30 10:44:42 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-30 10:44:42 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-30 10:44:42 - ===== FAILED: DB7 =====
-2026-03-30 10:44:42 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-03-30 10:45:37 - ===== START: DB7 =====
-2026-03-30 10:45:37 - Processing Folder: 01_Tables
-2026-03-30 10:45:37 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-03-30 10:45:37 - Changed database context to 'DB7'.
-2026-03-30 10:45:37 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-03-30 10:45:37 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-03-30 10:45:37 - ===== FAILED: DB7 =====
-2026-03-30 10:45:37 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-04-10 21:48:31 - ===== START: DB7 =====
-2026-04-10 21:48:31 - Processing Folder: 01_Tables
-2026-04-10 21:48:31 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-04-10 21:48:31 - Changed database context to 'DB7'.
-2026-04-10 21:48:31 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-04-10 21:48:31 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-04-10 21:48:31 - ===== FAILED: DB7 =====
-2026-04-10 21:48:31 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-04-10 23:02:20 - ===== START: DB7 =====
-2026-04-10 23:02:20 - Processing Folder: 01_Tables
-2026-04-10 23:02:21 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
-2026-04-10 23:02:21 - Execution Time: 0.0685599 sec
-2026-04-10 23:02:21 - Changed database context to 'DB7'.
-2026-04-10 23:02:21 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
-2026-04-10 23:02:21 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
-2026-04-10 23:02:21 - ===== FAILED: DB7 =====
-2026-04-10 23:02:21 - Error: Error executing dbo.AdventureWorksDWBuildVersion.Table.sql
-2026-04-10 23:19:18 - ===== START: DB7 =====
-2026-04-10 23:19:18 - Processing Folder: 01_Tables
-2026-04-10 23:19:18 - Executing dbo.FactCurrencyRate.Table.sql...
-2026-04-10 23:19:18 - dbo.FactCurrencyRate.Table.sql executed in 0.0768752 sec
-2026-04-10 23:19:18 - Completed dbo.FactCurrencyRate.Table.sql âœ…
-2026-04-10 23:19:19 - Executing dbo.FactCallCenter.Table.sql...
-2026-04-10 23:19:19 - dbo.FactCallCenter.Table.sql executed in 0.0637178 sec
-2026-04-10 23:19:19 - Completed dbo.FactCallCenter.Table.sql âœ…
-2026-04-10 23:19:19 - Executing dbo.FactFinance.Table.sql...
-2026-04-10 23:19:19 - dbo.FactFinance.Table.sql executed in 0.0725703 sec
-2026-04-10 23:19:19 - âš ï¸ Rolling back script: dbo.FactFinance.Table.sql
-2026-04-10 23:19:19 - âœ… Rollback completed for dbo.FactFinance.Table.sql
-2026-04-10 23:19:19 - ===== FAILED: DB7 =====
-2026-04-10 23:19:19 - Error: Error executing dbo.FactFinance.Table.sql
-2026-04-10 23:43:10 - ===== START: DB7 =====
-2026-04-10 23:43:10 - Processing Folder: 01_Tables
-2026-04-10 23:43:10 - ===== FAILED: DB7 =====
-2026-04-10 23:43:10 - Error: The regular expression pattern \ is not valid.
-2026-04-10 23:47:29 - ===== START: DB7 =====
-2026-04-10 23:47:29 - Processing Folder: 01_Tables
-2026-04-10 23:47:29 - ===== FAILED: DB7 =====
-2026-04-10 23:47:29 - Error: The regular expression pattern \ is not valid.
-2026-04-10 23:54:44 - ===== START: DB7 =====
-2026-04-10 23:54:44 - Processing Folder: 01_Tables
-2026-04-10 23:54:44 - âœ… Validation Passed: C:\ESD\sql-ci-cd\01_Tables\dbo.FactCurrencyRate.Table.sql
-2026-04-10 23:54:44 - Executing dbo.FactCurrencyRate.Table.sql...
-2026-04-10 23:54:44 - dbo.FactCurrencyRate.Table.sql executed in 0.0775015 sec
-2026-04-10 23:54:44 - âš ï¸ Rolling back script: dbo.FactCurrencyRate.Table.sql
-2026-04-10 23:54:45 - âœ… Rollback completed for dbo.FactCurrencyRate.Table.sql
-2026-04-10 23:54:45 - ===== FAILED: DB7 =====
-2026-04-10 23:54:45 - Error: Error executing dbo.FactCurrencyRate.Table.sql
-2026-04-11 00:05:47 - ===== START: DB7 =====
-2026-04-11 00:05:47 - Processing Folder: 01_Tables
-2026-04-11 00:05:47 - âœ… Validation Passed: C:\ESD\sql-ci-cd\01_Tables\dbo.FactInternetSalesReason.Table.sql
-2026-04-11 00:05:47 - Executing dbo.FactInternetSalesReason.Table.sql...
-2026-04-11 00:05:47 - dbo.FactInternetSalesReason.Table.sql executed in 0.0800199 sec
-2026-04-11 00:05:47 - Completed dbo.FactInternetSalesReason.Table.sql âœ…
-2026-04-11 00:05:47 - âœ… Validation Passed: C:\ESD\sql-ci-cd\01_Tables\dbo.FactInternetSales.Table.sql
-2026-04-11 00:05:47 - Executing dbo.FactInternetSales.Table.sql...
-2026-04-11 00:05:47 - dbo.FactInternetSales.Table.sql executed in 0.068533 sec
-2026-04-11 00:05:47 - Completed dbo.FactInternetSales.Table.sql âœ…
-2026-04-11 00:05:48 - âœ… Validation Passed: C:\ESD\sql-ci-cd\01_Tables\dbo.FactResellerSales.Table.sql
-2026-04-11 00:05:48 - Executing dbo.FactResellerSales.Table.sql...
-2026-04-11 00:05:48 - dbo.FactResellerSales.Table.sql executed in 0.0650255 sec
-2026-04-11 00:05:48 - Completed dbo.FactResellerSales.Table.sql âœ…
-2026-04-11 00:05:48 - âœ… Validation Passed: C:\ESD\sql-ci-cd\01_Tables\dbo.FactProductInventory.Table.sql
-2026-04-11 00:05:48 - Executing dbo.FactProductInventory.Table.sql...
-2026-04-11 00:05:48 - dbo.FactProductInventory.Table.sql executed in 0.0599581 sec
-2026-04-11 00:05:48 - Completed dbo.FactProductInventory.Table.sql âœ…
-2026-04-11 00:05:48 - âœ… Validation Passed: C:\ESD\sql-ci-cd\01_Tables\dbo.FactCallCenter.Table.sql
-2026-04-11 00:05:48 - Executing dbo.FactCallCenter.Table.sql...
-2026-04-11 00:05:48 - dbo.FactCallCenter.Table.sql executed in 0.0598136 sec
-2026-04-11 00:05:48 - âš ï¸ Rolling back script: dbo.FactCallCenter.Table.sql
-2026-04-11 00:05:48 - âœ… Rollback completed for dbo.FactCallCenter.Table.sql
-2026-04-11 00:05:48 - ===== FAILED: DB7 =====
-2026-04-11 00:05:48 - Error: Error executing dbo.FactCallCenter.Table.sql
-2026-04-11 09:51:16 - ===== START: DB7 =====
-2026-04-11 09:51:16 - Processing Folder: 01_Tables
-2026-04-11 09:51:16 - âœ… Validation Passed: C:\ESD\sql-ci-cd\01_Tables\dbo.FactInternetSalesReason.Table.sql
-2026-04-11 09:51:16 - Executing dbo.FactInternetSalesReason.Table.sql...
-2026-04-11 09:51:16 - dbo.FactInternetSalesReason.Table.sql executed in 0.0636458 sec
-2026-04-11 09:51:16 - âš ï¸ Rolling back script: dbo.FactInternetSalesReason.Table.sql
-2026-04-11 09:51:17 - âœ… Rollback completed for dbo.FactInternetSalesReason.Table.sql
-2026-04-11 09:51:17 - ===== FAILED: DB7 =====
-2026-04-11 09:51:17 - Error: Error executing dbo.FactInternetSalesReason.Table.sql
-2026-04-11 16:56:25 - ===== START: DB7 =====
-2026-04-11 16:56:25 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql (TYPE=UNKNOWN)
