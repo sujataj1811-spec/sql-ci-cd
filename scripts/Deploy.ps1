@@ -11,7 +11,7 @@ $maxParallel = 3
 $smtpServer = "smtp.gmail.com"
 $smtpPort   = 587
 $smtpUser   = "your_email@gmail.com"
-$smtpPass   = "your_app_password"
+$smtpPass = "uunf fggb jkbf rmbz"
 
 $fromEmail  = "your_email@gmail.com"
 $toEmail    = "receiver_email@gmail.com"
