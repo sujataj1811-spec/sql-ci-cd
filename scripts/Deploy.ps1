@@ -255,17 +255,16 @@ if ($jobs) {
         }
 foreach ($job in $jobs) {
 
+    if ($null -eq $job) { continue }
+
     Wait-Job $job | Out-Null
 
-    $result = Receive-Job $job -ErrorAction SilentlyContinue
+    Receive-Job $job -ErrorAction SilentlyContinue | Out-Null
 
     if ($job.State -eq "Failed") {
         Write-Host "Job FAILED: $($job.Id)"
         $global:DeploymentFailed = $true
     }
-}
-    }
-}
 }
 
 function Send-DeploymentEmail {
