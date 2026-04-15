@@ -107,7 +107,7 @@ foreach ($database in $databases) {
 
     try {
         Write-Log "===== START: $database ====="
-
+Write-Log "Log initialized"
         # Ensure SchemaVersions table exists
         $createTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
@@ -181,15 +181,16 @@ SELECT 1 ELSE SELECT 0
 $start = Get-Date
 
 $output = sqlcmd -S $server `
-    -d $database `
-    -U $user `
-    -P $password `
-    -i "$($file.FullName)" `
-    -b -r 1 -h -1 -W 2>&1 | Out-String
+                 -U $user `
+                 -P $password `
+                 -i "$tempFile" `
+                 -W -h -1 2>&1 | Out-String
 
 $duration = ((Get-Date) - $start).TotalSeconds
 
-                $cleanOutput = $output -replace "sqlcmd :.*", "" `
+
+Write-Log "OUTPUT:"
+$cleanOutput = $output -replace "sqlcmd :.*", "" `
                        -replace "At line:.*", "" `
                        -replace "\+.*", "" `
                        -replace "CategoryInfo.*", "" `
@@ -200,19 +201,21 @@ $cleanOutput = $cleanOutput.Trim()
 if ($cleanOutput) {
     Write-Log $cleanOutput
 }
-
                 # ================= ERROR CHECK =================
-                if ($output -match "Msg\s+\d+") {
+if ($output -match "Msg\s+\d+") {
 
-                    $errClean = $cleanOutput
+    Write-Log "ERROR DETECTED"
 
-Write-Log "ERROR: $errClean"
+    $safeOutput = $output.Replace("'", "''")
 
-                    sqlcmd -S $server -d $database -U $user -P $password `
-                        -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ExecutionTime) VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$output',$duration)"
+    sqlcmd -S $server -d $database -U $user -P $password `
+        -Q "INSERT INTO SchemaVersions 
+            (ScriptName,DatabaseName,Status,ErrorMessage,ExecutionTime) 
+            VALUES ('$fileSafe','$dbSafe','FAILED','$safeOutput',$duration)"
 
-                    throw "SQL FAILED: $fileName"
-                }
+    throw "SQL FAILED: $fileName"
+}
+
 
                 # ================= SUCCESS =================
                 sqlcmd -S $server -d $database -U $user -P $password `
