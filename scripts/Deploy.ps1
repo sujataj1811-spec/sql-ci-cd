@@ -24,8 +24,6 @@ Write-Host "Using Log Directory: $logDir"
 }
 
 # ================= VALIDATION =================
-$deployScript = {
-    param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir)
 
     # ✅ MOVE FUNCTION HERE (IMPORTANT FIX)
     function Validate-SqlScript {
@@ -191,7 +189,7 @@ SELECT 1 ELSE SELECT 0
             $start = Get-Date
 
             $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
-
+$sqlContent = Get-Content $file.FullName -Raw
             $sqlWrapper = @"
 USE [$database]
 GO
@@ -199,7 +197,7 @@ SET XACT_ABORT ON;
 BEGIN TRY
     BEGIN TRAN;
 
-    :r "$($file.FullName)"
+     $sqlContent
 
     COMMIT TRAN;
 END TRY
@@ -217,7 +215,7 @@ END CATCH
             Write-Log $output
 
             # ================= ERROR =================
-            if ($output -match "Msg\s+\d+") {
+            if ($output -match "Msg \d+, Level \d+, State \d+") {
 
                 Write-Log "ERROR: $output"
 
@@ -243,7 +241,7 @@ END CATCH
 }
 
 # ================= PARALLEL =================
-$jobs = New-Object System.Collections.ArrayList
+$jobs = @()
 
 foreach ($db in $databases) {
 
@@ -255,7 +253,7 @@ foreach ($db in $databases) {
     $job = Start-Job -ScriptBlock $deployScript `
     -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
 
-[void]$jobs.Add($job)
+$jobs += $job
         
 }
 
