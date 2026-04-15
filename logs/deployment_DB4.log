@@ -107,3 +107,265 @@ Incorrect syntax near 'END'.
 2026-04-15 22:52:39 - ERROR: Msg 102, Level 15, State 1, Server SUJATAJADHAV, Line 14
 Incorrect syntax near 'END'.
 
+2026-04-15 23:28:45 - ===== START: DB4 =====
+2026-04-15 23:28:45 - Processing Folder: 01_Tables
+2026-04-15 23:28:45 - Executing 00_dbo.DatabaseLog.Table.sql...
+2026-04-15 23:28:45 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:45 - Using sqlcmd (GO detected)
+2026-04-15 23:28:45 - 
+2026-04-15 23:28:46 - 00_dbo.DatabaseLog.Table.sql executed in 0.1195177 sec
+2026-04-15 23:28:46 - Executing dbo.DimAccount.Table.sql...
+2026-04-15 23:28:46 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:46 - Using sqlcmd (GO detected)
+2026-04-15 23:28:46 - 
+2026-04-15 23:28:46 - dbo.DimAccount.Table.sql executed in 0.0985531 sec
+2026-04-15 23:28:46 - Executing dbo.DimCurrency.Table.sql...
+2026-04-15 23:28:46 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:46 - Using sqlcmd (GO detected)
+2026-04-15 23:28:46 - 
+2026-04-15 23:28:46 - dbo.DimCurrency.Table.sql executed in 0.0911902 sec
+2026-04-15 23:28:46 - Executing dbo.DimCustomer.Table.sql...
+2026-04-15 23:28:46 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:46 - Using sqlcmd (GO detected)
+2026-04-15 23:28:46 - 
+2026-04-15 23:28:47 - dbo.DimCustomer.Table.sql executed in 0.1378821 sec
+2026-04-15 23:28:47 - Executing dbo.DimDate.Table.sql...
+2026-04-15 23:28:47 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:47 - Using sqlcmd (GO detected)
+2026-04-15 23:28:47 - 
+2026-04-15 23:28:47 - dbo.DimDate.Table.sql executed in 0.1137334 sec
+2026-04-15 23:28:47 - Executing dbo.DimDepartmentGroup.Table.sql...
+2026-04-15 23:28:47 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:47 - Using sqlcmd (GO detected)
+2026-04-15 23:28:47 - 
+2026-04-15 23:28:47 - dbo.DimDepartmentGroup.Table.sql executed in 0.1355548 sec
+2026-04-15 23:28:47 - Executing dbo.DimEmployee.Table.sql...
+2026-04-15 23:28:47 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:47 - Using sqlcmd (GO detected)
+2026-04-15 23:28:48 - 
+2026-04-15 23:28:48 - dbo.DimEmployee.Table.sql executed in 0.1031826 sec
+2026-04-15 23:28:48 - Executing dbo.DimGeography.Table.sql...
+2026-04-15 23:28:48 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:48 - Using sqlcmd (GO detected)
+2026-04-15 23:28:48 - 
+2026-04-15 23:28:48 - dbo.DimGeography.Table.sql executed in 0.0956483 sec
+2026-04-15 23:28:48 - Executing dbo.DimOrganization.Table.sql...
+2026-04-15 23:28:48 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:48 - Using sqlcmd (GO detected)
+2026-04-15 23:28:48 - 
+2026-04-15 23:28:48 - dbo.DimOrganization.Table.sql executed in 0.0986476 sec
+2026-04-15 23:28:48 - Executing dbo.DimProduct.Table.sql...
+2026-04-15 23:28:48 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:48 - Using sqlcmd (GO detected)
+2026-04-15 23:28:48 - 
+2026-04-15 23:28:49 - dbo.DimProduct.Table.sql executed in 0.1169018 sec
+2026-04-15 23:28:49 - Executing dbo.DimProductCategory.Table.sql...
+2026-04-15 23:28:49 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:49 - Using sqlcmd (GO detected)
+2026-04-15 23:28:49 - 
+2026-04-15 23:28:49 - dbo.DimProductCategory.Table.sql executed in 0.1064952 sec
+2026-04-15 23:28:49 - Executing dbo.DimProductSubcategory.Table.sql...
+2026-04-15 23:28:49 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:49 - Using sqlcmd (GO detected)
+2026-04-15 23:28:49 - 
+2026-04-15 23:28:49 - dbo.DimProductSubcategory.Table.sql executed in 0.1052985 sec
+2026-04-15 23:28:49 - Executing dbo.DimPromotion.Table.sql...
+2026-04-15 23:28:49 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:49 - Using sqlcmd (GO detected)
+2026-04-15 23:28:49 - 
+2026-04-15 23:28:49 - dbo.DimPromotion.Table.sql executed in 0.0965867 sec
+2026-04-15 23:28:49 - Executing dbo.DimReseller.Table.sql...
+2026-04-15 23:28:50 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:50 - Using sqlcmd (GO detected)
+2026-04-15 23:28:50 - 
+2026-04-15 23:28:50 - dbo.DimReseller.Table.sql executed in 0.0951799 sec
+2026-04-15 23:28:50 - Executing dbo.DimSalesReason.Table.sql...
+2026-04-15 23:28:50 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:50 - Using sqlcmd (GO detected)
+2026-04-15 23:28:50 - 
+2026-04-15 23:28:50 - dbo.DimSalesReason.Table.sql executed in 0.0973493 sec
+2026-04-15 23:28:50 - Executing dbo.DimSalesTerritory.Table.sql...
+2026-04-15 23:28:50 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:50 - Using sqlcmd (GO detected)
+2026-04-15 23:28:50 - 
+2026-04-15 23:28:50 - dbo.DimSalesTerritory.Table.sql executed in 0.0963298 sec
+2026-04-15 23:28:50 - Executing dbo.DimScenario.Table.sql...
+2026-04-15 23:28:50 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:50 - Using sqlcmd (GO detected)
+2026-04-15 23:28:51 - 
+2026-04-15 23:28:51 - dbo.DimScenario.Table.sql executed in 0.1228038 sec
+2026-04-15 23:28:51 - Executing dbo.FactAdditionalInternationalProductDescription.Table.sql...
+2026-04-15 23:28:51 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:51 - Using sqlcmd (GO detected)
+2026-04-15 23:28:51 - 
+2026-04-15 23:28:51 - dbo.FactAdditionalInternationalProductDescription.Table.sql executed in 0.1098345 sec
+2026-04-15 23:28:51 - Executing dbo.FactCallCenter.Table.sql...
+2026-04-15 23:28:51 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:51 - Using sqlcmd (GO detected)
+2026-04-15 23:28:51 - 
+2026-04-15 23:28:51 - dbo.FactCallCenter.Table.sql executed in 0.1309909 sec
+2026-04-15 23:28:51 - Executing dbo.FactCurrencyRate.Table.sql...
+2026-04-15 23:28:52 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:52 - Using sqlcmd (GO detected)
+2026-04-15 23:28:52 - 
+2026-04-15 23:28:52 - dbo.FactCurrencyRate.Table.sql executed in 0.1363472 sec
+2026-04-15 23:28:52 - Executing dbo.FactFinance.Table.sql...
+2026-04-15 23:28:52 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:52 - Using sqlcmd (GO detected)
+2026-04-15 23:28:52 - 
+2026-04-15 23:28:52 - dbo.FactFinance.Table.sql executed in 0.0945973 sec
+2026-04-15 23:28:52 - Executing dbo.FactInternetSales.Table.sql...
+2026-04-15 23:28:52 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:52 - Using sqlcmd (GO detected)
+2026-04-15 23:28:52 - 
+2026-04-15 23:28:52 - dbo.FactInternetSales.Table.sql executed in 0.0930287 sec
+2026-04-15 23:28:52 - Executing dbo.FactProductInventory.Table.sql...
+2026-04-15 23:28:53 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:53 - Using sqlcmd (GO detected)
+2026-04-15 23:28:53 - 
+2026-04-15 23:28:53 - dbo.FactProductInventory.Table.sql executed in 0.1286382 sec
+2026-04-15 23:28:53 - Executing dbo.FactResellerSales.Table.sql...
+2026-04-15 23:28:53 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:53 - Using sqlcmd (GO detected)
+2026-04-15 23:28:53 - 
+2026-04-15 23:28:53 - dbo.FactResellerSales.Table.sql executed in 0.0906489 sec
+2026-04-15 23:28:53 - Executing dbo.FactSalesQuota.Table.sql...
+2026-04-15 23:28:53 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:53 - Using sqlcmd (GO detected)
+2026-04-15 23:28:53 - 
+2026-04-15 23:28:53 - dbo.FactSalesQuota.Table.sql executed in 0.0953843 sec
+2026-04-15 23:28:53 - Executing dbo.FactSurveyResponse.Table.sql...
+2026-04-15 23:28:54 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:54 - Using sqlcmd (GO detected)
+2026-04-15 23:28:54 - 
+2026-04-15 23:28:54 - dbo.FactSurveyResponse.Table.sql executed in 0.1269683 sec
+2026-04-15 23:28:54 - Executing dbo.NewFactCurrencyRate.Table.sql...
+2026-04-15 23:28:54 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:54 - Using sqlcmd (GO detected)
+2026-04-15 23:28:54 - 
+2026-04-15 23:28:54 - dbo.NewFactCurrencyRate.Table.sql executed in 0.3120955 sec
+2026-04-15 23:28:54 - Executing dbo.ProspectiveBuyer.Table.sql...
+2026-04-15 23:28:55 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:55 - Using sqlcmd (GO detected)
+2026-04-15 23:28:55 - 
+2026-04-15 23:28:55 - dbo.ProspectiveBuyer.Table.sql executed in 0.1177059 sec
+2026-04-15 23:28:55 - Executing dbo.Prospects.Table.sql...
+2026-04-15 23:28:55 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:55 - Using sqlcmd (GO detected)
+2026-04-15 23:28:55 - 
+2026-04-15 23:28:55 - dbo.Prospects.Table.sql executed in 0.0958316 sec
+2026-04-15 23:28:55 - Executing dbo.SQLServerTable.Table.sql...
+2026-04-15 23:28:55 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:55 - Using sqlcmd (GO detected)
+2026-04-15 23:28:55 - 
+2026-04-15 23:28:55 - dbo.SQLServerTable.Table.sql executed in 0.1078802 sec
+2026-04-15 23:28:55 - Executing dbo.tblDepartment.Table.sql...
+2026-04-15 23:28:55 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:55 - Using sqlcmd (GO detected)
+2026-04-15 23:28:56 - 
+2026-04-15 23:28:56 - dbo.tblDepartment.Table.sql executed in 0.0977231 sec
+2026-04-15 23:28:56 - Executing dbo.tblEmployee.Table.sql...
+2026-04-15 23:28:56 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:56 - Using sqlcmd (GO detected)
+2026-04-15 23:28:56 - 
+2026-04-15 23:28:56 - dbo.tblEmployee.Table.sql executed in 0.0949106 sec
+2026-04-15 23:28:56 - Executing dbo.tblTransaction.Table.sql...
+2026-04-15 23:28:56 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:56 - Using sqlcmd (GO detected)
+2026-04-15 23:28:56 - 
+2026-04-15 23:28:56 - dbo.tblTransaction.Table.sql executed in 0.131546 sec
+2026-04-15 23:28:56 - Executing SQLQuery71.sql...
+2026-04-15 23:28:57 - Execution Mode: Invoke-Sqlcmd (single-batch)
+2026-04-15 23:28:57 - Using Invoke-Sqlcmd (single batch)
+2026-04-15 23:28:58 - 
+2026-04-15 23:28:58 - SQLQuery71.sql executed in 1.5750141 sec
+2026-04-15 23:28:58 - Processing Folder: 02_Views
+2026-04-15 23:28:58 - Executing dbo.vAssocSeqLineItems.View.sql...
+2026-04-15 23:28:58 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:28:58 - Using sqlcmd (GO detected)
+2026-04-15 23:28:59 - Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqLineItems, Line 4
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-15 23:28:59 - ERROR: Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqLineItems, Line 4
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-15 23:30:09 - ===== START: DB4 =====
+2026-04-15 23:30:09 - Processing Folder: 01_Tables
+2026-04-15 23:30:09 - Executing 00_dbo.DatabaseLog.Table.sql...
+2026-04-15 23:30:09 - SKIPPING (already deployed): 00_dbo.DatabaseLog.Table.sql
+2026-04-15 23:30:09 - Executing dbo.DimAccount.Table.sql...
+2026-04-15 23:30:09 - SKIPPING (already deployed): dbo.DimAccount.Table.sql
+2026-04-15 23:30:09 - Executing dbo.DimCurrency.Table.sql...
+2026-04-15 23:30:09 - SKIPPING (already deployed): dbo.DimCurrency.Table.sql
+2026-04-15 23:30:09 - Executing dbo.DimCustomer.Table.sql...
+2026-04-15 23:30:09 - SKIPPING (already deployed): dbo.DimCustomer.Table.sql
+2026-04-15 23:30:09 - Executing dbo.DimDate.Table.sql...
+2026-04-15 23:30:09 - SKIPPING (already deployed): dbo.DimDate.Table.sql
+2026-04-15 23:30:09 - Executing dbo.DimDepartmentGroup.Table.sql...
+2026-04-15 23:30:09 - SKIPPING (already deployed): dbo.DimDepartmentGroup.Table.sql
+2026-04-15 23:30:09 - Executing dbo.DimEmployee.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimEmployee.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimGeography.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimGeography.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimOrganization.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimOrganization.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimProduct.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimProduct.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimProductCategory.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimProductCategory.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimProductSubcategory.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimProductSubcategory.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimPromotion.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimPromotion.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimReseller.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimReseller.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimSalesReason.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimSalesReason.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimSalesTerritory.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimSalesTerritory.Table.sql
+2026-04-15 23:30:10 - Executing dbo.DimScenario.Table.sql...
+2026-04-15 23:30:10 - SKIPPING (already deployed): dbo.DimScenario.Table.sql
+2026-04-15 23:30:10 - Executing dbo.FactAdditionalInternationalProductDescription.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactAdditionalInternationalProductDescription.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactCallCenter.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactCallCenter.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactCurrencyRate.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactCurrencyRate.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactFinance.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactFinance.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactInternetSales.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactInternetSales.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactProductInventory.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactProductInventory.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactResellerSales.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactResellerSales.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactSalesQuota.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactSalesQuota.Table.sql
+2026-04-15 23:30:11 - Executing dbo.FactSurveyResponse.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.FactSurveyResponse.Table.sql
+2026-04-15 23:30:11 - Executing dbo.NewFactCurrencyRate.Table.sql...
+2026-04-15 23:30:11 - SKIPPING (already deployed): dbo.NewFactCurrencyRate.Table.sql
+2026-04-15 23:30:11 - Executing dbo.ProspectiveBuyer.Table.sql...
+2026-04-15 23:30:12 - SKIPPING (already deployed): dbo.ProspectiveBuyer.Table.sql
+2026-04-15 23:30:12 - Executing dbo.Prospects.Table.sql...
+2026-04-15 23:30:12 - SKIPPING (already deployed): dbo.Prospects.Table.sql
+2026-04-15 23:30:12 - Executing dbo.SQLServerTable.Table.sql...
+2026-04-15 23:30:12 - SKIPPING (already deployed): dbo.SQLServerTable.Table.sql
+2026-04-15 23:30:12 - Executing dbo.tblDepartment.Table.sql...
+2026-04-15 23:30:12 - SKIPPING (already deployed): dbo.tblDepartment.Table.sql
+2026-04-15 23:30:12 - Executing dbo.tblEmployee.Table.sql...
+2026-04-15 23:30:12 - SKIPPING (already deployed): dbo.tblEmployee.Table.sql
+2026-04-15 23:30:12 - Executing dbo.tblTransaction.Table.sql...
+2026-04-15 23:30:12 - SKIPPING (already deployed): dbo.tblTransaction.Table.sql
+2026-04-15 23:30:12 - Executing SQLQuery71.sql...
+2026-04-15 23:30:12 - SKIPPING (already deployed): SQLQuery71.sql
+2026-04-15 23:30:12 - Processing Folder: 02_Views
+2026-04-15 23:30:12 - Executing dbo.vAssocSeqLineItems.View.sql...
+2026-04-15 23:30:12 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:30:12 - Using sqlcmd (GO detected)
+2026-04-15 23:30:12 - Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqLineItems, Line 4
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-15 23:30:12 - ERROR: Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqLineItems, Line 4
+Invalid object name 'dbo.vDMPrep'.
+

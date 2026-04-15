@@ -7,6 +7,15 @@ $user        = $env:DB_USER
 $password    = $env:DB_PASSWORD
 $maxParallel = 3
 
+# ================= EMAIL CONFIG =================
+$smtpServer = "smtp.gmail.com"
+$smtpPort   = 587
+$smtpUser   = "your_email@gmail.com"
+$smtpPass   = "your_app_password"
+
+$fromEmail  = "your_email@gmail.com"
+$toEmail    = "receiver_email@gmail.com"
+
 # ================= PATHS =================
 $basePath   = Get-Location
 $sqlPath    = $basePath
@@ -51,6 +60,18 @@ $deployScript = {
     }
 
     Write-Log "===== START: $database ====="
+function Test-UsesGO {
+    param ([string]$content)
+
+    $lines = $content -split "`r?`n"
+
+    foreach ($line in $lines) {
+        if ($line.Trim().ToUpper() -eq "GO") {
+            return $true
+        }
+    }
+    return $false
+}
 
     # ================= TRACKING TABLE =================
     $createTable = @"
@@ -101,18 +122,11 @@ END
             Write-Log "Executing $fileName..."
 
             # ================= VALIDATION =================
-function Test-UsesGO {
-    param ([string]$content)
 
-    $lines = $content -split "`r?`n"
 
-    foreach ($line in $lines) {
-        if ($line.Trim().ToUpper() -eq "GO") {
-            return $true
-        }
-    }
-    return $false
-}
+$sqlContent = Get-Content $file.FullName -Raw
+$sql = $sqlContent.ToUpper()
+
             if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
                 Write-Log "BLOCKED SCRIPT: $fileName"
                 continue
@@ -148,6 +162,9 @@ SELECT 1 ELSE SELECT 0
 $start = Get-Date
 $sqlContent = Get-Content $file.FullName -Raw
 
+# ✅ ADD HERE
+$script:LastError = $false
+
 $usesGO = Test-UsesGO -content $sqlContent
 
 Write-Log "Execution Mode: $(if ($usesGO) { 'sqlcmd (multi-batch)' } else { 'Invoke-Sqlcmd (single-batch)' })"
@@ -175,17 +192,17 @@ else {
             -Query $sqlContent `
             -ErrorAction Stop | Out-String
     }
-    catch {
-        $output = $_.Exception.Message
-        $LASTEXITCODE = 1
-    }
+catch {
+    $output = $_.Exception.Message
+    $script:LastError = $true
+}
 }
 
 $duration = ((Get-Date) - $start).TotalSeconds
 Write-Log $output
 
             # ================= ERROR CHECK =================
-            if ($LASTEXITCODE -ne 0) {
+            if ($LASTEXITCODE -ne 0 -or $script:LastError) {
 
                 Write-Log "ERROR: $output"
                 $safeOutput = $output.Replace("'", "''")
@@ -210,6 +227,8 @@ Write-Log $output
 }
 
 # ================= PARALLEL EXECUTION (SAFE) =================
+$global:DeploymentFailed = $false
+
 $jobs = New-Object System.Collections.ArrayList
 
 foreach ($db in $databases) {
@@ -234,11 +253,56 @@ if ($jobs) {
             Wait-Job -Job $job -ErrorAction SilentlyContinue
             Receive-Job -Job $job -ErrorAction SilentlyContinue
         }
-        catch {
-            Write-Host "Job skipped due to error"
-        }
+foreach ($job in $jobs) {
+
+    Wait-Job $job | Out-Null
+
+    $result = Receive-Job $job -ErrorAction SilentlyContinue
+
+    if ($job.State -eq "Failed") {
+        Write-Host "Job FAILED: $($job.Id)"
+        $global:DeploymentFailed = $true
+    }
+}
     }
 }
 }
 
-Write-Output "===== Deployment Completed ====="
+function Send-DeploymentEmail {
+    param (
+        [string]$status,
+        [string]$logDir
+    )
+
+    $subject = "SQL CI/CD Deployment - $status"
+
+    $body = @"
+Deployment Status: $status
+
+Server: $server
+Databases: $($databases -join ", ")
+
+Logs Location: $logDir
+
+Time: $(Get-Date)
+"@
+
+    $securePass = ConvertTo-SecureString $smtpPass -AsPlainText -Force
+    $cred = New-Object System.Management.Automation.PSCredential ($smtpUser, $securePass)
+
+    Send-MailMessage `
+        -From $fromEmail `
+        -To $toEmail `
+        -Subject $subject `
+        -Body $body `
+        -SmtpServer $smtpServer `
+        -Port $smtpPort `
+        -UseSsl `
+        -Credential $cred
+}
+
+$status = if ($global:DeploymentFailed) { "FAILED" } else { "SUCCESS" }
+
+Send-DeploymentEmail -status $status -logDir $logDir
+
+Write-Output "===== Deployment Completed: $status ====="

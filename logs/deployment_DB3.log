@@ -61,3 +61,53 @@ Database 'DB3' does not exist. Make sure that the name is entered correctly.
 2026-04-15 22:52:41 - ERROR: Msg 911, Level 16, State 1, Server SUJATAJADHAV, Line 1
 Database 'DB3' does not exist. Make sure that the name is entered correctly.
 
+2026-04-15 23:29:00 - ===== START: DB3 =====
+2026-04-15 23:29:00 - Processing Folder: 01_Tables
+2026-04-15 23:29:00 - Executing 00_dbo.DatabaseLog.Table.sql...
+2026-04-15 23:29:00 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:29:00 - Using sqlcmd (GO detected)
+2026-04-15 23:29:00 - sqlcmd : Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Login failed for user 'API'..
+At line:125 char:15
++     $output = sqlcmd `
++               ~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Sqlcmd: Error: ...or user 'API'..:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Cannot open database "DB3" requested by the login. The login 
+failed..
+
+2026-04-15 23:29:00 - ERROR: sqlcmd : Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Login failed for user 'API'..
+At line:125 char:15
++     $output = sqlcmd `
++               ~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Sqlcmd: Error: ...or user 'API'..:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Cannot open database "DB3" requested by the login. The login 
+failed..
+
+2026-04-15 23:30:13 - ===== START: DB3 =====
+2026-04-15 23:30:13 - Processing Folder: 01_Tables
+2026-04-15 23:30:13 - Executing 00_dbo.DatabaseLog.Table.sql...
+2026-04-15 23:30:13 - Execution Mode: sqlcmd (multi-batch)
+2026-04-15 23:30:13 - Using sqlcmd (GO detected)
+2026-04-15 23:30:14 - sqlcmd : Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Login failed for user 'API'..
+At line:125 char:15
++     $output = sqlcmd `
++               ~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Sqlcmd: Error: ...or user 'API'..:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Cannot open database "DB3" requested by the login. The login 
+failed..
+
+2026-04-15 23:30:14 - ERROR: sqlcmd : Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Login failed for user 'API'..
+At line:125 char:15
++     $output = sqlcmd `
++               ~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Sqlcmd: Error: ...or user 'API'..:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Cannot open database "DB3" requested by the login. The login 
+failed..
+
