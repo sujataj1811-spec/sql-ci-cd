@@ -26,3 +26,12 @@ Incorrect syntax near 'END'.
 Msg 102, Level 15, State 1, Server SUJATAJADHAV, Line 12
 Incorrect syntax near 'END'.
 
+2026-04-15 10:03:20 - ===== START: DB5 =====
+2026-04-15 10:03:20 - Processing Folder: 01_Tables
+2026-04-15 10:03:20 - Executing 00_dbo.DatabaseLog.Table.sql...
+2026-04-15 10:03:21 - Msg 102, Level 15, State 1, Server SUJATAJADHAV, Line 14
+Incorrect syntax near 'END'.
+
+2026-04-15 10:03:21 - ERROR: Msg 102, Level 15, State 1, Server SUJATAJADHAV, Line 14
+Incorrect syntax near 'END'.
+
