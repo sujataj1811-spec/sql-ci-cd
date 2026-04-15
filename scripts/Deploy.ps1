@@ -101,10 +101,14 @@ END
             Write-Log "Executing $fileName..."
 
             # ================= VALIDATION =================
-            $content = Get-Content $file.FullName -Raw
-            $clean   = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-            $sql     = $clean.ToUpper()
+$sql = $clean.ToUpper()
 
+$lines = $clean -split "`r?`n"
+
+if ($lines | Where-Object { $_.Trim().ToUpper() -eq "GO" }) {
+    Add-Content $logFile "$(Get-Date) - BLOCKED: GO statement found in $filePath"
+    return $false
+}
             if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
                 Write-Log "BLOCKED SCRIPT: $fileName"
                 continue
