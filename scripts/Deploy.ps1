@@ -11,217 +11,227 @@ $maxParallel = 3
 $basePath   = Get-Location
 $sqlPath    = $basePath
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
-$logDir     = Join-Path $basePath "logs"
-
-# Ensure log folder
-if (!(Test-Path $logDir)) {
-    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
-}
+$logDir     = "C:\ESD\sql-ci-cd\logs"
+$tempDir    = Join-Path $basePath "temp"
 
 Write-Host "Using Log Directory: $logDir"
 
-# ================= DATABASE LIST =================
+# Ensure folders
+@($logDir, $tempDir) | ForEach-Object {
+    if (!(Test-Path $_)) {
+        New-Item -ItemType Directory -Path $_ -Force | Out-Null
+    }
+}
+
+# ================= VALIDATION =================
+function Validate-SqlScript {
+    param ($filePath, $logFile)
+
+    $content = Get-Content $filePath -Raw
+    $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
+    $sql = $contentClean.ToUpper()
+
+    if ($sql.Contains("DROP DATABASE")) {
+        Add-Content $logFile "$(Get-Date) - BLOCKED: DROP DATABASE in $filePath"
+        return $false
+    }
+
+    if ($sql.Contains("TRUNCATE TABLE")) {
+        Add-Content $logFile "$(Get-Date) - BLOCKED: TRUNCATE TABLE in $filePath"
+        return $false
+    }
+
+    if ($sql.Contains("DROP TABLE")) {
+        Add-Content $logFile "$(Get-Date) - WARNING: DROP TABLE in $filePath"
+    }
+
+    if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
+        Add-Content $logFile "$(Get-Date) - WARNING: DROP COLUMN in $filePath"
+    }
+
+    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
+        Add-Content $logFile "$(Get-Date) - BLOCKED: DELETE without WHERE"
+        return $false
+    }
+
+    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
+        Add-Content $logFile "$(Get-Date) - WARNING: UPDATE without WHERE"
+    }
+
+    return $true
+}
+
+# ================= CHECK =================
 if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
 $databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
 
-# ================= PARALLEL EXECUTION =================
-$jobs = @()
+# ================= DEPLOY FUNCTION =================
+$deployScript = {
+    param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir)
 
-foreach ($db in $databases) {
+    $database = $database.Trim()
+    if ([string]::IsNullOrWhiteSpace($database)) { return }
 
-    while ($jobs.Count -ge $maxParallel) {
-        $jobs = $jobs | Where-Object { $_.State -eq "Running" }
-        Start-Sleep -Seconds 2
+    $logFile = Join-Path $logDir "deployment_$database.log"
+
+    # ✅ Create log file only if not exists (append mode)
+    if (!(Test-Path $logFile)) {
+        New-Item -ItemType File -Path $logFile | Out-Null
     }
 
-    $jobs += Start-Job -ScriptBlock {
+    function Write-Log {
+        param ($msg)
+        $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        Add-Content -Path $logFile -Value "$time - $msg"
+    }
 
-        param($database, $server, $user, $password, $sqlPath, $logDir)
+    Write-Log "==============================================="
+    Write-Log "START NEW DEPLOYMENT RUN"
+    Write-Log "DATABASE: $database"
+    Write-Log "==============================================="
 
-        # ================= LOG =================
-        $logFile = Join-Path $logDir "deployment_$database.log"
-
-        function Write-Log {
-            param ($msg)
-            $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-            "$time - $msg" | Out-File -FilePath $logFile -Append -Encoding utf8
-        }
-
-        # ================= VALIDATION =================
-        function Validate-SqlScript {
-            param ($filePath)
-
-            $content = Get-Content $filePath -Raw
-            $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-            $sql = $contentClean.ToUpper()
-
-            if ($sql.Contains("DROP DATABASE")) {
-                Write-Log "BLOCKED: DROP DATABASE in $filePath"
-                return $false
-            }
-
-            if ($sql.Contains("TRUNCATE TABLE")) {
-                Write-Log "BLOCKED: TRUNCATE TABLE in $filePath"
-                return $false
-            }
-
-            if ($sql.Contains("DROP TABLE")) {
-                Write-Log "WARNING: DROP TABLE in $filePath"
-            }
-
-            if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
-                Write-Log "WARNING: DROP COLUMN in $filePath"
-            }
-
-            if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
-                Write-Log "BLOCKED: DELETE without WHERE in $filePath"
-                return $false
-            }
-
-            if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
-                Write-Log "WARNING: UPDATE without WHERE in $filePath"
-            }
-
-            return $true
-        }
-
-        # ================= START =================
-        Write-Log "===== START: $database ====="
-
-        # Ensure SchemaVersions
-        $createTable = @"
+    # ================= SchemaVersions =================
+    $createTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
 BEGIN
     CREATE TABLE SchemaVersions (
         Id INT IDENTITY(1,1) PRIMARY KEY,
         ScriptName NVARCHAR(255),
         DatabaseName NVARCHAR(100),
+        ScriptHash NVARCHAR(64),
         Status NVARCHAR(20),
+        ErrorMessage NVARCHAR(MAX),
+        ExecutionTime FLOAT,
         ExecutedOn DATETIME DEFAULT GETDATE()
     )
 END
 "@
 
-        sqlcmd -S $server -d $database -U $user -P $password -Q $createTable
+    sqlcmd -S $server -d $database -U $user -P $password -Q $createTable
 
-        $phases = @(
-            "01_Tables","02_Views","03_Procedures",
-            "04_Functions","05_Triggers","06_Indexes","07_Data"
-        )
+    # ================= ORDER =================
+    $folders = @(
+        "01_Tables",
+        "02_Views",
+        "03_Procedures",
+        "04_Functions",
+        "05_Triggers",
+        "06_Indexes",
+        "07_Data"
+    )
 
-        $failedScripts = @()
+    foreach ($folder in $folders) {
 
-        foreach ($phase in $phases) {
+        $folderPath = Join-Path $sqlPath $folder
+        if (!(Test-Path $folderPath)) { continue }
 
-            $folderPath = Join-Path $sqlPath $phase
-            if (!(Test-Path $folderPath)) { continue }
+        Write-Log "Processing Folder: $folder"
 
-            Write-Log "Processing Folder: $phase"
+        $files = Get-ChildItem "$folderPath\*.sql" | Sort-Object Name
 
-            $files = Get-ChildItem "$folderPath\*.sql" | Sort-Object Name
+        foreach ($file in $files) {
 
-            foreach ($file in $files) {
+            $fileName   = $file.Name
+            $fileSafe   = $fileName.Replace("'","''")
+            $dbSafe     = $database.Replace("'","''")
+            $scriptHash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash
 
-                $fileName = $file.Name
+            Write-Log "Executing $fileName..."
 
-                Write-Log "VALIDATING: $fileName"
+            # ================= VALIDATION =================
+            if (-not (& $using:Validate-SqlScript $file.FullName $logFile)) {
+                throw "Validation failed: $fileName"
+            }
 
-                if (-not (Validate-SqlScript $file.FullName)) {
-                    Write-Log "SKIPPED (Validation Failed): $fileName"
-                    continue
-                }
-
-                # ================= SKIP =================
-                $checkQuery = @"
+            # ================= SKIP =================
+            $checkQuery = @"
 SET NOCOUNT ON;
 IF EXISTS (
-    SELECT 1 FROM SchemaVersions
-    WHERE ScriptName = '$fileName'
-    AND DatabaseName = '$database'
-    AND Status = 'SUCCESS'
+ SELECT 1 FROM SchemaVersions
+ WHERE ScriptName='$fileSafe'
+ AND DatabaseName='$dbSafe'
+ AND ScriptHash='$scriptHash'
+ AND Status='SUCCESS'
 )
 SELECT 1 ELSE SELECT 0
 "@
 
-                $check = sqlcmd -S $server -d $database -U $user -P $password `
-                    -Q $checkQuery -h -1 -W | Out-String
+            $check = sqlcmd -S $server -d $database -U $user -P $password -Q $checkQuery -h -1 -W | Out-String
 
-                if ($check.Trim() -eq "1") {
-                    Write-Log "SKIPPING (already deployed): $fileName"
-                    continue
-                }
+            if (($check -replace "[^0-9]","") -eq "1") {
+                Write-Log "SKIPPING (already deployed): $fileName"
+                continue
+            }
 
-                # ================= EXECUTION =================
-                Write-Log "Executing $fileName..."
+            # ================= EXECUTION =================
+            $start = Get-Date
 
-                $start = Get-Date
+            $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
 
-                $output = sqlcmd -S $server -d $database -U $user -P $password `
-                    -i "$($file.FullName)" -b 2>&1 | Out-String
+            $sqlWrapper = @"
+USE [$database]
+GO
+SET XACT_ABORT ON;
+BEGIN TRY
+    BEGIN TRAN;
 
-                $duration = ((Get-Date) - $start).TotalSeconds
+    :r "$($file.FullName)"
 
-                # Clean output
-                $cleanOutput = $output -replace "sqlcmd :.*", "" `
-                                       -replace "At line:.*", "" `
-                                       -replace "CategoryInfo.*", "" `
-                                       -replace "FullyQualifiedErrorId.*", ""
+    COMMIT TRAN;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRAN;
+    THROW;
+END CATCH
+"@
 
-                if ($cleanOutput.Trim()) {
-                    Write-Log $cleanOutput.Trim()
-                }
+            $sqlWrapper | Out-File -Encoding utf8 $tempFile
 
-                # ================= ERROR =================
-                if ($output -match "Msg\s+\d+") {
+            $output = sqlcmd -S $server -U $user -P $password -i $tempFile -b 2>&1 | Out-String
+            $duration = ((Get-Date) - $start).TotalSeconds
 
-                    Write-Log "ERROR: $fileName"
+            Write-Log $output
 
-                    $safeOutput = $output.Replace("'", "''")
+            # ================= ERROR =================
+            if ($output -match "Msg\s+\d+") {
 
-                    sqlcmd -S $server -d $database -U $user -P $password `
-                        -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,Status,ErrorMessage)
-                            VALUES ('$fileName','$database','FAILED','$safeOutput')"
+                Write-Log "ERROR: $output"
 
-                    $failedScripts += $file
-                    continue
-                }
+                $safeOutput = $output.Replace("'", "''")
 
-                # ================= SUCCESS =================
                 sqlcmd -S $server -d $database -U $user -P $password `
-                    -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,Status)
-                        VALUES ('$fileName','$database','SUCCESS')"
+                -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ExecutionTime)
+                    VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$safeOutput',$duration)"
 
-                Write-Log "$fileName executed in $duration sec"
+                throw "SQL FAILED: $fileName"
             }
+
+            # ================= SUCCESS =================
+            sqlcmd -S $server -d $database -U $user -P $password `
+            -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ExecutionTime)
+                VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS',$duration)"
+
+            Write-Log "$fileName executed in $duration sec"
         }
+    }
 
-        # ================= RETRY =================
-        if ($failedScripts.Count -gt 0) {
-
-            Write-Log "===== RETRY FAILED SCRIPTS ====="
-
-            foreach ($file in $failedScripts) {
-
-                Write-Log "Retrying: $($file.Name)"
-
-                $output = sqlcmd -S $server -d $database -U $user -P $password `
-                    -i "$($file.FullName)" -b 2>&1 | Out-String
-
-                if ($output -match "Msg\s+\d+") {
-                    Write-Log "FINAL FAIL: $($file.Name)"
-                    throw "Deployment failed in $database"
-                }
-
-                Write-Log "RECOVERED: $($file.Name)"
-            }
-        }
-
-        Write-Log "===== SUCCESS: $database ====="
-
-    } -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir
+    Write-Log "===== SUCCESS: $database ====="
 }
 
-# Wait for all jobs
+# ================= PARALLEL =================
+$jobs = @()
+
+foreach ($db in $databases) {
+
+    while ($jobs.Count -ge $maxParallel) {
+        $jobs = $jobs | Where-Object { $_.State -eq "Running" }
+        Start-Sleep 2
+    }
+
+    $jobs += Start-Job -ScriptBlock $deployScript `
+        -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
+}
+
 $jobs | Wait-Job | Receive-Job
 
 Write-Output "===== Deployment Completed ====="
