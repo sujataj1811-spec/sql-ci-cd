@@ -6,14 +6,6 @@ $server   = $env:DB_SERVER
 $user     = $env:DB_USER
 $password = $env:DB_PASSWORD
 
-# ================= EMAIL CONFIG =================
-$smtpServer   = "smtp.gmail.com"
-$smtpPort     = 587
-$emailFrom    = "your_email@gmail.com"
-$emailTo      = "your_email@gmail.com"
-$emailPassword= "your_app_password"
-
-
 # ================= PATHS =================
 $basePath   = Get-Location
 $sqlPath    = $basePath
@@ -21,63 +13,17 @@ $dbListFile = Join-Path $basePath "scripts\databases.txt"
 $logDir     = Join-Path $basePath "logs"
 $tempDir    = Join-Path $basePath "temp"
 
-# ✅ DEBUG (add here)
 Write-Host "Using Log Directory: $logDir"
 
-# ✅ ENSURE log folder exists (add here)
-if (!(Test-Path $logDir)) {
-    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
-}
-
-# Create folders
+# Ensure folders exist
 @($logDir, $tempDir) | ForEach-Object {
     if (!(Test-Path $_)) {
-        New-Item -ItemType Directory -Path $_ | Out-Null
+        New-Item -ItemType Directory -Path $_ -Force | Out-Null
     }
-}
-
-# ================= EMAIL FUNCTION =================
-function Send-Email {
-    param ($subject, $body)
-    try {
-        $securePassword = ConvertTo-SecureString $emailPassword -AsPlainText -Force
-        $cred = New-Object System.Management.Automation.PSCredential ($emailFrom, $securePassword)
-
-        Send-MailMessage `
-            -From $emailFrom `
-            -To $emailTo `
-            -Subject $subject `
-            -Body $body `
-            -SmtpServer $smtpServer `
-            -Port $smtpPort `
-            -UseSsl `
-            -Credential $cred
-    }
-    catch {
-        Write-Host "Email sending failed"
-    }
-}
-
-# ================= VALIDATION FUNCTION =================
-function Validate-SqlScript {
-    param ($filePath, $logFile)
-
-    $content = Get-Content $filePath -Raw
-    $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-    $sql = $contentClean.ToUpper()
-
-    if ($sql.Contains("DROP DATABASE")) { Add-Content $logFile "BLOCKED: DROP DATABASE in $filePath"; return $false }
-    if ($sql.Contains("TRUNCATE TABLE")) { Add-Content $logFile "BLOCKED: TRUNCATE TABLE in $filePath"; return $false }
-    if ($sql.Contains("DROP TABLE")) { Add-Content $logFile "WARNING: DROP TABLE in $filePath" }
-    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) { Add-Content $logFile "BLOCKED: DELETE without WHERE"; return $false }
-    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) { Add-Content $logFile "WARNING: UPDATE without WHERE" }
-
-    return $true
 }
 
 # ================= VALIDATION =================
 if (!(Test-Path $dbListFile)) { throw "databases.txt not found!" }
-
 $databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
 
 # ================= FOLDER ORDER =================
@@ -93,7 +39,6 @@ foreach ($database in $databases) {
     if ([string]::IsNullOrWhiteSpace($database)) { continue }
 
     $logFile = Join-Path $logDir "deployment_$database.log"
-    Write-Host "Log file path: $logFile"
 
     if (!(Test-Path $logFile)) {
         New-Item -ItemType File -Path $logFile -Force | Out-Null
@@ -105,10 +50,11 @@ foreach ($database in $databases) {
         Add-Content -Path $logFile -Value "$time - $msg"
     }
 
+    Write-Log "===== START: $database ====="
+
     try {
-        Write-Log "===== START: $database ====="
-Write-Log "Log initialized"
-        # Ensure SchemaVersions table exists
+
+        # ================= ENSURE TABLE =================
         $createTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
 BEGIN
@@ -122,11 +68,6 @@ BEGIN
         ExecutionTime FLOAT,
         ExecutedOn DATETIME DEFAULT GETDATE()
     )
-END
-ELSE
-BEGIN
-    IF COL_LENGTH('SchemaVersions','ScriptHash') IS NULL
-        ALTER TABLE SchemaVersions ADD ScriptHash NVARCHAR(64)
 END
 "@
 
@@ -143,6 +84,11 @@ END
 
             foreach ($file in $files) {
 
+                if (!(Test-Path $file.FullName)) {
+                    Write-Log "FILE NOT FOUND: $($file.FullName)"
+                    continue
+                }
+
                 $fileName   = $file.Name
                 $fileSafe   = $fileName.Replace("'","''")
                 $dbSafe     = $database.Replace("'","''")
@@ -150,9 +96,14 @@ END
 
                 Write-Log "Executing: $fileName"
 
-                if (-not (Validate-SqlScript $file.FullName $logFile)) {
-                    throw "Validation failed for $fileName"
-                }
+                # ================= VALIDATION =================
+                $content = Get-Content $file.FullName -Raw
+                $clean   = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
+                $sql     = $clean.ToUpper()
+
+                if ($sql.Contains("DROP DATABASE")) { Write-Log "BLOCKED: DROP DATABASE"; continue }
+                if ($sql.Contains("TRUNCATE TABLE")) { Write-Log "BLOCKED: TRUNCATE TABLE"; continue }
+                if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) { Write-Log "BLOCKED: DELETE without WHERE"; continue }
 
                 # ================= SKIP =================
                 $checkQuery = @"
@@ -167,61 +118,71 @@ IF EXISTS (
 SELECT 1 ELSE SELECT 0
 "@
 
-                $check = sqlcmd -S $server -d $database -U $user -P $password `
-                    -Q $checkQuery -h -1 -W | Out-String
-
+                $check = sqlcmd -S $server -d $database -U $user -P $password -Q $checkQuery -h -1 -W | Out-String
                 $cleanCheck = $check -replace "[^0-9]", ""
 
                 if ($cleanCheck -eq "1") {
-                    Write-Log "SKIPPED: $fileName (No changes)"
+                    Write-Log "SKIPPED: $fileName"
                     continue
                 }
 
+                # ================= TEMP FILE =================
+                $tempFile = Join-Path $tempDir "$($file.BaseName)_$database.sql"
 
-$start = Get-Date
+@"
+USE [$database]
+GO
+:r "$($file.FullName)"
+GO
+"@ | Set-Content -Path $tempFile -Encoding UTF8
 
-$output = sqlcmd -S $server `
-                 -U $user `
-                 -P $password `
-                 -i "$tempFile" `
-                 -W -h -1 2>&1 | Out-String
+                if (!(Test-Path $tempFile)) {
+                    throw "Temp file not created"
+                }
 
-$duration = ((Get-Date) - $start).TotalSeconds
+                # ================= EXECUTION =================
+                $start = Get-Date
 
+                $output = sqlcmd -S $server `
+                                 -d $database `
+                                 -U $user `
+                                 -P $password `
+                                 -i "$tempFile" `
+                                 -W -h -1 2>&1 | Out-String
 
-Write-Log "OUTPUT:"
-$cleanOutput = $output -replace "sqlcmd :.*", "" `
-                       -replace "At line:.*", "" `
-                       -replace "\+.*", "" `
-                       -replace "CategoryInfo.*", "" `
-                       -replace "FullyQualifiedErrorId.*", ""
+                $end = Get-Date
+                $duration = ($end - $start).TotalSeconds
 
-$cleanOutput = $cleanOutput.Trim()
+                Write-Log "OUTPUT:"
+                $cleanOutput = $output -replace "sqlcmd :.*","" `
+                                       -replace "At line:.*","" `
+                                       -replace "\+.*",""
+                $cleanOutput = $cleanOutput.Trim()
 
-if ($cleanOutput) {
-    Write-Log $cleanOutput
-}
-                # ================= ERROR CHECK =================
-if ($output -match "Msg\s+\d+") {
+                if ($cleanOutput) { Write-Log $cleanOutput }
 
-    Write-Log "ERROR DETECTED"
+                # ================= ERROR =================
+                if ($output -match "Msg\s+\d+") {
 
-    $safeOutput = $output.Replace("'", "''")
+                    Write-Log "ERROR DETECTED"
 
-    sqlcmd -S $server -d $database -U $user -P $password `
-        -Q "INSERT INTO SchemaVersions 
-            (ScriptName,DatabaseName,Status,ErrorMessage,ExecutionTime) 
-            VALUES ('$fileSafe','$dbSafe','FAILED','$safeOutput',$duration)"
+                    $safeOutput = $output.Replace("'", "''")
 
-    throw "SQL FAILED: $fileName"
-}
+                    sqlcmd -S $server -d $database -U $user -P $password `
+                        -Q "INSERT INTO SchemaVersions 
+                            (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ExecutionTime)
+                            VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$safeOutput',$duration)"
 
+                    throw "SQL FAILED: $fileName"
+                }
 
                 # ================= SUCCESS =================
                 sqlcmd -S $server -d $database -U $user -P $password `
-                    -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ExecutionTime) VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS',$duration)"
+                    -Q "INSERT INTO SchemaVersions 
+                        (ScriptName,DatabaseName,ScriptHash,Status,ExecutionTime)
+                        VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS',$duration)"
 
-                Write-Log "SUCCESS: $fileName"
+                Write-Log "SUCCESS: $fileName ($duration sec)"
             }
         }
 
@@ -230,10 +191,8 @@ if ($output -match "Msg\s+\d+") {
     catch {
         Write-Log "===== FAILED: $database ====="
         Write-Log $_.Exception.Message
-        Send-Email "Deployment FAILED - $database" $_.Exception.Message
         throw
     }
 }
 
 Write-Output "===== Deployment Completed ====="
-Send-Email "Deployment SUCCESS" "All databases deployed successfully"
