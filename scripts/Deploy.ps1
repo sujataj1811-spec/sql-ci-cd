@@ -23,44 +23,6 @@ Write-Host "Using Log Directory: $logDir"
     }
 }
 
-# ================= VALIDATION FUNCTION =================
-function Validate-SqlScript {
-    param ($filePath, $logFile)
-
-    $content = Get-Content $filePath -Raw
-    $contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-    $sql = $contentClean.ToUpper()
-
-    if ($sql.Contains("DROP DATABASE")) {
-        Add-Content $logFile "$(Get-Date) - BLOCKED: DROP DATABASE in $filePath"
-        return $false
-    }
-
-    if ($sql.Contains("TRUNCATE TABLE")) {
-        Add-Content $logFile "$(Get-Date) - BLOCKED: TRUNCATE TABLE in $filePath"
-        return $false
-    }
-
-    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
-        Add-Content $logFile "$(Get-Date) - BLOCKED: DELETE without WHERE"
-        return $false
-    }
-
-    if ($sql.Contains("UPDATE") -and -not ($sql.Contains("WHERE"))) {
-        Add-Content $logFile "$(Get-Date) - WARNING: UPDATE without WHERE"
-    }
-
-    if ($sql.Contains("DROP TABLE")) {
-        Add-Content $logFile "$(Get-Date) - WARNING: DROP TABLE in $filePath"
-    }
-
-    if ($sql.Contains("ALTER TABLE") -and $sql.Contains("DROP COLUMN")) {
-        Add-Content $logFile "$(Get-Date) - WARNING: DROP COLUMN in $filePath"
-    }
-
-    return $true
-}
-
 # ================= DB LIST =================
 if (!(Test-Path $dbListFile)) {
     throw "databases.txt not found!"
@@ -90,7 +52,7 @@ $deployScript = {
 
     Write-Log "===== START: $database ====="
 
-    # ================= CREATE TRACKING TABLE =================
+    # ================= TRACKING TABLE =================
     $createTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
 BEGIN
@@ -109,7 +71,7 @@ END
 
     sqlcmd -S $server -d $database -U $user -P $password -Q $createTable
 
-    # ================= EXECUTION ORDER =================
+    # ================= FOLDERS ORDER =================
     $folders = @(
         "01_Tables",
         "02_Views",
@@ -140,14 +102,17 @@ END
 
             # ================= VALIDATION =================
             $content = Get-Content $file.FullName -Raw
-$contentClean = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
-$sql = $contentClean.ToUpper()
+            $clean   = $content -replace '--.*', '' -replace '/\*[\s\S]*?\*/', ''
+            $sql     = $clean.ToUpper()
 
-if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
-    Write-Log "BLOCKED SCRIPT: $fileName"
-    continue
-} {
-                throw "Validation failed: $fileName"
+            if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
+                Write-Log "BLOCKED SCRIPT: $fileName"
+                continue
+            }
+
+            if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
+                Write-Log "BLOCKED DELETE WITHOUT WHERE: $fileName"
+                continue
             }
 
             # ================= SKIP CHECK =================
@@ -225,22 +190,23 @@ END CATCH
     Write-Log "===== SUCCESS: $database ====="
 }
 
-# ================= PARALLEL EXECUTION =================
-$jobs = @()
+# ================= PARALLEL EXECUTION (SAFE) =================
+$jobs = New-Object System.Collections.ArrayList
 
 foreach ($db in $databases) {
 
-    while ($jobs.Count -ge $maxParallel) {
-        $jobs = $jobs | Where-Object { $_.State -eq "Running" }
+    while (($jobs | Where-Object { $_.State -eq "Running" }).Count -ge $maxParallel) {
         Start-Sleep 2
     }
 
     $job = Start-Job -ScriptBlock $deployScript `
         -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
 
-    $jobs += $job
+    [void]$jobs.Add($job)
 }
 
-$jobs | Wait-Job | Receive-Job
+$jobs | ForEach-Object {
+    $_ | Wait-Job | Receive-Job
+}
 
 Write-Output "===== Deployment Completed ====="
