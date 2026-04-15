@@ -181,8 +181,8 @@ SELECT 1 ELSE SELECT 0
                         -ServerInstance $server `
                         -Database $database `
                         -Username $user `
-                        -Password $password `
-                        -Query $sqlContent `
+			-Password $password `
+			-Query $sqlContent `
                         -ErrorAction Stop | Out-String
                 }
                 catch {
