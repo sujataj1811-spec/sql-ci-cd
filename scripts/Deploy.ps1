@@ -58,7 +58,7 @@ while (-not (Test-Path $approvalFile)) {
 # ================= READ APPROVAL DETAILS =================
 $content = Get-Content $approvalFile
 
-if ($content[0].Trim().ToUpper() -ne "APPROVED") {
+if (($content | Select-Object -First 1).Trim().ToUpper() -ne "APPROVED") {
     throw "Deployment blocked: Invalid approval content"
 }
 
