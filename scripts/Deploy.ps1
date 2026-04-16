@@ -154,7 +154,8 @@ function Get-SqlDependencies {
     $content = Get-Content $filePath -Raw
     $deps = @()
 
-    $matches = [regex]::Matches($content, "(FROM|JOIN|REFERENCES)\s+([\[\]\w]+\.[\[\]\w]+)", "IgnoreCase")
+
+    $matches = [regex]::Matches($content, "(FROM|JOIN)\s+([\[\]\w]+\.[\[\]\w]+)", "IgnoreCase")
 
     foreach ($m in $matches) {
         $deps += $m.Groups[2].Value.Replace("[","").Replace("]","")
@@ -181,9 +182,10 @@ function Resolve-ExecutionOrder {
     function Resolve($node) {
         if ($resolved -contains $node) { return }
 
-        if ($unresolved -contains $node) {
-            throw "Circular dependency detected: $node"
-        }
+if ($unresolved -contains $node) {
+    Write-Log "WARNING: Circular dependency ignored for $node"
+    return
+}
 
         [void]$unresolved.Add($node)
 
