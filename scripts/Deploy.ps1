@@ -154,7 +154,7 @@ function Get-SqlDependencies {
     $content = Get-Content $filePath -Raw
     $deps = @()
 
-    $matches = [regex]::Matches($content, "(FROM|JOIN|REFERENCES)\s+([\[\]\w\.]+)", "IgnoreCase")
+    $matches = [regex]::Matches($content, "(FROM|JOIN|REFERENCES)\s+([\[\]\w]+\.[\[\]\w]+)", "IgnoreCase")
 
     foreach ($m in $matches) {
         $deps += $m.Groups[2].Value.Replace("[","").Replace("]","")
@@ -188,10 +188,12 @@ function Resolve-ExecutionOrder {
         [void]$unresolved.Add($node)
 
         foreach ($dep in $graph[$node]) {
-            $depNode = $graph.Keys | Where-Object { $_ -match [regex]::Escape($dep) }
+           $depNode = $graph.Keys | Where-Object { $_ -like "*$dep*" } | Select-Object -First 1
 
             if ($depNode) {
-                Resolve $depNode
+               if ($depNode) {
+    Resolve $depNode
+}
             }
         }
 
@@ -301,7 +303,7 @@ SELECT 1 ELSE SELECT 0
  
 
     Write-Log "===== SUCCESS: $database ====="
-
+}
 
 # ================= PARALLEL EXECUTION =================
 $global:DeploymentFailed = $false
@@ -322,7 +324,7 @@ foreach ($db in $databases) {
 foreach ($job in $jobs) {
 
     Wait-Job $job | Out-Null
-    Receive-Job $job -ErrorAction SilentlyContinue | Out-Null
+    Receive-Job $job -Keep
 
     if ($job.State -eq "Failed") {
         $global:DeploymentFailed = $true
