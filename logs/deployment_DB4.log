@@ -689,3 +689,185 @@ Invalid object name 'dbo.vDMPrep'.
 2026-04-16 00:48:40 - ERROR: Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqLineItems, Line 4
 Invalid object name 'dbo.vDMPrep'.
 
+2026-04-16 08:53:31 - ===== START: DB4 =====
+2026-04-16 08:53:31 - Processing Folder: 01_Tables
+2026-04-16 08:53:31 - Executing 00_dbo.DatabaseLog.Table.sql...
+2026-04-16 08:53:31 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:31 - Using sqlcmd (GO detected)
+2026-04-16 08:53:32 - 
+2026-04-16 08:53:32 - 00_dbo.DatabaseLog.Table.sql executed in 0.1521762 sec
+2026-04-16 08:53:32 - Executing dbo.DimAccount.Table.sql...
+2026-04-16 08:53:32 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:32 - Using sqlcmd (GO detected)
+2026-04-16 08:53:32 - 
+2026-04-16 08:53:32 - dbo.DimAccount.Table.sql executed in 0.1468531 sec
+2026-04-16 08:53:32 - Executing dbo.DimCurrency.Table.sql...
+2026-04-16 08:53:32 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:32 - Using sqlcmd (GO detected)
+2026-04-16 08:53:33 - 
+2026-04-16 08:53:33 - dbo.DimCurrency.Table.sql executed in 0.1365953 sec
+2026-04-16 08:53:33 - Executing dbo.DimCustomer.Table.sql...
+2026-04-16 08:53:33 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:33 - Using sqlcmd (GO detected)
+2026-04-16 08:53:33 - 
+2026-04-16 08:53:33 - dbo.DimCustomer.Table.sql executed in 0.1528304 sec
+2026-04-16 08:53:33 - Executing dbo.DimDate.Table.sql...
+2026-04-16 08:53:33 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:33 - Using sqlcmd (GO detected)
+2026-04-16 08:53:33 - 
+2026-04-16 08:53:33 - dbo.DimDate.Table.sql executed in 0.1227699 sec
+2026-04-16 08:53:33 - Executing dbo.DimDepartmentGroup.Table.sql...
+2026-04-16 08:53:34 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:34 - Using sqlcmd (GO detected)
+2026-04-16 08:53:34 - 
+2026-04-16 08:53:34 - dbo.DimDepartmentGroup.Table.sql executed in 0.1285838 sec
+2026-04-16 08:53:34 - Executing dbo.DimEmployee.Table.sql...
+2026-04-16 08:53:34 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:34 - Using sqlcmd (GO detected)
+2026-04-16 08:53:34 - 
+2026-04-16 08:53:34 - dbo.DimEmployee.Table.sql executed in 0.1504788 sec
+2026-04-16 08:53:34 - Executing dbo.DimGeography.Table.sql...
+2026-04-16 08:53:34 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:34 - Using sqlcmd (GO detected)
+2026-04-16 08:53:35 - 
+2026-04-16 08:53:35 - dbo.DimGeography.Table.sql executed in 0.1265232 sec
+2026-04-16 08:53:35 - Executing dbo.DimOrganization.Table.sql...
+2026-04-16 08:53:35 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:35 - Using sqlcmd (GO detected)
+2026-04-16 08:53:35 - 
+2026-04-16 08:53:35 - dbo.DimOrganization.Table.sql executed in 0.1208861 sec
+2026-04-16 08:53:35 - Executing dbo.DimProduct.Table.sql...
+2026-04-16 08:53:35 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:35 - Using sqlcmd (GO detected)
+2026-04-16 08:53:35 - 
+2026-04-16 08:53:36 - dbo.DimProduct.Table.sql executed in 0.1752643 sec
+2026-04-16 08:53:36 - Executing dbo.DimProductCategory.Table.sql...
+2026-04-16 08:53:36 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:36 - Using sqlcmd (GO detected)
+2026-04-16 08:53:36 - 
+2026-04-16 08:53:36 - dbo.DimProductCategory.Table.sql executed in 0.2475286 sec
+2026-04-16 08:53:36 - Executing dbo.DimProductSubcategory.Table.sql...
+2026-04-16 08:53:36 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:36 - Using sqlcmd (GO detected)
+2026-04-16 08:53:37 - 
+2026-04-16 08:53:37 - dbo.DimProductSubcategory.Table.sql executed in 0.2134867 sec
+2026-04-16 08:53:37 - Executing dbo.DimPromotion.Table.sql...
+2026-04-16 08:53:37 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:37 - Using sqlcmd (GO detected)
+2026-04-16 08:53:37 - 
+2026-04-16 08:53:38 - dbo.DimPromotion.Table.sql executed in 0.1783726 sec
+2026-04-16 08:53:38 - Executing dbo.DimReseller.Table.sql...
+2026-04-16 08:53:38 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:38 - Using sqlcmd (GO detected)
+2026-04-16 08:53:38 - 
+2026-04-16 08:53:38 - dbo.DimReseller.Table.sql executed in 0.1666347 sec
+2026-04-16 08:53:38 - Executing dbo.DimSalesReason.Table.sql...
+2026-04-16 08:53:38 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:38 - Using sqlcmd (GO detected)
+2026-04-16 08:53:38 - 
+2026-04-16 08:53:39 - dbo.DimSalesReason.Table.sql executed in 0.2238955 sec
+2026-04-16 08:53:39 - Executing dbo.DimSalesTerritory.Table.sql...
+2026-04-16 08:53:39 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:39 - Using sqlcmd (GO detected)
+2026-04-16 08:53:39 - 
+2026-04-16 08:53:39 - dbo.DimSalesTerritory.Table.sql executed in 0.1556468 sec
+2026-04-16 08:53:39 - Executing dbo.DimScenario.Table.sql...
+2026-04-16 08:53:39 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:39 - Using sqlcmd (GO detected)
+2026-04-16 08:53:40 - 
+2026-04-16 08:53:40 - dbo.DimScenario.Table.sql executed in 0.1539223 sec
+2026-04-16 08:53:40 - Executing dbo.FactAdditionalInternationalProductDescription.Table.sql...
+2026-04-16 08:53:40 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:40 - Using sqlcmd (GO detected)
+2026-04-16 08:53:40 - 
+2026-04-16 08:53:40 - dbo.FactAdditionalInternationalProductDescription.Table.sql executed in 0.1182924 sec
+2026-04-16 08:53:40 - Executing dbo.FactCallCenter.Table.sql...
+2026-04-16 08:53:40 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:40 - Using sqlcmd (GO detected)
+2026-04-16 08:53:40 - 
+2026-04-16 08:53:41 - dbo.FactCallCenter.Table.sql executed in 0.1799953 sec
+2026-04-16 08:53:41 - Executing dbo.FactCurrencyRate.Table.sql...
+2026-04-16 08:53:41 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:41 - Using sqlcmd (GO detected)
+2026-04-16 08:53:41 - 
+2026-04-16 08:53:41 - dbo.FactCurrencyRate.Table.sql executed in 0.1800598 sec
+2026-04-16 08:53:41 - Executing dbo.FactFinance.Table.sql...
+2026-04-16 08:53:41 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:41 - Using sqlcmd (GO detected)
+2026-04-16 08:53:42 - 
+2026-04-16 08:53:42 - dbo.FactFinance.Table.sql executed in 0.2278684 sec
+2026-04-16 08:53:42 - Executing dbo.FactInternetSales.Table.sql...
+2026-04-16 08:53:42 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:42 - Using sqlcmd (GO detected)
+2026-04-16 08:53:42 - 
+2026-04-16 08:53:42 - dbo.FactInternetSales.Table.sql executed in 0.1646854 sec
+2026-04-16 08:53:42 - Executing dbo.FactProductInventory.Table.sql...
+2026-04-16 08:53:43 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:43 - Using sqlcmd (GO detected)
+2026-04-16 08:53:43 - 
+2026-04-16 08:53:43 - dbo.FactProductInventory.Table.sql executed in 0.1659521 sec
+2026-04-16 08:53:43 - Executing dbo.FactResellerSales.Table.sql...
+2026-04-16 08:53:43 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:43 - Using sqlcmd (GO detected)
+2026-04-16 08:53:43 - 
+2026-04-16 08:53:43 - dbo.FactResellerSales.Table.sql executed in 0.169612 sec
+2026-04-16 08:53:43 - Executing dbo.FactSalesQuota.Table.sql...
+2026-04-16 08:53:44 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:44 - Using sqlcmd (GO detected)
+2026-04-16 08:53:44 - 
+2026-04-16 08:53:44 - dbo.FactSalesQuota.Table.sql executed in 0.1581691 sec
+2026-04-16 08:53:44 - Executing dbo.FactSurveyResponse.Table.sql...
+2026-04-16 08:53:44 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:44 - Using sqlcmd (GO detected)
+2026-04-16 08:53:44 - 
+2026-04-16 08:53:44 - dbo.FactSurveyResponse.Table.sql executed in 0.2542566 sec
+2026-04-16 08:53:44 - Executing dbo.NewFactCurrencyRate.Table.sql...
+2026-04-16 08:53:45 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:45 - Using sqlcmd (GO detected)
+2026-04-16 08:53:45 - 
+2026-04-16 08:53:45 - dbo.NewFactCurrencyRate.Table.sql executed in 0.1981005 sec
+2026-04-16 08:53:45 - Executing dbo.ProspectiveBuyer.Table.sql...
+2026-04-16 08:53:45 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:45 - Using sqlcmd (GO detected)
+2026-04-16 08:53:45 - 
+2026-04-16 08:53:46 - dbo.ProspectiveBuyer.Table.sql executed in 0.1740043 sec
+2026-04-16 08:53:46 - Executing dbo.Prospects.Table.sql...
+2026-04-16 08:53:46 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:46 - Using sqlcmd (GO detected)
+2026-04-16 08:53:46 - 
+2026-04-16 08:53:46 - dbo.Prospects.Table.sql executed in 0.1648053 sec
+2026-04-16 08:53:46 - Executing dbo.SQLServerTable.Table.sql...
+2026-04-16 08:53:46 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:46 - Using sqlcmd (GO detected)
+2026-04-16 08:53:46 - 
+2026-04-16 08:53:47 - dbo.SQLServerTable.Table.sql executed in 0.1505647 sec
+2026-04-16 08:53:47 - Executing dbo.tblDepartment.Table.sql...
+2026-04-16 08:53:47 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:47 - Using sqlcmd (GO detected)
+2026-04-16 08:53:47 - 
+2026-04-16 08:53:47 - dbo.tblDepartment.Table.sql executed in 0.18793 sec
+2026-04-16 08:53:47 - Executing dbo.tblEmployee.Table.sql...
+2026-04-16 08:53:47 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:47 - Using sqlcmd (GO detected)
+2026-04-16 08:53:47 - 
+2026-04-16 08:53:47 - dbo.tblEmployee.Table.sql executed in 0.174267 sec
+2026-04-16 08:53:47 - Executing dbo.tblTransaction.Table.sql...
+2026-04-16 08:53:48 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:48 - Using sqlcmd (GO detected)
+2026-04-16 08:53:48 - 
+2026-04-16 08:53:48 - dbo.tblTransaction.Table.sql executed in 0.2738455 sec
+2026-04-16 08:53:48 - Executing SQLQuery71.sql...
+2026-04-16 08:53:48 - Execution Mode: Invoke-Sqlcmd (single-batch)
+2026-04-16 08:53:48 - Using Invoke-Sqlcmd (single batch)
+2026-04-16 08:53:50 - 
+2026-04-16 08:53:50 - SQLQuery71.sql executed in 2.010619 sec
+2026-04-16 08:53:50 - Processing Folder: 02_Views
+2026-04-16 08:53:50 - Executing dbo.vAssocSeqOrders.View.sql...
+2026-04-16 08:53:51 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 08:53:51 - Using sqlcmd (GO detected)
+2026-04-16 08:53:51 - Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqOrders, Line 7
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-16 08:53:51 - ERROR: Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqOrders, Line 7
+Invalid object name 'dbo.vDMPrep'.
+
