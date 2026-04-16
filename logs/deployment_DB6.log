@@ -1422,3 +1422,19 @@ Invalid object name 'dbo.vDMPrep'.
 2026-04-16 08:53:51 - ERROR: Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqOrders, Line 7
 Invalid object name 'dbo.vDMPrep'.
 
+2026-04-16 21:54:26 - ===== START: DB6 =====
+2026-04-16 21:54:27 - Processing Folder: 01_Tables
+2026-04-16 21:54:27 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-16 21:54:27 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 21:54:27 - Using sqlcmd (GO detected)
+2026-04-16 21:54:28 - 
+2026-04-16 21:54:28 - dbo.AdventureWorksDWBuildVersion.Table.sql executed in 0.2293831 sec
+2026-04-16 21:54:28 - Executing dbo.DatabaseLog.Table.sql...
+2026-04-16 21:54:28 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 21:54:28 - Using sqlcmd (GO detected)
+2026-04-16 21:54:28 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'DatabaseLog' in the database.
+
+2026-04-16 21:54:28 - ERROR: Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'DatabaseLog' in the database.
+

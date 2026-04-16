@@ -11,7 +11,7 @@ $maxParallel = 3
 $smtpServer = "smtp.gmail.com"
 $smtpPort   = 587
 $smtpUser   = "sujataj1811@gmail.com"
-$smtpPass = "uunf fggb jkbf rmbz"
+$smtpPass   = "uunf fggb jkbf rmbz"
 
 $fromEmail  = "sujataj1811@gmail.com"
 $toEmail    = "sujataj1918@gmail.com"
@@ -25,7 +25,6 @@ $tempDir    = Join-Path $basePath "temp"
 
 Write-Host "Using Log Directory: $logDir"
 
-# Ensure folders
 @($logDir, $tempDir) | ForEach-Object {
     if (!(Test-Path $_)) {
         New-Item -ItemType Directory -Path $_ -Force | Out-Null
@@ -39,10 +38,63 @@ if (!(Test-Path $dbListFile)) {
 
 $databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
 
+# ================= DBA APPROVAL =================
+Write-Output "Waiting for DBA approval..."
+
+$approvalFile = Join-Path $basePath "scripts\approved.txt"
+
+$timeoutMinutes = 30
+$startTime = Get-Date
+
+while (-not (Test-Path $approvalFile)) {
+
+    Start-Sleep -Seconds 10
+
+    if ((Get-Date) -gt $startTime.AddMinutes($timeoutMinutes)) {
+        throw "Deployment aborted: DBA approval not received within $timeoutMinutes minutes"
+    }
+}
+
+# ================= READ APPROVAL DETAILS =================
+$content = Get-Content $approvalFile
+
+if ($content[0].Trim().ToUpper() -ne "APPROVED") {
+    throw "Deployment blocked: Invalid approval content"
+}
+
+$approvedBy = ""
+$approvedOn = ""
+
+foreach ($line in $content) {
+
+    if ($line -match "^By:\s*(.*)") {
+        $approvedBy = $matches[1].Trim()
+    }
+
+    if ($line -match "^Time:\s*(.*)") {
+        $approvedOn = $matches[1].Trim()
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($approvedBy)) {
+    throw "Approval missing 'By' field"
+}
+
+if ([string]::IsNullOrWhiteSpace($approvedOn)) {
+    $approvedOn = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+}
+
+Write-Output "Approved By: $approvedBy"
+Write-Output "Approved On: $approvedOn"
+
+Write-Output "DBA approval received. Starting deployment..."
+
+Remove-Item $approvalFile -ErrorAction SilentlyContinue
+
 # ================= DEPLOY SCRIPT =================
 $deployScript = {
 
-    param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir)
+param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir, $approvedBy, $approvedOn)
 
     $database = $database.Trim()
     if ([string]::IsNullOrWhiteSpace($database)) { return }
@@ -72,7 +124,6 @@ $deployScript = {
         return $false
     }
 
-    # ================= TRACKING TABLE =================
     $createTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'SchemaVersions')
 BEGIN
@@ -83,6 +134,8 @@ BEGIN
         ScriptHash NVARCHAR(64),
         Status NVARCHAR(20),
         ErrorMessage NVARCHAR(MAX),
+        ApprovedBy NVARCHAR(100),
+        ApprovedOn DATETIME,
         ExecutionTime FLOAT,
         ExecutedOn DATETIME DEFAULT GETDATE()
     )
@@ -91,16 +144,7 @@ END
 
     sqlcmd -S $server -d $database -U $user -P $password -Q $createTable
 
-    # ================= FOLDERS ORDER =================
-    $folders = @(
-        "01_Tables",
-        "02_Views",
-        "03_Procedures",
-        "04_Functions",
-        "05_Triggers",
-        "06_Indexes",
-        "07_Data"
-    )
+    $folders = @("01_Tables","02_Views","03_Procedures","04_Functions","05_Triggers","06_Indexes","07_Data")
 
     foreach ($folder in $folders) {
 
@@ -120,7 +164,6 @@ END
 
             Write-Log "Executing $fileName..."
 
-            # ================= VALIDATION =================
             $sqlContent = Get-Content $file.FullName -Raw
             $sql = $sqlContent.ToUpper()
 
@@ -134,7 +177,6 @@ END
                 continue
             }
 
-            # ================= SKIP CHECK =================
             $checkQuery = @"
 SET NOCOUNT ON;
 IF EXISTS (
@@ -154,36 +196,17 @@ SELECT 1 ELSE SELECT 0
                 continue
             }
 
-            # ================= EXECUTION =================
             $start = Get-Date
             $script:LastError = $false
 
             $usesGO = Test-UsesGO -content $sqlContent
 
-            Write-Log "Execution Mode: $(if ($usesGO) { 'sqlcmd (multi-batch)' } else { 'Invoke-Sqlcmd (single-batch)' })"
-
             if ($usesGO) {
-                Write-Log "Using sqlcmd (GO detected)"
-
-                $output = sqlcmd `
-                    -S $server `
-                    -d $database `
-                    -U $user `
-                    -P $password `
-                    -i $file.FullName `
-                    -b 2>&1 | Out-String
+                $output = sqlcmd -S $server -d $database -U $user -P $password -i $file.FullName -b 2>&1 | Out-String
             }
             else {
-                Write-Log "Using Invoke-Sqlcmd (single batch)"
-
                 try {
-                    $output = Invoke-Sqlcmd `
-                        -ServerInstance $server `
-                        -Database $database `
-                        -Username $user `
-			-Password $password `
-			-Query $sqlContent `
-                        -ErrorAction Stop | Out-String
+                    $output = Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $password -Query $sqlContent -ErrorAction Stop | Out-String
                 }
                 catch {
                     $output = $_.Exception.Message
@@ -194,23 +217,20 @@ SELECT 1 ELSE SELECT 0
             $duration = ((Get-Date) - $start).TotalSeconds
             Write-Log $output
 
-            # ================= ERROR CHECK =================
             if ($LASTEXITCODE -ne 0 -or $script:LastError) {
 
-                Write-Log "ERROR: $output"
                 $safeOutput = $output.Replace("'", "''")
 
                 sqlcmd -S $server -d $database -U $user -P $password `
-                -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ExecutionTime)
-                    VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$safeOutput',$duration)"
+                -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ApprovedBy,ApprovedOn,ExecutionTime)
+                    VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$safeOutput','$approvedBy','$approvedOn',$duration)"
 
                 throw "SQL FAILED: $fileName"
             }
 
-            # ================= SUCCESS =================
             sqlcmd -S $server -d $database -U $user -P $password `
-            -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ExecutionTime)
-                VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS',$duration)"
+            -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ApprovedBy,ApprovedOn,ExecutionTime)
+                VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS','$approvedBy','$approvedOn',$duration)"
 
             Write-Log "$fileName executed in $duration sec"
         }
@@ -230,66 +250,22 @@ foreach ($db in $databases) {
     }
 
     $job = Start-Job -ScriptBlock $deployScript `
-        -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir
+        -ArgumentList $db, $server, $user, $password, $sqlPath, $logDir, $tempDir, $approvedBy, $approvedOn
 
     [void]$jobs.Add($job)
 }
 
 foreach ($job in $jobs) {
 
-    if ($null -eq $job) { continue }
-
-    try {
-        Wait-Job -Job $job -ErrorAction SilentlyContinue
-        Receive-Job -Job $job -ErrorAction SilentlyContinue | Out-Null
-    }
-    catch {
-        Write-Host "Job failed"
-        $global:DeploymentFailed = $true
-    }
+    Wait-Job $job | Out-Null
+    Receive-Job $job -ErrorAction SilentlyContinue | Out-Null
 
     if ($job.State -eq "Failed") {
-        Write-Host "Job FAILED: $($job.Id)"
         $global:DeploymentFailed = $true
     }
 }
 
 # ================= EMAIL =================
-function Send-DeploymentEmail {
-    param (
-        [string]$status,
-        [string]$logDir
-    )
-
-    $subject = "SQL CI/CD Deployment - $status"
-
-    $body = @"
-Deployment Status: $status
-
-Server: $server
-Databases: $($databases -join ", ")
-
-Logs Location: $logDir
-
-Time: $(Get-Date)
-"@
-
-    $securePass = ConvertTo-SecureString $smtpPass -AsPlainText -Force
-    $cred = New-Object System.Management.Automation.PSCredential ($smtpUser, $securePass)
-
-    Send-MailMessage `
-        -From $fromEmail `
-        -To $toEmail `
-        -Subject $subject `
-        -Body $body `
-        -SmtpServer $smtpServer `
-        -Port $smtpPort `
-        -UseSsl `
-        -Credential $cred
-}
-
 $status = if ($global:DeploymentFailed) { "FAILED" } else { "SUCCESS" }
-
-Send-DeploymentEmail -status $status -logDir $logDir
 
 Write-Output "===== Deployment Completed: $status ====="

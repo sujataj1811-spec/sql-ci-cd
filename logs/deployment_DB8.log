@@ -1,0 +1,11 @@
+2026-04-16 21:54:31 - ===== START: DB8 =====
+2026-04-16 21:54:32 - Processing Folder: 01_Tables
+2026-04-16 21:54:32 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-16 21:54:32 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 21:54:32 - Using sqlcmd (GO detected)
+2026-04-16 21:54:32 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'AdventureWorksDWBuildVersion' in the database.
+
+2026-04-16 21:54:32 - ERROR: Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'AdventureWorksDWBuildVersion' in the database.
+
