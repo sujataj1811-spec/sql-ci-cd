@@ -1608,3 +1608,126 @@ Id Name   Age
 2026-04-16 23:35:23 - Executing (dependency) dbo.NewFactCurrencyRate.Table.sql...
 2026-04-16 23:35:23 - SKIPPING (already deployed): dbo.NewFactCurrencyRate.Table.sql
 2026-04-16 23:35:23 - ===== SUCCESS: DB4 =====
+2026-04-16 23:43:11 - ===== START: DB4 =====
+2026-04-16 23:43:11 - Executing (dependency) dbo.SQLServerTable.Table.sql...
+2026-04-16 23:43:12 - 
+2026-04-16 23:43:12 - dbo.SQLServerTable.Table.sql executed in 0.1582851 sec
+2026-04-16 23:43:12 - Executing (dependency) dbo.tblTransaction.Table.sql...
+2026-04-16 23:43:12 - 
+2026-04-16 23:43:13 - dbo.tblTransaction.Table.sql executed in 0.2185423 sec
+2026-04-16 23:43:13 - Executing (dependency) dbo.ProspectiveBuyer.Table.sql...
+2026-04-16 23:43:13 - 
+2026-04-16 23:43:13 - dbo.ProspectiveBuyer.Table.sql executed in 0.21472 sec
+2026-04-16 23:43:13 - Executing (dependency) dbo.DimProductCategory.Table.sql...
+2026-04-16 23:43:13 - 
+2026-04-16 23:43:14 - dbo.DimProductCategory.Table.sql executed in 0.159975 sec
+2026-04-16 23:43:14 - Executing (dependency) dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-16 23:43:14 - 
+2026-04-16 23:43:14 - dbo.AdventureWorksDWBuildVersion.Table.sql executed in 0.187191 sec
+2026-04-16 23:43:14 - Executing (dependency) dbo.ProspectiveBuyer1.Table.sql...
+2026-04-16 23:43:15 - 
+2026-04-16 23:43:15 - dbo.ProspectiveBuyer1.Table.sql executed in 0.2457043 sec
+2026-04-16 23:43:15 - Executing (dependency) dbo.DimProduct.Table.sql...
+2026-04-16 23:43:16 - 
+2026-04-16 23:43:16 - dbo.DimProduct.Table.sql executed in 0.3323572 sec
+2026-04-16 23:43:16 - Executing (dependency) dbo.DimDate.Table.sql...
+2026-04-16 23:43:16 - 
+2026-04-16 23:43:17 - dbo.DimDate.Table.sql executed in 0.2039508 sec
+2026-04-16 23:43:17 - Executing (dependency) dbo.DimSalesReason.Table.sql...
+2026-04-16 23:43:17 - 
+2026-04-16 23:43:17 - dbo.DimSalesReason.Table.sql executed in 0.280052 sec
+2026-04-16 23:43:17 - Executing (dependency) dbo.FactProductInventory.Table.sql...
+2026-04-16 23:43:18 - 
+2026-04-16 23:43:18 - dbo.FactProductInventory.Table.sql executed in 0.1161068 sec
+2026-04-16 23:43:18 - Executing (dependency) dbo.DimSalesTerritory.Table.sql...
+2026-04-16 23:43:18 - 
+2026-04-16 23:43:18 - dbo.DimSalesTerritory.Table.sql executed in 0.232416 sec
+2026-04-16 23:43:18 - Executing (dependency) SQLQuery10.sql...
+2026-04-16 23:43:21 - 
+Id Name   Age
+-- ----   ---
+ 1 Sujata  25
+ 1 Sujata  25
+ 2 Rahul   30
+ 1 Sujata    
+ 2 Rahul     
+
+
+
+2026-04-16 23:43:21 - SQLQuery10.sql executed in 2.4816184 sec
+2026-04-16 23:43:21 - Executing (dependency) dbo.FactResellerSales.Table.sql...
+2026-04-16 23:43:22 - 
+2026-04-16 23:43:22 - dbo.FactResellerSales.Table.sql executed in 0.3059314 sec
+2026-04-16 23:43:22 - Executing (dependency) dbo.DimCustomer.Table.sql...
+2026-04-16 23:43:23 - 
+2026-04-16 23:43:23 - dbo.DimCustomer.Table.sql executed in 0.3130623 sec
+2026-04-16 23:43:23 - Executing (dependency) dbo.DimProductSubcategory.Table.sql...
+2026-04-16 23:43:24 - 
+2026-04-16 23:43:24 - dbo.DimProductSubcategory.Table.sql executed in 0.2308891 sec
+2026-04-16 23:43:24 - Executing (dependency) dbo.FactInternetSalesReason.Table.sql...
+2026-04-16 23:43:24 - 
+2026-04-16 23:43:24 - dbo.FactInternetSalesReason.Table.sql executed in 0.1652325 sec
+2026-04-16 23:43:24 - Executing (dependency) dbo.DimPromotion.Table.sql...
+2026-04-16 23:43:25 - 
+2026-04-16 23:43:25 - dbo.DimPromotion.Table.sql executed in 0.1538796 sec
+2026-04-16 23:43:25 - Executing (dependency) dbo.DimOrganization.Table.sql...
+2026-04-16 23:43:26 - 
+2026-04-16 23:43:26 - dbo.DimOrganization.Table.sql executed in 0.271211 sec
+2026-04-16 23:43:26 - Executing (dependency) dbo.FactSalesQuota.Table.sql...
+2026-04-16 23:43:26 - 
+2026-04-16 23:43:26 - dbo.FactSalesQuota.Table.sql executed in 0.1884212 sec
+2026-04-16 23:43:26 - Executing (dependency) dbo.DatabaseLog.Table.sql...
+2026-04-16 23:43:27 - 
+2026-04-16 23:43:27 - dbo.DatabaseLog.Table.sql executed in 0.3038444 sec
+2026-04-16 23:43:27 - Executing (dependency) dbo.Prospects.Table.sql...
+2026-04-16 23:43:28 - 
+2026-04-16 23:43:28 - dbo.Prospects.Table.sql executed in 0.3135009 sec
+2026-04-16 23:43:28 - Executing (dependency) dbo.FactInternetSales.Table.sql...
+2026-04-16 23:43:29 - 
+2026-04-16 23:43:29 - dbo.FactInternetSales.Table.sql executed in 0.2283258 sec
+2026-04-16 23:43:29 - Executing (dependency) dbo.DimCurrency.Table.sql...
+2026-04-16 23:43:29 - 
+2026-04-16 23:43:29 - dbo.DimCurrency.Table.sql executed in 0.1635773 sec
+2026-04-16 23:43:29 - Executing (dependency) dbo.FactAdditionalInternationalProductDescription.Table.sql...
+2026-04-16 23:43:30 - 
+2026-04-16 23:43:30 - dbo.FactAdditionalInternationalProductDescription.Table.sql executed in 0.1750742 sec
+2026-04-16 23:43:30 - Executing (dependency) dbo.tblDepartment.Table.sql...
+2026-04-16 23:43:30 - 
+2026-04-16 23:43:30 - dbo.tblDepartment.Table.sql executed in 0.1643225 sec
+2026-04-16 23:43:30 - Executing (dependency) dbo.FactFinance.Table.sql...
+2026-04-16 23:43:31 - 
+2026-04-16 23:43:31 - dbo.FactFinance.Table.sql executed in 0.2053269 sec
+2026-04-16 23:43:31 - Executing (dependency) dbo.DimReseller.Table.sql...
+2026-04-16 23:43:32 - 
+2026-04-16 23:43:32 - dbo.DimReseller.Table.sql executed in 0.1754105 sec
+2026-04-16 23:43:32 - Executing (dependency) dbo.tblEmployee.Table.sql...
+2026-04-16 23:43:32 - 
+2026-04-16 23:43:32 - dbo.tblEmployee.Table.sql executed in 0.172373 sec
+2026-04-16 23:43:32 - Executing (dependency) dbo.DimScenario.Table.sql...
+2026-04-16 23:43:33 - 
+2026-04-16 23:43:33 - dbo.DimScenario.Table.sql executed in 0.2299758 sec
+2026-04-16 23:43:33 - Executing (dependency) dbo.DimAccount.Table.sql...
+2026-04-16 23:43:33 - 
+2026-04-16 23:43:34 - dbo.DimAccount.Table.sql executed in 0.1644132 sec
+2026-04-16 23:43:34 - Executing (dependency) dbo.FactCallCenter.Table.sql...
+2026-04-16 23:43:34 - 
+2026-04-16 23:43:34 - dbo.FactCallCenter.Table.sql executed in 0.1814677 sec
+2026-04-16 23:43:34 - Executing (dependency) dbo.DimDepartmentGroup.Table.sql...
+2026-04-16 23:43:34 - 
+2026-04-16 23:43:35 - dbo.DimDepartmentGroup.Table.sql executed in 0.1537859 sec
+2026-04-16 23:43:35 - Executing (dependency) dbo.FactCurrencyRate.Table.sql...
+2026-04-16 23:43:35 - 
+2026-04-16 23:43:35 - dbo.FactCurrencyRate.Table.sql executed in 0.2086284 sec
+2026-04-16 23:43:35 - Executing (dependency) dbo.DimEmployee.Table.sql...
+2026-04-16 23:43:36 - 
+2026-04-16 23:43:36 - dbo.DimEmployee.Table.sql executed in 0.2993625 sec
+2026-04-16 23:43:36 - Executing (dependency) dbo.FactSurveyResponse.Table.sql...
+2026-04-16 23:43:37 - 
+2026-04-16 23:43:37 - dbo.FactSurveyResponse.Table.sql executed in 0.2231036 sec
+2026-04-16 23:43:37 - Executing (dependency) dbo.DimGeography.Table.sql...
+2026-04-16 23:43:37 - 
+2026-04-16 23:43:38 - dbo.DimGeography.Table.sql executed in 0.2677031 sec
+2026-04-16 23:43:38 - Executing (dependency) dbo.NewFactCurrencyRate.Table.sql...
+2026-04-16 23:43:38 - 
+2026-04-16 23:43:39 - dbo.NewFactCurrencyRate.Table.sql executed in 0.2816857 sec
+2026-04-16 23:43:39 - ===== SUCCESS: DB4 =====
