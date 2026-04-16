@@ -9,3 +9,127 @@ There is already an object named 'AdventureWorksDWBuildVersion' in the database.
 2026-04-16 21:54:32 - ERROR: Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
 There is already an object named 'AdventureWorksDWBuildVersion' in the database.
 
+2026-04-16 22:59:19 - ===== START: DB8 =====
+2026-04-16 22:59:19 - Processing Folder: 01_Tables
+2026-04-16 22:59:19 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-16 22:59:19 - 
+2026-04-16 22:59:20 - dbo.AdventureWorksDWBuildVersion.Table.sql executed in 0.1631854 sec
+2026-04-16 22:59:20 - Executing dbo.DatabaseLog.Table.sql...
+2026-04-16 22:59:20 - 
+2026-04-16 22:59:20 - dbo.DatabaseLog.Table.sql executed in 0.0913152 sec
+2026-04-16 22:59:20 - Executing dbo.DimAccount.Table.sql...
+2026-04-16 22:59:20 - 
+2026-04-16 22:59:20 - dbo.DimAccount.Table.sql executed in 0.1154501 sec
+2026-04-16 22:59:20 - Executing dbo.DimCurrency.Table.sql...
+2026-04-16 22:59:21 - 
+2026-04-16 22:59:21 - dbo.DimCurrency.Table.sql executed in 0.1729833 sec
+2026-04-16 22:59:21 - Executing dbo.DimCustomer.Table.sql...
+2026-04-16 22:59:21 - 
+2026-04-16 22:59:21 - dbo.DimCustomer.Table.sql executed in 0.1339271 sec
+2026-04-16 22:59:21 - Executing dbo.DimDate.Table.sql...
+2026-04-16 22:59:21 - 
+2026-04-16 22:59:21 - dbo.DimDate.Table.sql executed in 0.1212159 sec
+2026-04-16 22:59:21 - Executing dbo.DimDepartmentGroup.Table.sql...
+2026-04-16 22:59:22 - 
+2026-04-16 22:59:22 - dbo.DimDepartmentGroup.Table.sql executed in 0.1393387 sec
+2026-04-16 22:59:22 - Executing dbo.DimEmployee.Table.sql...
+2026-04-16 22:59:22 - 
+2026-04-16 22:59:22 - dbo.DimEmployee.Table.sql executed in 0.0938285 sec
+2026-04-16 22:59:22 - Executing dbo.DimGeography.Table.sql...
+2026-04-16 22:59:22 - 
+2026-04-16 22:59:22 - dbo.DimGeography.Table.sql executed in 0.1450575 sec
+2026-04-16 22:59:22 - Executing dbo.DimOrganization.Table.sql...
+2026-04-16 22:59:23 - 
+2026-04-16 22:59:23 - dbo.DimOrganization.Table.sql executed in 0.0898643 sec
+2026-04-16 22:59:23 - Executing dbo.DimProduct.Table.sql...
+2026-04-16 22:59:23 - 
+2026-04-16 22:59:23 - dbo.DimProduct.Table.sql executed in 0.0902789 sec
+2026-04-16 22:59:23 - Executing dbo.DimProductCategory.Table.sql...
+2026-04-16 22:59:23 - 
+2026-04-16 22:59:23 - dbo.DimProductCategory.Table.sql executed in 0.0968711 sec
+2026-04-16 22:59:23 - Executing dbo.DimProductSubcategory.Table.sql...
+2026-04-16 22:59:24 - 
+2026-04-16 22:59:24 - dbo.DimProductSubcategory.Table.sql executed in 0.1412425 sec
+2026-04-16 22:59:24 - Executing dbo.DimPromotion.Table.sql...
+2026-04-16 22:59:24 - 
+2026-04-16 22:59:24 - dbo.DimPromotion.Table.sql executed in 0.1118453 sec
+2026-04-16 22:59:24 - Executing dbo.DimReseller.Table.sql...
+2026-04-16 22:59:24 - 
+2026-04-16 22:59:24 - dbo.DimReseller.Table.sql executed in 0.1312563 sec
+2026-04-16 22:59:24 - Executing dbo.DimSalesReason.Table.sql...
+2026-04-16 22:59:25 - 
+2026-04-16 22:59:25 - dbo.DimSalesReason.Table.sql executed in 0.0990157 sec
+2026-04-16 22:59:25 - Executing dbo.DimSalesTerritory.Table.sql...
+2026-04-16 22:59:25 - 
+2026-04-16 22:59:25 - dbo.DimSalesTerritory.Table.sql executed in 0.1387638 sec
+2026-04-16 22:59:25 - Executing dbo.DimScenario.Table.sql...
+2026-04-16 22:59:25 - 
+2026-04-16 22:59:25 - dbo.DimScenario.Table.sql executed in 0.1292133 sec
+2026-04-16 22:59:25 - Executing dbo.FactAdditionalInternationalProductDescription.Table.sql...
+2026-04-16 22:59:26 - 
+2026-04-16 22:59:26 - dbo.FactAdditionalInternationalProductDescription.Table.sql executed in 0.1267295 sec
+2026-04-16 22:59:26 - Executing dbo.FactCallCenter.Table.sql...
+2026-04-16 22:59:26 - 
+2026-04-16 22:59:26 - dbo.FactCallCenter.Table.sql executed in 0.139184 sec
+2026-04-16 22:59:26 - Executing dbo.FactCurrencyRate.Table.sql...
+2026-04-16 22:59:26 - 
+2026-04-16 22:59:27 - dbo.FactCurrencyRate.Table.sql executed in 0.148615 sec
+2026-04-16 22:59:27 - Executing dbo.FactFinance.Table.sql...
+2026-04-16 22:59:27 - 
+2026-04-16 22:59:27 - dbo.FactFinance.Table.sql executed in 0.1291685 sec
+2026-04-16 22:59:27 - Executing dbo.FactInternetSales.Table.sql...
+2026-04-16 22:59:27 - 
+2026-04-16 22:59:27 - dbo.FactInternetSales.Table.sql executed in 0.1326502 sec
+2026-04-16 22:59:27 - Executing dbo.FactInternetSalesReason.Table.sql...
+2026-04-16 22:59:28 - 
+2026-04-16 22:59:28 - dbo.FactInternetSalesReason.Table.sql executed in 0.0930882 sec
+2026-04-16 22:59:28 - Executing dbo.FactProductInventory.Table.sql...
+2026-04-16 22:59:28 - 
+2026-04-16 22:59:28 - dbo.FactProductInventory.Table.sql executed in 0.0857774 sec
+2026-04-16 22:59:28 - Executing dbo.FactResellerSales.Table.sql...
+2026-04-16 22:59:28 - 
+2026-04-16 22:59:28 - dbo.FactResellerSales.Table.sql executed in 0.0865356 sec
+2026-04-16 22:59:28 - Executing dbo.FactSalesQuota.Table.sql...
+2026-04-16 22:59:29 - 
+2026-04-16 22:59:29 - dbo.FactSalesQuota.Table.sql executed in 0.1309149 sec
+2026-04-16 22:59:29 - Executing dbo.FactSurveyResponse.Table.sql...
+2026-04-16 22:59:29 - 
+2026-04-16 22:59:29 - dbo.FactSurveyResponse.Table.sql executed in 0.1385136 sec
+2026-04-16 22:59:29 - Executing dbo.NewFactCurrencyRate.Table.sql...
+2026-04-16 22:59:29 - 
+2026-04-16 22:59:30 - dbo.NewFactCurrencyRate.Table.sql executed in 0.1371998 sec
+2026-04-16 22:59:30 - Executing dbo.ProspectiveBuyer.Table.sql...
+2026-04-16 22:59:30 - 
+2026-04-16 22:59:30 - dbo.ProspectiveBuyer.Table.sql executed in 0.1687082 sec
+2026-04-16 22:59:30 - Executing dbo.ProspectiveBuyer1.Table.sql...
+2026-04-16 22:59:30 - 
+2026-04-16 22:59:31 - dbo.ProspectiveBuyer1.Table.sql executed in 0.1503858 sec
+2026-04-16 22:59:31 - Executing dbo.Prospects.Table.sql...
+2026-04-16 22:59:31 - 
+2026-04-16 22:59:31 - dbo.Prospects.Table.sql executed in 0.1396462 sec
+2026-04-16 22:59:31 - Executing dbo.SQLServerTable.Table.sql...
+2026-04-16 22:59:31 - 
+2026-04-16 22:59:31 - dbo.SQLServerTable.Table.sql executed in 0.1712805 sec
+2026-04-16 22:59:31 - Executing dbo.tblDepartment.Table.sql...
+2026-04-16 22:59:32 - 
+2026-04-16 22:59:32 - dbo.tblDepartment.Table.sql executed in 0.1001859 sec
+2026-04-16 22:59:32 - Executing dbo.tblEmployee.Table.sql...
+2026-04-16 22:59:32 - 
+2026-04-16 22:59:32 - dbo.tblEmployee.Table.sql executed in 0.1350017 sec
+2026-04-16 22:59:32 - Executing dbo.tblTransaction.Table.sql...
+2026-04-16 22:59:33 - 
+2026-04-16 22:59:33 - dbo.tblTransaction.Table.sql executed in 0.1518208 sec
+2026-04-16 22:59:33 - Executing SQLQuery10.sql...
+2026-04-16 22:59:34 - 
+Id Name   Age
+-- ----   ---
+ 1 Sujata  25
+ 1 Sujata  25
+ 2 Rahul   30
+ 1 Sujata    
+ 2 Rahul     
+
+
+
+2026-04-16 22:59:35 - SQLQuery10.sql executed in 1.4314331 sec
+2026-04-16 22:59:35 - ===== SUCCESS: DB8 =====

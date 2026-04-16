@@ -146,38 +146,102 @@ END
 
     $folders = @("01_Tables","02_Views","03_Procedures","04_Functions","05_Triggers","06_Indexes","07_Data")
 
-    foreach ($folder in $folders) {
+# ================= DEPENDENCY FUNCTIONS =================
 
-        $folderPath = Join-Path $sqlPath $folder
-        if (!(Test-Path $folderPath)) { continue }
+function Get-SqlDependencies {
+    param ($filePath)
 
-        Write-Log "Processing Folder: $folder"
+    $content = Get-Content $filePath -Raw
+    $deps = @()
 
-        $files = Get-ChildItem "$folderPath\*.sql" | Sort-Object Name
+    $matches = [regex]::Matches($content, "(FROM|JOIN|REFERENCES)\s+([\[\]\w\.]+)", "IgnoreCase")
 
-        foreach ($file in $files) {
+    foreach ($m in $matches) {
+        $deps += $m.Groups[2].Value.Replace("[","").Replace("]","")
+    }
 
-            $fileName   = $file.Name
-            $fileSafe   = $fileName.Replace("'","''")
-            $dbSafe     = $database.Replace("'","''")
-            $scriptHash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash
+    return $deps | Select-Object -Unique
+}
 
-            Write-Log "Executing $fileName..."
+function Resolve-ExecutionOrder {
+    param ($files)
 
-            $sqlContent = Get-Content $file.FullName -Raw
-            $sql = $sqlContent.ToUpper()
+    $graph = @{}
+    $nameMap = @{}
 
-            if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
-                Write-Log "BLOCKED SCRIPT: $fileName"
-                continue
+    foreach ($file in $files) {
+        $key = $file.FullName
+        $nameMap[$key] = $file
+        $graph[$key] = Get-SqlDependencies $file.FullName
+    }
+
+    $resolved = New-Object System.Collections.ArrayList
+    $unresolved = New-Object System.Collections.ArrayList
+
+    function Resolve($node) {
+        if ($resolved -contains $node) { return }
+
+        if ($unresolved -contains $node) {
+            throw "Circular dependency detected: $node"
+        }
+
+        [void]$unresolved.Add($node)
+
+        foreach ($dep in $graph[$node]) {
+            $depNode = $graph.Keys | Where-Object { $_ -match [regex]::Escape($dep) }
+
+            if ($depNode) {
+                Resolve $depNode
             }
+        }
 
-            if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
-                Write-Log "BLOCKED DELETE WITHOUT WHERE: $fileName"
-                continue
-            }
+        $unresolved.Remove($node)
+        [void]$resolved.Add($node)
+    }
 
-            $checkQuery = @"
+    foreach ($node in $graph.Keys) {
+        Resolve $node
+    }
+
+    return $resolved
+}
+# ================= COLLECT ALL FILES =================
+$allFiles = @()
+
+foreach ($folder in $folders) {
+    $folderPath = Join-Path $sqlPath $folder
+    if (Test-Path $folderPath) {
+        $allFiles += Get-ChildItem "$folderPath\*.sql"
+    }
+}
+
+# ================= RESOLVE DEPENDENCY ORDER =================
+$orderedPaths = Resolve-ExecutionOrder $allFiles
+
+foreach ($filePath in $orderedPaths) {
+
+    $file = Get-Item $filePath
+    $fileName   = $file.Name
+    $fileSafe   = $fileName.Replace("'","''")
+    $dbSafe     = $database.Replace("'","''")
+    $scriptHash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash
+
+    Write-Log "Executing (dependency) $fileName..."
+
+    $sqlContent = Get-Content $file.FullName -Raw
+    $sql = $sqlContent.ToUpper()
+
+    if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
+        Write-Log "BLOCKED SCRIPT: $fileName"
+        continue
+    }
+
+    if ($sql.Contains("DELETE FROM") -and -not ($sql.Contains("WHERE"))) {
+        Write-Log "BLOCKED DELETE WITHOUT WHERE: $fileName"
+        continue
+    }
+
+    $checkQuery = @"
 SET NOCOUNT ON;
 IF EXISTS (
  SELECT 1 FROM SchemaVersions
@@ -189,55 +253,55 @@ IF EXISTS (
 SELECT 1 ELSE SELECT 0
 "@
 
-            $check = sqlcmd -S $server -d $database -U $user -P $password -Q $checkQuery -h -1 -W | Out-String
+    $check = sqlcmd -S $server -d $database -U $user -P $password -Q $checkQuery -h -1 -W | Out-String
 
-            if (($check -replace "[^0-9]","") -eq "1") {
-                Write-Log "SKIPPING (already deployed): $fileName"
-                continue
-            }
+    if (($check -replace "[^0-9]","") -eq "1") {
+        Write-Log "SKIPPING (already deployed): $fileName"
+        continue
+    }
 
-            $start = Get-Date
-            $script:LastError = $false
+    $start = Get-Date
+    $script:LastError = $false
 
-            $usesGO = Test-UsesGO -content $sqlContent
+    $usesGO = Test-UsesGO -content $sqlContent
 
-            if ($usesGO) {
-                $output = sqlcmd -S $server -d $database -U $user -P $password -i $file.FullName -b 2>&1 | Out-String
-            }
-            else {
-                try {
-                    $output = Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $password -Query $sqlContent -ErrorAction Stop | Out-String
-                }
-                catch {
-                    $output = $_.Exception.Message
-                    $script:LastError = $true
-                }
-            }
-
-            $duration = ((Get-Date) - $start).TotalSeconds
-            Write-Log $output
-
-            if ($LASTEXITCODE -ne 0 -or $script:LastError) {
-
-                $safeOutput = $output.Replace("'", "''")
-
-                sqlcmd -S $server -d $database -U $user -P $password `
-                -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ApprovedBy,ApprovedOn,ExecutionTime)
-                    VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$safeOutput','$approvedBy','$approvedOn',$duration)"
-
-                throw "SQL FAILED: $fileName"
-            }
-
-            sqlcmd -S $server -d $database -U $user -P $password `
-            -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ApprovedBy,ApprovedOn,ExecutionTime)
-                VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS','$approvedBy','$approvedOn',$duration)"
-
-            Write-Log "$fileName executed in $duration sec"
+    if ($usesGO) {
+        $output = sqlcmd -S $server -d $database -U $user -P $password -i $file.FullName -b 2>&1 | Out-String
+    }
+    else {
+        try {
+            $output = Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $password -Query $sqlContent -ErrorAction Stop | Out-String
+        }
+        catch {
+            $output = $_.Exception.Message
+            $script:LastError = $true
         }
     }
 
-    Write-Log "===== SUCCESS: $database ====="
+    $duration = ((Get-Date) - $start).TotalSeconds
+    Write-Log $output
+
+    if ($LASTEXITCODE -ne 0 -or $script:LastError) {
+
+        $safeOutput = $output.Replace("'", "''")
+
+        sqlcmd -S $server -d $database -U $user -P $password `
+        -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ErrorMessage,ApprovedBy,ApprovedOn,ExecutionTime)
+            VALUES ('$fileSafe','$dbSafe','$scriptHash','FAILED','$safeOutput','$approvedBy','$approvedOn',$duration)"
+
+        throw "SQL FAILED: $fileName"
+    }
+
+    sqlcmd -S $server -d $database -U $user -P $password `
+    -Q "INSERT INTO SchemaVersions (ScriptName,DatabaseName,ScriptHash,Status,ApprovedBy,ApprovedOn,ExecutionTime)
+        VALUES ('$fileSafe','$dbSafe','$scriptHash','SUCCESS','$approvedBy','$approvedOn',$duration)"
+
+    Write-Log "$fileName executed in $duration sec"
 }
+ 
+
+    Write-Log "===== SUCCESS: $database ====="
+
 
 # ================= PARALLEL EXECUTION =================
 $global:DeploymentFailed = $false

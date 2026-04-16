@@ -1438,3 +1438,11 @@ There is already an object named 'DatabaseLog' in the database.
 2026-04-16 21:54:28 - ERROR: Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
 There is already an object named 'DatabaseLog' in the database.
 
+2026-04-16 22:59:17 - ===== START: DB6 =====
+2026-04-16 22:59:17 - Processing Folder: 01_Tables
+2026-04-16 22:59:17 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-16 22:59:17 - SKIPPING (already deployed): dbo.AdventureWorksDWBuildVersion.Table.sql
+2026-04-16 22:59:17 - Executing dbo.DatabaseLog.Table.sql...
+2026-04-16 22:59:17 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'DatabaseLog' in the database.
+
