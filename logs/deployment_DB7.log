@@ -747,3 +747,8 @@ There is already an object named 'DatabaseLog' in the database.
 2026-04-16 22:59:19 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
 There is already an object named 'DatabaseLog' in the database.
 
+2026-04-16 23:35:20 - ===== START: DB7 =====
+2026-04-16 23:35:20 - Executing (dependency) dbo.SQLServerTable.Table.sql...
+2026-04-16 23:35:21 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'SQLServerTable' in the database.
+
