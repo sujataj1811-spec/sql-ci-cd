@@ -871,3 +871,69 @@ Invalid object name 'dbo.vDMPrep'.
 2026-04-16 08:53:51 - ERROR: Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqOrders, Line 7
 Invalid object name 'dbo.vDMPrep'.
 
+2026-04-16 09:26:07 - ===== START: DB4 =====
+2026-04-16 09:26:07 - Processing Folder: 01_Tables
+2026-04-16 09:26:07 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-16 09:26:08 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:26:08 - Using sqlcmd (GO detected)
+2026-04-16 09:26:08 - 
+2026-04-16 09:26:08 - dbo.AdventureWorksDWBuildVersion.Table.sql executed in 0.3749243 sec
+2026-04-16 09:26:08 - Executing dbo.DatabaseLog.Table.sql...
+2026-04-16 09:26:08 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:26:08 - Using sqlcmd (GO detected)
+2026-04-16 09:26:08 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'DatabaseLog' in the database.
+
+2026-04-16 09:26:08 - ERROR: Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'DatabaseLog' in the database.
+
+2026-04-16 09:28:58 - ===== START: DB4 =====
+2026-04-16 09:28:58 - Processing Folder: 01_Tables
+2026-04-16 09:28:58 - Executing dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-16 09:28:58 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:58 - Using sqlcmd (GO detected)
+2026-04-16 09:28:58 - 
+2026-04-16 09:28:58 - dbo.AdventureWorksDWBuildVersion.Table.sql executed in 0.1058823 sec
+2026-04-16 09:28:58 - Executing dbo.DatabaseLog.Table.sql...
+2026-04-16 09:28:58 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:58 - Using sqlcmd (GO detected)
+2026-04-16 09:28:58 - 
+2026-04-16 09:28:58 - dbo.DatabaseLog.Table.sql executed in 0.060129 sec
+2026-04-16 09:28:58 - Executing dbo.DimAccount.Table.sql...
+2026-04-16 09:28:58 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:58 - Using sqlcmd (GO detected)
+2026-04-16 09:28:58 - 
+2026-04-16 09:28:58 - dbo.DimAccount.Table.sql executed in 0.0647835 sec
+2026-04-16 09:28:58 - Executing dbo.DimCurrency.Table.sql...
+2026-04-16 09:28:59 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:59 - Using sqlcmd (GO detected)
+2026-04-16 09:28:59 - 
+2026-04-16 09:28:59 - dbo.DimCurrency.Table.sql executed in 0.0613668 sec
+2026-04-16 09:28:59 - Executing dbo.DimCustomer.Table.sql...
+2026-04-16 09:28:59 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:59 - Using sqlcmd (GO detected)
+2026-04-16 09:28:59 - 
+2026-04-16 09:28:59 - dbo.DimCustomer.Table.sql executed in 0.143667 sec
+2026-04-16 09:28:59 - Executing dbo.DimDate.Table.sql...
+2026-04-16 09:28:59 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:59 - Using sqlcmd (GO detected)
+2026-04-16 09:28:59 - 
+2026-04-16 09:28:59 - dbo.DimDate.Table.sql executed in 0.0668149 sec
+2026-04-16 09:28:59 - Executing dbo.DimDepartmentGroup.Table.sql...
+2026-04-16 09:28:59 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:59 - Using sqlcmd (GO detected)
+2026-04-16 09:28:59 - 
+2026-04-16 09:28:59 - dbo.DimDepartmentGroup.Table.sql executed in 0.1474683 sec
+2026-04-16 09:28:59 - Executing dbo.DimEmployee.Table.sql...
+2026-04-16 09:28:59 - Execution Mode: sqlcmd (multi-batch)
+2026-04-16 09:28:59 - Using sqlcmd (GO detected)
+2026-04-16 09:28:59 - Msg 1767, Level 16, State 1, Server SUJATAJADHAV, Line 1
+Foreign key 'FK_DimEmployee_DimSalesTerritory' references invalid table 'dbo.DimSalesTerritory'.
+Msg 1750, Level 16, State 1, Server SUJATAJADHAV, Line 1
+Could not create constraint or index. See previous errors.
+
+2026-04-16 09:28:59 - ERROR: Msg 1767, Level 16, State 1, Server SUJATAJADHAV, Line 1
+Foreign key 'FK_DimEmployee_DimSalesTerritory' references invalid table 'dbo.DimSalesTerritory'.
+Msg 1750, Level 16, State 1, Server SUJATAJADHAV, Line 1
+Could not create constraint or index. See previous errors.
+
