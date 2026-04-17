@@ -169,7 +169,7 @@ function Split-ForeignKeys {
         TableSQL = $cleanTableSQL
         FKSQL    = $fkLines
     }
-}
+
 
     Write-Log "===== START: $database ====="
 
