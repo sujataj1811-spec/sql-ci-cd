@@ -125,7 +125,33 @@ function Split-ForeignKeys {
     foreach ($line in $lines) {
 
         # Detect start of FK constraint
-        if ($line -match "CONSTRAINT.*FOREIGN KEY" -or $line -match "FOREIGN KEY") {
+        function Split-ForeignKeys {
+    param ([string]$sqlContent)
+
+    # Extract FK constraints (table-level)
+    $fkMatches = [regex]::Matches($sqlContent, "CONSTRAINT\s+.*?FOREIGN\s+KEY.*?REFERENCES.*?\)", "Singleline,IgnoreCase")
+
+    $fkBlocks = @()
+    foreach ($m in $fkMatches) {
+        $fkBlocks += $m.Value
+    }
+
+    # Remove FK constraints from CREATE TABLE
+    $cleanSQL = $sqlContent
+
+    foreach ($fk in $fkBlocks) {
+        $cleanSQL = $cleanSQL.Replace($fk, "")
+    }
+
+    # Remove trailing commas before )
+    $cleanSQL = $cleanSQL -replace ",\s*\)", ")"
+
+    return @{
+        TableSQL = $cleanSQL
+        FKSQL    = $fkBlocks
+    }
+}
+ {
             $insideFK = $true
             $currentFK = $line
             continue
