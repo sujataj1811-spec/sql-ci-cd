@@ -937,3 +937,36 @@ There is already an object named 'SQLServerTable' in the database.
 2026-04-17 23:34:05 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
 There is already an object named 'SQLServerTable' in the database.
 
+2026-04-18 00:25:10 - ===== START: DB5 =====
+2026-04-18 00:25:11 - Executing (dependency) dbo.SQLServerTable.Table.sql...
+2026-04-18 00:25:11 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'SQLServerTable' in the database.
+
+2026-04-18 00:30:18 - ===== START: DB5 =====
+2026-04-18 00:30:19 - Executing (dependency) dbo.SQLServerTable.Table.sql...
+2026-04-18 00:30:19 - 
+2026-04-18 00:30:19 - dbo.SQLServerTable.Table.sql executed in 0.0984556 sec
+2026-04-18 00:30:19 - Executing (dependency) dbo.tblTransaction.Table.sql...
+2026-04-18 00:30:19 - 
+2026-04-18 00:30:19 - dbo.tblTransaction.Table.sql executed in 0.09507 sec
+2026-04-18 00:30:19 - Executing (dependency) dbo.udfTwoDigitZeroFill.UserDefinedFunction.sql...
+2026-04-18 00:30:20 - 
+2026-04-18 00:30:20 - dbo.udfTwoDigitZeroFill.UserDefinedFunction.sql executed in 0.0969849 sec
+2026-04-18 00:30:20 - Executing (dependency) dbo.ProspectiveBuyer.Table.sql...
+2026-04-18 00:30:20 - 
+2026-04-18 00:30:20 - dbo.ProspectiveBuyer.Table.sql executed in 0.119619 sec
+2026-04-18 00:30:20 - Executing (dependency) dbo.DimProductCategory.Table.sql...
+2026-04-18 00:30:20 - 
+2026-04-18 00:30:20 - dbo.DimProductCategory.Table.sql executed in 0.1078166 sec
+2026-04-18 00:30:20 - Executing (dependency) dbo.AdventureWorksDWBuildVersion.Table.sql...
+2026-04-18 00:30:21 - 
+2026-04-18 00:30:21 - dbo.AdventureWorksDWBuildVersion.Table.sql executed in 0.1036738 sec
+2026-04-18 00:30:21 - Executing (dependency) dbo.ProspectiveBuyer1.Table.sql...
+2026-04-18 00:30:21 - 
+2026-04-18 00:30:21 - dbo.ProspectiveBuyer1.Table.sql executed in 0.0959207 sec
+2026-04-18 00:30:21 - Executing (dependency) dbo.DimProduct.Table.sql...
+2026-04-18 00:30:21 - Msg 1767, Level 16, State 1, Server SUJATAJADHAV, Line 1
+Foreign key 'FK_DimProduct_DimProductSubcategory' references invalid table 'dbo.DimProductSubcategory'.
+Msg 1750, Level 16, State 1, Server SUJATAJADHAV, Line 1
+Could not create constraint or index. See previous errors.
+

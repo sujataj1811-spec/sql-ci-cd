@@ -117,34 +117,49 @@ function Split-ForeignKeys {
     $lines = $sqlContent -split "`r?`n"
 
     $tableLines = @()
-    $fkLines = @()
+    $fkBlocks = @()
 
-    $insideConstraint = $false
+    $insideFK = $false
     $currentFK = ""
 
     foreach ($line in $lines) {
 
-        if ($line -match "CONSTRAINT.*FOREIGN KEY") {
-            $insideConstraint = $true
+        # Detect start of FK constraint
+        if ($line -match "CONSTRAINT.*FOREIGN KEY" -or $line -match "FOREIGN KEY") {
+            $insideFK = $true
             $currentFK = $line
             continue
         }
 
-        if ($insideConstraint) {
-            $currentFK += " " + $line
+        if ($insideFK) {
+            $currentFK += "`n" + $line
 
+            # End when REFERENCES line closes
             if ($line -match "\)") {
-                $fkLines += $currentFK
-                $insideConstraint = $false
+                $fkBlocks += $currentFK
+                $insideFK = $false
             }
             continue
         }
 
+        # Remove inline FK (column-level)
         if ($line -match "FOREIGN KEY") {
-            $fkLines += $line
             continue
         }
 
+        $tableLines += $line
+    }
+
+    $cleanSQL = ($tableLines -join "`n")
+
+    # 🔥 Fix trailing comma issue
+    $cleanSQL = $cleanSQL -replace ",\s*\)", ")"
+
+    return @{
+        TableSQL = $cleanSQL
+        FKSQL    = $fkBlocks
+    }
+}
         $tableLines += $line
     }
 
@@ -360,7 +375,8 @@ SELECT 1 ELSE SELECT 0
 foreach ($fk in $fkList) {
 
     $fkQuery = @"
-ALTER TABLE $($file.BaseName.Replace(".Table",""))
+ALTER TABLE $($tableNameMatch = [regex]::Match($tableSQL, "CREATE TABLE\s+([\[\]\w\.]+)", "IgnoreCase")
+$tableName = $tableNameMatch.Groups[1].Value)
 ADD $fk
 "@
 
