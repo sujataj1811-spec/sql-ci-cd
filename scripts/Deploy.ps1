@@ -160,16 +160,6 @@ function Split-ForeignKeys {
         FKSQL    = $fkBlocks
     }
 }
-        $tableLines += $line
-    }
-
-    $cleanTableSQL = ($tableLines -join "`n")
-
-    return @{
-        TableSQL = $cleanTableSQL
-        FKSQL    = $fkLines
-    }
-
 
     Write-Log "===== START: $database ====="
 
@@ -368,10 +358,6 @@ SELECT 1 ELSE SELECT 0
     Write-Log "$fileName executed in $duration sec"
 }
  
-
-    Write-Log "===== SUCCESS: $database ====="
-}
-
 foreach ($fk in $fkList) {
 
     $fkQuery = @"
@@ -396,6 +382,10 @@ ADD $fk
         throw $_
     }
 }
+    Write-Log "===== SUCCESS: $database ====="
+}
+
+
 # ================= PARALLEL EXECUTION =================
 $global:DeploymentFailed = $false
 $jobs = New-Object System.Collections.ArrayList
