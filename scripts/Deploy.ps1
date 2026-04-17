@@ -111,6 +111,51 @@ param ($database, $server, $user, $password, $sqlPath, $logDir, $tempDir, $appro
         Add-Content -Path $logFile -Value "$time - $msg"
     }
 
+function Split-ForeignKeys {
+    param ([string]$sqlContent)
+
+    $lines = $sqlContent -split "`r?`n"
+
+    $tableLines = @()
+    $fkLines = @()
+
+    $insideConstraint = $false
+    $currentFK = ""
+
+    foreach ($line in $lines) {
+
+        if ($line -match "CONSTRAINT.*FOREIGN KEY") {
+            $insideConstraint = $true
+            $currentFK = $line
+            continue
+        }
+
+        if ($insideConstraint) {
+            $currentFK += " " + $line
+
+            if ($line -match "\)") {
+                $fkLines += $currentFK
+                $insideConstraint = $false
+            }
+            continue
+        }
+
+        if ($line -match "FOREIGN KEY") {
+            $fkLines += $line
+            continue
+        }
+
+        $tableLines += $line
+    }
+
+    $cleanTableSQL = ($tableLines -join "`n")
+
+    return @{
+        TableSQL = $cleanTableSQL
+        FKSQL    = $fkLines
+    }
+}
+
     Write-Log "===== START: $database ====="
 
     function Test-UsesGO {
@@ -233,6 +278,11 @@ foreach ($filePath in $orderedPaths) {
     Write-Log "Executing (dependency) $fileName..."
 
     $sqlContent = Get-Content $file.FullName -Raw
+
+$split = Split-ForeignKeys -sqlContent $sqlContent
+
+$tableSQL = $split.TableSQL
+$fkList   = $split.FKSQL
     $sql = $sqlContent.ToUpper()
 
     if ($sql.Contains("DROP DATABASE") -or $sql.Contains("TRUNCATE TABLE")) {
@@ -274,7 +324,7 @@ SELECT 1 ELSE SELECT 0
     }
     else {
         try {
-            $output = Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $password -Query $sqlContent -ErrorAction Stop | Out-String
+            $output = Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $password -Query $tableSQL -ErrorAction Stop | Out-String
         }
         catch {
             $output = $_.Exception.Message
@@ -307,6 +357,29 @@ SELECT 1 ELSE SELECT 0
     Write-Log "===== SUCCESS: $database ====="
 }
 
+foreach ($fk in $fkList) {
+
+    $fkQuery = @"
+ALTER TABLE $($file.BaseName.Replace(".Table",""))
+ADD $fk
+"@
+
+    try {
+        Invoke-Sqlcmd `
+            -ServerInstance $server `
+            -Database $database `
+            -Username $user `
+            -Password $password `
+            -Query $fkQuery `
+            -ErrorAction Stop | Out-Null
+
+        Write-Log "FK Applied: $fk"
+    }
+    catch {
+        Write-Log "FK FAILED: $fk"
+        throw $_
+    }
+}
 # ================= PARALLEL EXECUTION =================
 $global:DeploymentFailed = $false
 $jobs = New-Object System.Collections.ArrayList

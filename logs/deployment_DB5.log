@@ -922,3 +922,18 @@ Id Name   Age
 2026-04-16 23:43:39 - dbo.NewFactCurrencyRate.Table.sql executed in 0.2944434 sec
 2026-04-16 23:43:39 - ===== SUCCESS: DB5 =====
 2026-04-16 23:50:56 - ===== START: DB5 =====
+2026-04-17 00:04:33 - ===== START: DB5 =====
+2026-04-17 00:04:34 - Executing (dependency) dbo.SQLServerTable.Table.sql...
+2026-04-17 00:04:34 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'SQLServerTable' in the database.
+
+2026-04-17 00:14:16 - ===== START: DB5 =====
+2026-04-17 00:14:17 - Executing (dependency) dbo.SQLServerTable.Table.sql...
+2026-04-17 00:14:17 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'SQLServerTable' in the database.
+
+2026-04-17 23:34:04 - ===== START: DB5 =====
+2026-04-17 23:34:05 - Executing (dependency) dbo.SQLServerTable.Table.sql...
+2026-04-17 23:34:05 - Msg 2714, Level 16, State 6, Server SUJATAJADHAV, Line 1
+There is already an object named 'SQLServerTable' in the database.
+
