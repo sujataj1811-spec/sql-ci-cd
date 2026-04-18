@@ -27,7 +27,7 @@ IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = '$schema')
 
     Write-Output "✔ Schema ensured: $schema"
 }
-
+}
 # ================= STEP 2: LOAD FILES =================
 
 $folders = @(
