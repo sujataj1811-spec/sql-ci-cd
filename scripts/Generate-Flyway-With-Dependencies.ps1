@@ -10,6 +10,7 @@ if (!(Test-Path $migrationPath)) {
 }
 
 # ================= STEP 1: ENSURE SCHEMAS =================
+
 Write-Output "===== STEP 1: SCHEMA BOOTSTRAP ====="
 
 $schemas = @("dbo", "HumanResources", "Sales", "Person", "Production")
@@ -42,13 +43,16 @@ $allFiles = @()
 foreach ($folder in $folders) {
     $path = Join-Path $basePath $folder
     if (Test-Path $path) {
-        $allFiles += Get-ChildItem "$path\*.sql"
+        $files = Get-ChildItem -Path $path -Filter *.sql -ErrorAction SilentlyContinue
+        if ($files) {
+            $allFiles += $files
+        }
     }
 }
 
 Write-Output "Total SQL files found: $($allFiles.Count)"
 
-# ================= STEP 3: SIMPLE SAFE ORDER =================
+# ================= STEP 3: SORT FILES =================
 
 $orderMap = @{
     "01_Tables"     = 1
@@ -60,11 +64,13 @@ $orderMap = @{
 
 $sortedFiles = $allFiles | Sort-Object {
     $order = 99
+
     foreach ($key in $orderMap.Keys) {
         if ($_.FullName -match $key) {
             $order = $orderMap[$key]
         }
     }
+
     $order
 }
 
@@ -73,7 +79,6 @@ $sortedFiles = $allFiles | Sort-Object {
 Write-Output "===== STEP 4: EXECUTION START ====="
 
 foreach ($file in $sortedFiles) {
-
     try {
         Write-Output "Executing: $($file.Name)"
 
