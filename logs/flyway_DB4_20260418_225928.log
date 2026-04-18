@@ -1,0 +1,7 @@
+2026-04-18 22:59:28 - ===== START DB: DB4 =====
+2026-04-18 22:59:29 - Checking: V1__baseline_schema.sql
+2026-04-18 22:59:29 - Skipping already applied: V1__baseline_schema.sql
+2026-04-18 22:59:29 - Checking: V20260418225928__dbo_SQLServerTable_Table.sql
+2026-04-18 22:59:29 - Executing: V20260418225928__dbo_SQLServerTable_Table.sql
+2026-04-18 22:59:29 - There is already an object named 'SQLServerTable' in the database.
+2026-04-18 22:59:29 - FAILED: V20260418225928__dbo_SQLServerTable_Table.sql
