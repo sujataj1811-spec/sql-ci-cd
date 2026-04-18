@@ -27,7 +27,7 @@ jobs:
         shell: powershell
         run: |
           Write-Host "===== STEP 2: Generate Dependencies ====="
-         cd $env:GITHUB_WORKSPACE
+          cd $env:GITHUB_WORKSPACE
           .\scripts\Generate-Flyway-With-Dependencies.ps1
 
       # ================= STEP 3 =================
