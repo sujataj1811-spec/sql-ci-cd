@@ -52,10 +52,24 @@ END
 
 sqlcmd -S $server -d $database -U $user -P $password -Q $historyTable
 
+# ================= DATABASE LIST =================
+$dbListFile = Join-Path $basePath "scripts\databases.txt"
+
+if (!(Test-Path $dbListFile)) {
+    throw "databases.txt not found!"
+}
+
+$databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
+
 # ================= GET MIGRATIONS =================
 $migrations = Get-ChildItem "$migrationPath\V*.sql" | Sort-Object Name
 
-foreach ($file in $migrations) {
+foreach ($database in $databases) {
+
+    Write-Log "===== Deploying to Database: $database ====="
+
+    foreach ($file in $migrations) {
+ {
 
     $fileName = $file.Name
 
@@ -72,6 +86,7 @@ foreach ($file in $migrations) {
     $checksum = (Get-FileHash $file.FullName -Algorithm SHA256).Hash
 
     Write-Log "Checking: $fileName"
+}
 
     # ================= CHECK ALREADY EXECUTED =================
     $checkQuery = @"
