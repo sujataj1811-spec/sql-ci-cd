@@ -35,10 +35,17 @@ function Get-Dependencies {
     $content = Get-Content $file.FullName -Raw
     $deps = @()
 
-    # Find FROM / JOIN references
-    $matches = [regex]::Matches($content, "(FROM|JOIN)\s+([\[\]\w]+\.[\[\]\w]+)", "IgnoreCase")
+    # Match schema + table/view
+    $matches1 = [regex]::Matches($content, "(FROM|JOIN)\s+([\[\]\w]+\.[\[\]\w]+)", "IgnoreCase")
 
-    foreach ($m in $matches) {
+    # Match without schema (VERY IMPORTANT)
+    $matches2 = [regex]::Matches($content, "(FROM|JOIN)\s+([\[\]\w]+)", "IgnoreCase")
+
+    foreach ($m in $matches1) {
+        $deps += $m.Groups[2].Value.Replace("[","").Replace("]","")
+    }
+
+    foreach ($m in $matches2) {
         $deps += $m.Groups[2].Value.Replace("[","").Replace("]","")
     }
 
@@ -73,7 +80,9 @@ function Resolve($node) {
     foreach ($dep in $graph[$node]) {
 
         # Match dependency file
-        $depNode = $graph.Keys | Where-Object { $_ -like "*$dep*" } | Select-Object -First 1
+        $depNode = $graph.Keys | Where-Object {
+    (Split-Path $_ -Leaf) -like "*$dep*"
+} | Select-Object -First 1
 
         if ($depNode) {
             Resolve $depNode
