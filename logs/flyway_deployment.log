@@ -1,0 +1,190 @@
+2026-04-18 11:15:52 - Checking: V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql
+2026-04-18 11:15:53 - Executing: V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql
+2026-04-18 11:15:53 - 
+2026-04-18 11:15:53 - SUCCESS: V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql (0.2158612 sec)
+2026-04-18 11:15:53 - Checking: V20260418111349__dbo_DatabaseLog_Table.sql
+2026-04-18 11:15:53 - Executing: V20260418111349__dbo_DatabaseLog_Table.sql
+2026-04-18 11:15:53 - 
+2026-04-18 11:15:54 - SUCCESS: V20260418111349__dbo_DatabaseLog_Table.sql (0.1984829 sec)
+2026-04-18 11:15:54 - Checking: V20260418111350__dbo_DimAccount_Table.sql
+2026-04-18 11:15:54 - Executing: V20260418111350__dbo_DimAccount_Table.sql
+2026-04-18 11:15:54 - 
+2026-04-18 11:15:54 - SUCCESS: V20260418111350__dbo_DimAccount_Table.sql (0.2019087 sec)
+2026-04-18 11:15:54 - Checking: V20260418111351__dbo_DimCurrency_Table.sql
+2026-04-18 11:15:54 - Executing: V20260418111351__dbo_DimCurrency_Table.sql
+2026-04-18 11:15:55 - 
+2026-04-18 11:15:55 - SUCCESS: V20260418111351__dbo_DimCurrency_Table.sql (0.2261689 sec)
+2026-04-18 11:15:55 - Checking: V20260418111352__dbo_DimCustomer_Table.sql
+2026-04-18 11:15:55 - Executing: V20260418111352__dbo_DimCustomer_Table.sql
+2026-04-18 11:15:55 - 
+2026-04-18 11:15:55 - SUCCESS: V20260418111352__dbo_DimCustomer_Table.sql (0.1471706 sec)
+2026-04-18 11:15:55 - Checking: V20260418111353__dbo_DimDate_Table.sql
+2026-04-18 11:15:55 - Executing: V20260418111353__dbo_DimDate_Table.sql
+2026-04-18 11:15:56 - 
+2026-04-18 11:15:56 - SUCCESS: V20260418111353__dbo_DimDate_Table.sql (0.2187975 sec)
+2026-04-18 11:15:56 - Checking: V20260418111354__dbo_DimDepartmentGroup_Table.sql
+2026-04-18 11:15:56 - Executing: V20260418111354__dbo_DimDepartmentGroup_Table.sql
+2026-04-18 11:15:56 - 
+2026-04-18 11:15:56 - SUCCESS: V20260418111354__dbo_DimDepartmentGroup_Table.sql (0.2103516 sec)
+2026-04-18 11:15:56 - Checking: V20260418111355__dbo_DimEmployee_Table.sql
+2026-04-18 11:15:57 - Executing: V20260418111355__dbo_DimEmployee_Table.sql
+2026-04-18 11:15:57 - 
+2026-04-18 11:15:57 - SUCCESS: V20260418111355__dbo_DimEmployee_Table.sql (0.1893994 sec)
+2026-04-18 11:15:57 - Checking: V20260418111356__dbo_DimGeography_Table.sql
+2026-04-18 11:15:57 - Executing: V20260418111356__dbo_DimGeography_Table.sql
+2026-04-18 11:15:57 - 
+2026-04-18 11:15:58 - SUCCESS: V20260418111356__dbo_DimGeography_Table.sql (0.2561973 sec)
+2026-04-18 11:15:58 - Checking: V20260418111357__dbo_DimOrganization_Table.sql
+2026-04-18 11:15:58 - Executing: V20260418111357__dbo_DimOrganization_Table.sql
+2026-04-18 11:15:58 - 
+2026-04-18 11:15:59 - SUCCESS: V20260418111357__dbo_DimOrganization_Table.sql (0.2892994 sec)
+2026-04-18 11:15:59 - Checking: V20260418111358__dbo_DimProduct_Table.sql
+2026-04-18 11:15:59 - Executing: V20260418111358__dbo_DimProduct_Table.sql
+2026-04-18 11:15:59 - 
+2026-04-18 11:15:59 - SUCCESS: V20260418111358__dbo_DimProduct_Table.sql (0.2484519 sec)
+2026-04-18 11:15:59 - Checking: V20260418111359__dbo_DimProductCategory_Table.sql
+2026-04-18 11:15:59 - Executing: V20260418111359__dbo_DimProductCategory_Table.sql
+2026-04-18 11:16:00 - 
+2026-04-18 11:16:00 - SUCCESS: V20260418111359__dbo_DimProductCategory_Table.sql (0.1356614 sec)
+2026-04-18 11:16:00 - Checking: V20260418111400__dbo_DimProductSubcategory_Table.sql
+2026-04-18 11:16:00 - Executing: V20260418111400__dbo_DimProductSubcategory_Table.sql
+2026-04-18 11:16:00 - 
+2026-04-18 11:16:00 - SUCCESS: V20260418111400__dbo_DimProductSubcategory_Table.sql (0.1806684 sec)
+2026-04-18 11:16:00 - Checking: V20260418111401__dbo_DimPromotion_Table.sql
+2026-04-18 11:16:00 - Executing: V20260418111401__dbo_DimPromotion_Table.sql
+2026-04-18 11:16:00 - 
+2026-04-18 11:16:01 - SUCCESS: V20260418111401__dbo_DimPromotion_Table.sql (0.1349371 sec)
+2026-04-18 11:16:01 - Checking: V20260418111402__dbo_DimReseller_Table.sql
+2026-04-18 11:16:01 - Executing: V20260418111402__dbo_DimReseller_Table.sql
+2026-04-18 11:16:01 - 
+2026-04-18 11:16:01 - SUCCESS: V20260418111402__dbo_DimReseller_Table.sql (0.1735648 sec)
+2026-04-18 11:16:01 - Checking: V20260418111403__dbo_DimSalesReason_Table.sql
+2026-04-18 11:16:01 - Executing: V20260418111403__dbo_DimSalesReason_Table.sql
+2026-04-18 11:16:01 - 
+2026-04-18 11:16:02 - SUCCESS: V20260418111403__dbo_DimSalesReason_Table.sql (0.1744745 sec)
+2026-04-18 11:16:02 - Checking: V20260418111404__dbo_DimSalesTerritory_Table.sql
+2026-04-18 11:16:02 - Executing: V20260418111404__dbo_DimSalesTerritory_Table.sql
+2026-04-18 11:16:02 - 
+2026-04-18 11:16:02 - SUCCESS: V20260418111404__dbo_DimSalesTerritory_Table.sql (0.178221 sec)
+2026-04-18 11:16:02 - Checking: V20260418111405__dbo_DimScenario_Table.sql
+2026-04-18 11:16:03 - Executing: V20260418111405__dbo_DimScenario_Table.sql
+2026-04-18 11:16:03 - 
+2026-04-18 11:16:03 - SUCCESS: V20260418111405__dbo_DimScenario_Table.sql (0.2835296 sec)
+2026-04-18 11:16:03 - Checking: V20260418111406__dbo_FactAdditionalInternationalProductDescription_Table.sql
+2026-04-18 11:16:03 - Executing: V20260418111406__dbo_FactAdditionalInternationalProductDescription_Table.sql
+2026-04-18 11:16:04 - 
+2026-04-18 11:16:04 - SUCCESS: V20260418111406__dbo_FactAdditionalInternationalProductDescription_Table.sql (0.3166718 sec)
+2026-04-18 11:16:04 - Checking: V20260418111407__dbo_FactCallCenter_Table.sql
+2026-04-18 11:16:04 - Executing: V20260418111407__dbo_FactCallCenter_Table.sql
+2026-04-18 11:16:04 - 
+2026-04-18 11:16:04 - SUCCESS: V20260418111407__dbo_FactCallCenter_Table.sql (0.178679 sec)
+2026-04-18 11:16:04 - Checking: V20260418111408__dbo_FactCurrencyRate_Table.sql
+2026-04-18 11:16:04 - Executing: V20260418111408__dbo_FactCurrencyRate_Table.sql
+2026-04-18 11:16:05 - 
+2026-04-18 11:16:05 - SUCCESS: V20260418111408__dbo_FactCurrencyRate_Table.sql (0.1214296 sec)
+2026-04-18 11:16:05 - Checking: V20260418111409__dbo_FactFinance_Table.sql
+2026-04-18 11:16:05 - Executing: V20260418111409__dbo_FactFinance_Table.sql
+2026-04-18 11:16:05 - 
+2026-04-18 11:16:05 - SUCCESS: V20260418111409__dbo_FactFinance_Table.sql (0.2201526 sec)
+2026-04-18 11:16:05 - Checking: V20260418111410__dbo_FactInternetSales_Table.sql
+2026-04-18 11:16:06 - Executing: V20260418111410__dbo_FactInternetSales_Table.sql
+2026-04-18 11:16:06 - 
+2026-04-18 11:16:06 - SUCCESS: V20260418111410__dbo_FactInternetSales_Table.sql (0.281616 sec)
+2026-04-18 11:16:06 - Checking: V20260418111411__dbo_FactInternetSalesReason_Table.sql
+2026-04-18 11:16:06 - Executing: V20260418111411__dbo_FactInternetSalesReason_Table.sql
+2026-04-18 11:16:07 - 
+2026-04-18 11:16:07 - SUCCESS: V20260418111411__dbo_FactInternetSalesReason_Table.sql (0.2898964 sec)
+2026-04-18 11:16:07 - Checking: V20260418111412__dbo_FactProductInventory_Table.sql
+2026-04-18 11:16:07 - Executing: V20260418111412__dbo_FactProductInventory_Table.sql
+2026-04-18 11:16:07 - 
+2026-04-18 11:16:08 - SUCCESS: V20260418111412__dbo_FactProductInventory_Table.sql (0.270357 sec)
+2026-04-18 11:16:08 - Checking: V20260418111413__dbo_FactResellerSales_Table.sql
+2026-04-18 11:16:08 - Executing: V20260418111413__dbo_FactResellerSales_Table.sql
+2026-04-18 11:16:08 - 
+2026-04-18 11:16:08 - SUCCESS: V20260418111413__dbo_FactResellerSales_Table.sql (0.1361117 sec)
+2026-04-18 11:16:08 - Checking: V20260418111414__dbo_FactSalesQuota_Table.sql
+2026-04-18 11:16:08 - Executing: V20260418111414__dbo_FactSalesQuota_Table.sql
+2026-04-18 11:16:08 - 
+2026-04-18 11:16:08 - SUCCESS: V20260418111414__dbo_FactSalesQuota_Table.sql (0.1407142 sec)
+2026-04-18 11:16:08 - Checking: V20260418111415__dbo_FactSurveyResponse_Table.sql
+2026-04-18 11:16:09 - Executing: V20260418111415__dbo_FactSurveyResponse_Table.sql
+2026-04-18 11:16:09 - 
+2026-04-18 11:16:09 - SUCCESS: V20260418111415__dbo_FactSurveyResponse_Table.sql (0.1696353 sec)
+2026-04-18 11:16:09 - Checking: V20260418111416__dbo_NewFactCurrencyRate_Table.sql
+2026-04-18 11:16:09 - Executing: V20260418111416__dbo_NewFactCurrencyRate_Table.sql
+2026-04-18 11:16:09 - 
+2026-04-18 11:16:09 - SUCCESS: V20260418111416__dbo_NewFactCurrencyRate_Table.sql (0.1486208 sec)
+2026-04-18 11:16:09 - Checking: V20260418111417__dbo_ProspectiveBuyer_Table.sql
+2026-04-18 11:16:09 - Executing: V20260418111417__dbo_ProspectiveBuyer_Table.sql
+2026-04-18 11:16:09 - 
+2026-04-18 11:16:10 - SUCCESS: V20260418111417__dbo_ProspectiveBuyer_Table.sql (0.1301414 sec)
+2026-04-18 11:16:10 - Checking: V20260418111418__dbo_ProspectiveBuyer1_Table.sql
+2026-04-18 11:16:10 - Executing: V20260418111418__dbo_ProspectiveBuyer1_Table.sql
+2026-04-18 11:16:10 - 
+2026-04-18 11:16:10 - SUCCESS: V20260418111418__dbo_ProspectiveBuyer1_Table.sql (0.1403852 sec)
+2026-04-18 11:16:10 - Checking: V20260418111419__dbo_Prospects_Table.sql
+2026-04-18 11:16:10 - Executing: V20260418111419__dbo_Prospects_Table.sql
+2026-04-18 11:16:10 - 
+2026-04-18 11:16:10 - SUCCESS: V20260418111419__dbo_Prospects_Table.sql (0.1190053 sec)
+2026-04-18 11:16:10 - Checking: V20260418111420__dbo_SQLServerTable_Table.sql
+2026-04-18 11:16:10 - Executing: V20260418111420__dbo_SQLServerTable_Table.sql
+2026-04-18 11:16:11 - 
+2026-04-18 11:16:11 - SUCCESS: V20260418111420__dbo_SQLServerTable_Table.sql (0.1334168 sec)
+2026-04-18 11:16:11 - Checking: V20260418111421__dbo_tblDepartment_Table.sql
+2026-04-18 11:16:11 - Executing: V20260418111421__dbo_tblDepartment_Table.sql
+2026-04-18 11:16:11 - 
+2026-04-18 11:16:11 - SUCCESS: V20260418111421__dbo_tblDepartment_Table.sql (0.1412543 sec)
+2026-04-18 11:16:11 - Checking: V20260418111422__dbo_tblEmployee_Table.sql
+2026-04-18 11:16:11 - Executing: V20260418111422__dbo_tblEmployee_Table.sql
+2026-04-18 11:16:11 - 
+2026-04-18 11:16:11 - SUCCESS: V20260418111422__dbo_tblEmployee_Table.sql (0.1105137 sec)
+2026-04-18 11:16:11 - Checking: V20260418111423__dbo_tblTransaction_Table.sql
+2026-04-18 11:16:12 - Executing: V20260418111423__dbo_tblTransaction_Table.sql
+2026-04-18 11:16:12 - 
+2026-04-18 11:16:12 - SUCCESS: V20260418111423__dbo_tblTransaction_Table.sql (0.1009445 sec)
+2026-04-18 11:16:12 - Checking: V20260418111424__dbo_vAssocSeqLineItems_View.sql
+2026-04-18 11:16:12 - Executing: V20260418111424__dbo_vAssocSeqLineItems_View.sql
+2026-04-18 11:16:12 - Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqLineItems, Line 4
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-18 11:16:12 - SUCCESS: V20260418111424__dbo_vAssocSeqLineItems_View.sql (0.0894139 sec)
+2026-04-18 11:16:12 - Checking: V20260418111425__dbo_vAssocSeqOrders_View.sql
+2026-04-18 11:16:12 - Executing: V20260418111425__dbo_vAssocSeqOrders_View.sql
+2026-04-18 11:16:12 - Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vAssocSeqOrders, Line 7
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-18 11:16:12 - SUCCESS: V20260418111425__dbo_vAssocSeqOrders_View.sql (0.0948728 sec)
+2026-04-18 11:16:12 - Checking: V20260418111426__dbo_vDMPrep_View.sql
+2026-04-18 11:16:12 - Executing: V20260418111426__dbo_vDMPrep_View.sql
+2026-04-18 11:16:13 - Msg 207, Level 16, State 1, Server SUJATAJADHAV, Procedure vDMPrep, Line 46
+Invalid column name 'GeographyKey'.
+
+2026-04-18 11:16:13 - SUCCESS: V20260418111426__dbo_vDMPrep_View.sql (0.0968643 sec)
+2026-04-18 11:16:13 - Checking: V20260418111427__dbo_vTargetMail_View.sql
+2026-04-18 11:16:13 - Executing: V20260418111427__dbo_vTargetMail_View.sql
+2026-04-18 11:16:13 - Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vTargetMail, Line 54
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-18 11:16:13 - SUCCESS: V20260418111427__dbo_vTargetMail_View.sql (0.1009293 sec)
+2026-04-18 11:16:13 - Checking: V20260418111428__dbo_vTimeSeries_View.sql
+2026-04-18 11:16:13 - Executing: V20260418111428__dbo_vTimeSeries_View.sql
+2026-04-18 11:16:13 - Msg 208, Level 16, State 1, Server SUJATAJADHAV, Procedure vTimeSeries, Line 26
+Invalid object name 'dbo.vDMPrep'.
+
+2026-04-18 11:16:13 - SUCCESS: V20260418111428__dbo_vTimeSeries_View.sql (0.0866495 sec)
+2026-04-18 11:16:13 - Checking: V20260418111429__dbo_udfBuildISO8601Date_UserDefinedFunction.sql
+2026-04-18 11:16:13 - Executing: V20260418111429__dbo_udfBuildISO8601Date_UserDefinedFunction.sql
+2026-04-18 11:16:13 - 
+2026-04-18 11:16:14 - SUCCESS: V20260418111429__dbo_udfBuildISO8601Date_UserDefinedFunction.sql (0.0841829 sec)
+2026-04-18 11:16:14 - Checking: V20260418111430__dbo_udfMinimumDate_UserDefinedFunction.sql
+2026-04-18 11:16:14 - Executing: V20260418111430__dbo_udfMinimumDate_UserDefinedFunction.sql
+2026-04-18 11:16:14 - 
+2026-04-18 11:16:14 - SUCCESS: V20260418111430__dbo_udfMinimumDate_UserDefinedFunction.sql (0.112304 sec)
+2026-04-18 11:16:14 - Checking: V20260418111431__dbo_udfTwoDigitZeroFill_UserDefinedFunction.sql
+2026-04-18 11:16:14 - Executing: V20260418111431__dbo_udfTwoDigitZeroFill_UserDefinedFunction.sql
+2026-04-18 11:16:14 - 
+2026-04-18 11:16:14 - SUCCESS: V20260418111431__dbo_udfTwoDigitZeroFill_UserDefinedFunction.sql (0.074393 sec)
+2026-04-18 11:16:14 - Checking: V20260418111432__ddlDatabaseTriggerLog_DdlTrigger.sql
+2026-04-18 11:16:14 - Executing: V20260418111432__ddlDatabaseTriggerLog_DdlTrigger.sql
+2026-04-18 11:16:14 - 
+2026-04-18 11:16:14 - SUCCESS: V20260418111432__ddlDatabaseTriggerLog_DdlTrigger.sql (0.1264632 sec)

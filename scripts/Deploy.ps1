@@ -88,11 +88,21 @@ SELECT 1 ELSE SELECT 0
     }
 
     Write-Log "Executing: $fileName"
-
+Write-Host "Running on DB: $database"
     $start = Get-Date
 
     try {
-        $output = sqlcmd -S $server -U $user -P $password -i $file.FullName -b 2>&1 | Out-String
+    Invoke-Sqlcmd `
+        -ServerInstance $server `
+        -Database $database `
+        -Username $user `
+        -Password $password `
+        -InputFile $file.FullName `
+        -ErrorAction Stop
+}
+catch {
+    throw "SQL FAILED: $fileName - $($_.Exception.Message)"
+}
         $success = 1
     }
     catch {
