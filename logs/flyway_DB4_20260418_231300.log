@@ -1,0 +1,19 @@
+2026-04-18 23:13:00 - ===== START DB: DB4 =====
+2026-04-18 23:13:00 - Checking: V1__baseline_schema.sql
+2026-04-18 23:13:00 - Skipping already applied: V1__baseline_schema.sql
+2026-04-18 23:13:00 - Checking: R__functions.sql
+2026-04-18 23:13:00 - Executing: R__functions.sql
+2026-04-18 23:13:00 - 
+2026-04-18 23:13:00 - SUCCESS: R__functions.sql (0.2691355 sec)
+2026-04-18 23:13:00 - Checking: R__procedures.sql
+2026-04-18 23:13:00 - Executing: R__procedures.sql
+2026-04-18 23:13:00 - 
+2026-04-18 23:13:00 - SUCCESS: R__procedures.sql (0.0021614 sec)
+2026-04-18 23:13:00 - Checking: R__triggers.sql
+2026-04-18 23:13:00 - Executing: R__triggers.sql
+2026-04-18 23:13:00 - 
+2026-04-18 23:13:01 - SUCCESS: R__triggers.sql (0.0155719 sec)
+2026-04-18 23:13:01 - Checking: R__views.sql
+2026-04-18 23:13:01 - Executing: R__views.sql
+2026-04-18 23:13:01 - Invalid object name 'dbo.vDMPrep'.
+2026-04-18 23:13:01 - FAILED: R__views.sql
