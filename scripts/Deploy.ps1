@@ -10,6 +10,9 @@ $basePath      = Get-Location
 $migrationPath = Join-Path $basePath "migrations"
 $logDir        = "C:\ESD\sql-ci-cd\logs"
 
+# 👉 FIX: define database (was missing)
+$database = "master"   # change if needed
+
 if (!(Test-Path $logDir)) {
     New-Item -ItemType Directory -Path $logDir | Out-Null
 }
@@ -47,7 +50,7 @@ BEGIN
 END
 "@
 
-sqlcmd -S $server -U $user -P $password -Q $historyTable
+sqlcmd -S $server -d $database -U $user -P $password -Q $historyTable
 
 # ================= GET MIGRATIONS =================
 $migrations = Get-ChildItem "$migrationPath\V*.sql" | Sort-Object Name
@@ -70,7 +73,7 @@ foreach ($file in $migrations) {
 
     Write-Log "Checking: $fileName"
 
-    # Check already executed
+    # ================= CHECK ALREADY EXECUTED =================
     $checkQuery = @"
 SET NOCOUNT ON;
 IF EXISTS (
@@ -80,7 +83,7 @@ IF EXISTS (
 SELECT 1 ELSE SELECT 0
 "@
 
-    $exists = sqlcmd -S $server -U $user -P $password -Q $checkQuery -h -1 -W | Out-String
+    $exists = sqlcmd -S $server -d $database -U $user -P $password -Q $checkQuery -h -1 -W | Out-String
 
     if (($exists -replace "[^0-9]","") -eq "1") {
         Write-Log "Skipping (already applied): $fileName"
@@ -88,22 +91,20 @@ SELECT 1 ELSE SELECT 0
     }
 
     Write-Log "Executing: $fileName"
-Write-Host "Running on DB: $database"
+    Write-Host "Running on DB: $database"
+
     $start = Get-Date
+    $output = ""
+    $success = 1   # assume success
 
     try {
-    Invoke-Sqlcmd `
-        -ServerInstance $server `
-        -Database $database `
-        -Username $user `
-        -Password $password `
-        -InputFile $file.FullName `
-        -ErrorAction Stop
-}
-catch {
-    throw "SQL FAILED: $fileName - $($_.Exception.Message)"
-}
-        $success = 1
+        $output = Invoke-Sqlcmd `
+            -ServerInstance $server `
+            -Database $database `
+            -Username $user `
+            -Password $password `
+            -InputFile $file.FullName `
+            -ErrorAction Stop | Out-String
     }
     catch {
         $output = $_.Exception.Message
@@ -116,6 +117,7 @@ catch {
 
     $safeOutput = $output.Replace("'", "''")
 
+    # ================= INSERT HISTORY =================
     $insertQuery = @"
 INSERT INTO FlywaySchemaHistory
 (Version, Description, ScriptName, Checksum, InstalledBy, ExecutionTime, Success)
@@ -123,7 +125,7 @@ VALUES
 ('$version', '$desc', '$fileName', '$checksum', '$env:USERNAME', $duration, $success)
 "@
 
-    sqlcmd -S $server -U $user -P $password -Q $insertQuery
+    sqlcmd -S $server -d $database -U $user -P $password -Q $insertQuery
 
     if ($success -eq 0) {
         Write-Log "FAILED: $fileName"
