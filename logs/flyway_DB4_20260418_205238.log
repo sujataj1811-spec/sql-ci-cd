@@ -1,0 +1,5 @@
+2026-04-18 20:52:38 - ===== Deploying to Database: DB4 =====
+2026-04-18 20:52:39 - Checking: V1__baseline_schema.sql
+2026-04-18 20:52:39 - Executing: V1__baseline_schema.sql
+2026-04-18 20:52:39 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
+2026-04-18 20:52:39 - FAILED: V1__baseline_schema.sql

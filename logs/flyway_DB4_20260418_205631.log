@@ -1,0 +1,9 @@
+2026-04-18 20:56:31 - ===== Deploying to Database: DB4 =====
+2026-04-18 20:56:32 - Checking: V1__baseline_schema.sql
+2026-04-18 20:56:33 - Executing: V1__baseline_schema.sql
+2026-04-18 20:56:34 - 
+2026-04-18 20:56:34 - SUCCESS: V1__baseline_schema.sql (1.0380833 sec)
+2026-04-18 20:56:34 - Checking: V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql
+2026-04-18 20:56:34 - Executing: V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql
+2026-04-18 20:56:34 - There is already an object named 'AdventureWorksDWBuildVersion' in the database.
+2026-04-18 20:56:35 - FAILED: V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql
