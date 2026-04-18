@@ -23,12 +23,12 @@ jobs:
           .\scripts\Convert-To-Production-Flyway.ps1
 
       # ================= STEP 2 =================
-      #- name: Step 2 - Generate Dependencies
-      #  shell: powershell
-      #  run: |
-      #    Write-Host "===== STEP 2: Generate Dependencies ====="
-      #   cd $env:GITHUB_WORKSPACE
-      #    .\scripts\Generate-Flyway-With-Dependencies.ps1
+      - name: Step 2 - Generate Dependencies
+        shell: powershell
+        run: |
+          Write-Host "===== STEP 2: Generate Dependencies ====="
+         cd $env:GITHUB_WORKSPACE
+          .\scripts\Generate-Flyway-With-Dependencies.ps1
 
       # ================= STEP 3 =================
       - name: Step 3 - Deploy Scripts
