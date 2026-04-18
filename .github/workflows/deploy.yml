@@ -10,16 +10,35 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      # ================= CHECKOUT =================
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run Deploy Script
+      # ================= STEP 1 =================
+      - name: Step 1 - Convert Flyway Structure
+        shell: powershell
+        run: |
+          Write-Host "===== STEP 1: Convert To Production Flyway ====="
+          cd $env:GITHUB_WORKSPACE
+          .\scripts\Convert-To-Production-Flyway.ps1
+
+      # ================= STEP 2 =================
+      - name: Step 2 - Generate Dependencies
+        shell: powershell
+        run: |
+          Write-Host "===== STEP 2: Generate Dependencies ====="
+          cd $env:GITHUB_WORKSPACE
+          .\scripts\Generate-Flyway-With-Dependencies.ps1
+
+      # ================= STEP 3 =================
+      - name: Step 3 - Deploy Scripts
         shell: powershell
         env:
           DB_SERVER: ${{ secrets.DB_SERVER }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
+          Write-Host "===== STEP 3: Deploy Starting ====="
           Write-Host "SERVER=$env:DB_SERVER"
           Write-Host "USER=$env:DB_USER"
 
@@ -33,6 +52,7 @@ jobs:
 
           .\scripts\Deploy.ps1
 
+      # ================= LOG UPLOAD =================
       - name: Upload Logs
         if: always()
         uses: actions/upload-artifact@v4
