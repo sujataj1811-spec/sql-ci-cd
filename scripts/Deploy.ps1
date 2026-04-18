@@ -13,16 +13,8 @@ $logDir        = "C:\ESD\sql-ci-cd\logs"
 if (!(Test-Path $logDir)) {
     New-Item -ItemType Directory -Path $logDir | Out-Null
 }
-$timeStamp = Get-Date -Format "yyyyMMdd_HHmmss"
-$logFile = Join-Path $logDir "flyway_${database}_$timeStamp.log"
 
-foreach ($database in $databases) {
-
-    # 🔥 Create separate log per DB
-    $logFile = Join-Path $logDir "flyway_$database.log"
-
-    Write-Log "===== Deploying to Database: $database ====="
-
+# ================= LOG FUNCTION =================
 function Write-Log {
     param ($msg)
     $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -48,11 +40,16 @@ $databases = Get-Content $dbListFile | Where-Object { $_.Trim() -ne "" }
 # ================= GET MIGRATIONS =================
 $migrations = Get-ChildItem "$migrationPath\V*.sql" | Sort-Object Name
 
+# ================= MAIN LOOP =================
 foreach ($database in $databases) {
+
+    # ✅ Separate log per DB (with timestamp)
+    $timeStamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    $logFile = Join-Path $logDir "flyway_${database}_$timeStamp.log"
 
     Write-Log "===== Deploying to Database: $database ====="
 
-    # ✅ Create history table INSIDE each DB
+    # ================= CREATE HISTORY TABLE =================
     $historyTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'FlywaySchemaHistory')
 BEGIN
@@ -72,11 +69,12 @@ END
 
     sqlcmd -S $server -d $database -U $user -P $password -Q $historyTable
 
+    # ================= MIGRATION LOOP =================
     foreach ($file in $migrations) {
 
         $fileName = $file.Name
 
-        # Parse version and description
+        # Parse version
         if ($fileName -match "^V(\d+)__(.+)\.sql$") {
             $version = $matches[1]
             $desc    = $matches[2].Replace("_"," ")
@@ -90,7 +88,7 @@ END
 
         Write-Log "Checking: $fileName"
 
-        # ================= CHECK ALREADY EXECUTED =================
+        # ================= CHECK HISTORY =================
         $checkQuery = @"
 SET NOCOUNT ON;
 IF EXISTS (
@@ -129,7 +127,6 @@ SELECT 1 ELSE SELECT 0
         }
 
         $duration = ((Get-Date) - $start).TotalSeconds
-
         Write-Log $output
 
         $safeOutput = $output.Replace("'", "''")
@@ -151,6 +148,8 @@ VALUES
 
         Write-Log "SUCCESS: $fileName ($duration sec)"
     }
+
+    Write-Log "===== Completed DB: $database ====="
 }
 
 Write-Output "===== Deployment Completed Successfully ====="
