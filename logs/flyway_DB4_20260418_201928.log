@@ -1,0 +1,77 @@
+2026-04-18 20:19:28 - ===== Deploying to Database: DB4 =====
+2026-04-18 20:19:29 - Checking: V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111348__dbo_AdventureWorksDWBuildVersion_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111349__dbo_DatabaseLog_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111349__dbo_DatabaseLog_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111350__dbo_DimAccount_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111350__dbo_DimAccount_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111351__dbo_DimCurrency_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111351__dbo_DimCurrency_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111352__dbo_DimCustomer_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111352__dbo_DimCustomer_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111353__dbo_DimDate_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111353__dbo_DimDate_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111354__dbo_DimDepartmentGroup_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111354__dbo_DimDepartmentGroup_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111355__dbo_DimEmployee_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111355__dbo_DimEmployee_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111356__dbo_DimGeography_Table.sql
+2026-04-18 20:19:29 - Skipping (already applied): V20260418111356__dbo_DimGeography_Table.sql
+2026-04-18 20:19:29 - Checking: V20260418111357__dbo_DimOrganization_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111357__dbo_DimOrganization_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111358__dbo_DimProduct_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111358__dbo_DimProduct_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111359__dbo_DimProductCategory_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111359__dbo_DimProductCategory_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111400__dbo_DimProductSubcategory_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111400__dbo_DimProductSubcategory_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111401__dbo_DimPromotion_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111401__dbo_DimPromotion_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111402__dbo_DimReseller_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111402__dbo_DimReseller_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111403__dbo_DimSalesReason_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111403__dbo_DimSalesReason_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111404__dbo_DimSalesTerritory_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111404__dbo_DimSalesTerritory_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111405__dbo_DimScenario_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111405__dbo_DimScenario_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111406__dbo_FactAdditionalInternationalProductDescription_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111406__dbo_FactAdditionalInternationalProductDescription_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111407__dbo_FactCallCenter_Table.sql
+2026-04-18 20:19:30 - Skipping (already applied): V20260418111407__dbo_FactCallCenter_Table.sql
+2026-04-18 20:19:30 - Checking: V20260418111408__dbo_FactCurrencyRate_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111408__dbo_FactCurrencyRate_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111409__dbo_FactFinance_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111409__dbo_FactFinance_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111410__dbo_FactInternetSales_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111410__dbo_FactInternetSales_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111411__dbo_FactInternetSalesReason_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111411__dbo_FactInternetSalesReason_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111412__dbo_FactProductInventory_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111412__dbo_FactProductInventory_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111413__dbo_FactResellerSales_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111413__dbo_FactResellerSales_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111414__dbo_FactSalesQuota_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111414__dbo_FactSalesQuota_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111415__dbo_FactSurveyResponse_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111415__dbo_FactSurveyResponse_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111416__dbo_NewFactCurrencyRate_Table.sql
+2026-04-18 20:19:31 - Skipping (already applied): V20260418111416__dbo_NewFactCurrencyRate_Table.sql
+2026-04-18 20:19:31 - Checking: V20260418111417__dbo_ProspectiveBuyer_Table.sql
+2026-04-18 20:19:32 - Skipping (already applied): V20260418111417__dbo_ProspectiveBuyer_Table.sql
+2026-04-18 20:19:32 - Checking: V20260418111418__dbo_ProspectiveBuyer1_Table.sql
+2026-04-18 20:19:32 - Skipping (already applied): V20260418111418__dbo_ProspectiveBuyer1_Table.sql
+2026-04-18 20:19:32 - Checking: V20260418111419__dbo_Prospects_Table.sql
+2026-04-18 20:19:32 - Skipping (already applied): V20260418111419__dbo_Prospects_Table.sql
+2026-04-18 20:19:32 - Checking: V20260418111420__dbo_SQLServerTable_Table.sql
+2026-04-18 20:19:32 - Skipping (already applied): V20260418111420__dbo_SQLServerTable_Table.sql
+2026-04-18 20:19:32 - Checking: V20260418111421__dbo_tblDepartment_Table.sql
+2026-04-18 20:19:32 - Skipping (already applied): V20260418111421__dbo_tblDepartment_Table.sql
+2026-04-18 20:19:32 - Checking: V20260418111422__dbo_tblEmployee_Table.sql
+2026-04-18 20:19:32 - Skipping (already applied): V20260418111422__dbo_tblEmployee_Table.sql
+2026-04-18 20:19:32 - Checking: V20260418111423__dbo_tblTransaction_Table.sql
+2026-04-18 20:19:32 - Skipping (already applied): V20260418111423__dbo_tblTransaction_Table.sql
+2026-04-18 20:19:32 - Checking: V20260418111424__dbo_vAssocSeqLineItems_View.sql
+2026-04-18 20:19:32 - Executing: V20260418111424__dbo_vAssocSeqLineItems_View.sql
+2026-04-18 20:19:33 - Invalid object name 'dbo.vDMPrep'.
+2026-04-18 20:19:33 - FAILED: V20260418111424__dbo_vAssocSeqLineItems_View.sql
