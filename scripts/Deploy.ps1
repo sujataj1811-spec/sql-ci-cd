@@ -54,7 +54,10 @@ $orderedGroups = @(
     "V12"
 )
 
-
+# ================= LOAD VERSIONED FILES IN ORDER =================
+$migrationsV = foreach ($prefix in $orderedGroups) {
+    Get-SafeFiles "$prefix*.sql"
+}
 
 # ================= DB LIST =================
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
