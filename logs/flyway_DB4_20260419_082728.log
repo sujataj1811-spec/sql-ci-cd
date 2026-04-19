@@ -1,0 +1,14 @@
+2026-04-19 08:27:28 - ===== START DB: DB4 =====
+2026-04-19 08:27:28 - Checking: V1__schemas.sql
+2026-04-19 08:27:28 - Executing: V1__schemas.sql
+2026-04-19 08:27:29 - 
+2026-04-19 08:27:29 - SUCCESS: V1__schemas.sql (0.8090184 sec)
+2026-04-19 08:27:29 - Checking: V2__types.sql
+2026-04-19 08:27:29 - Executing: V2__types.sql
+2026-04-19 08:27:29 - 
+2026-04-19 08:27:29 - SUCCESS: V2__types.sql (0.0482075 sec)
+2026-04-19 08:27:29 - Skipping invalid file: V2_1__xml_schema_collections.sql
+2026-04-19 08:27:29 - Checking: V3__tables.sql
+2026-04-19 08:27:30 - Executing: V3__tables.sql
+2026-04-19 08:27:30 - Collection specified does not exist in metadata : 'HumanResources.HRResumeSchemaCollection'
+2026-04-19 08:27:31 - FAILED: V3__tables.sql

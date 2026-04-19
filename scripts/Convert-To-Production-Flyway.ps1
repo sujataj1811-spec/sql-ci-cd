@@ -69,21 +69,20 @@ foreach ($m in $typeMatches) {
     if ($content -match "XML") {
         Write-Output "XML keyword found in $($file.FullName)"
     }
-# ================= XML SCHEMA COLLECTIONS (FIXED) =================
+# ================= XML SCHEMA COLLECTION EXTRACTION =================
 
 if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
 
-    Write-Output "XML Schema found in $($file.Name)"
+    Write-Output "✔ XML Schema detected in $($file.Name)"
 
-    # Extract full CREATE XML block (safe multiline)
-    $xmlMatch = [regex]::Match(
+    $matches = [regex]::Matches(
         $content,
-        "CREATE\s+XML\s+SCHEMA\s+COLLECTION[\s\S]+?GO",
+        "CREATE\s+XML\s+SCHEMA\s+COLLECTION\s+[\[\]\w\.]+\s+AS\s+N?'[\s\S]*?'",
         "IgnoreCase"
     )
 
-    if ($xmlMatch.Success) {
-        Add-ContentSafe "V2_1__xml_schema_collections.sql" $xmlMatch.Value
+    foreach ($match in $matches) {
+        Add-ContentSafe "V2_1__xml_schema_collections.sql" ($match.Value + "`nGO")
     }
 }
     # ================= CLASSIFY FILE =================
