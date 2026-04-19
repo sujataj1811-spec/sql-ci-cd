@@ -37,25 +37,20 @@ function Get-SafeFiles($pattern) {
     return @()
 }
 
-
 # ===== ENTERPRISE ORDER FIX =====
 $orderedGroups = @(
-    "V1","V2","V3","V4","V5","V6","V7","V8","V9","V10","V11","V12"
+    "V1","V2","V3","V4","V5","V6",
+    "V7","V8","V9","V10","V11","V12"
 )
 
-# ✅ ADD THIS RIGHT HERE 👇
+# ================= LOAD VERSIONED FILES IN ORDER =================
 $migrationsV = @()
 
 foreach ($prefix in $orderedGroups) {
     $files = Get-SafeFiles "$prefix*.sql"
-    $migrationsV += $files
-}
-
-
-
-# ================= LOAD VERSIONED FILES IN ORDER =================
-$migrationsV = foreach ($prefix in $orderedGroups) {
-    Get-SafeFiles "$prefix*.sql"
+    if ($files) {
+        $migrationsV += $files
+    }
 }
 
 # ================= DB LIST =================
@@ -73,10 +68,10 @@ function Run-Script {
 
     $fileName = $file.Name
 
-if ($fileName -match "^V(\d+)__(.+)\.sql$") {
-    $version = $matches[1]
-    $desc = $matches[2].Replace("_"," ")
-}
+    if ($fileName -match "^V(\d+)__(.+)\.sql$") {
+        $version = $matches[1]
+        $desc = $matches[2].Replace("_"," ")
+    }
     elseif ($fileName -match "^R__(.+)\.sql$") {
         $version = "R"
         $desc = $matches[1].Replace("_"," ")
@@ -148,17 +143,7 @@ VALUES
 }
 
 # ================= MAIN EXECUTION =================
-foreach ($file in $migrationsV)
 foreach ($db in $databases) {
-
-    Write-Log "===== START DB: $db ====="
-
-    foreach ($file in $migrationsV) {
-        Run-Script $file $db
-    }
-
-   } 
-{
 
     $timeStamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $logFile = Join-Path $logDir "flyway_${db}_$timeStamp.log"
@@ -189,7 +174,6 @@ END
     foreach ($file in $migrationsV) {
         Run-Script $file $db
     }
-
 
     Write-Log "===== END DB: $db ====="
 }
