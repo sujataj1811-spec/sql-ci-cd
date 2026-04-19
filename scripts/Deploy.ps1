@@ -40,19 +40,18 @@ function Get-SafeFiles($pattern) {
 
 # ===== ENTERPRISE ORDER FIX =====
 $orderedGroups = @(
-    "V1",
-    "V2",
-    "V3",
-    "V4",
-    "V5",
-    "V6",
-    "V7",
-    "V8",
-    "V9",
-    "V10",
-    "V11",
-    "V12"
+    "V1","V2","V3","V4","V5","V6","V7","V8","V9","V10","V11","V12"
 )
+
+# ✅ ADD THIS RIGHT HERE 👇
+$migrationsV = @()
+
+foreach ($prefix in $orderedGroups) {
+    $files = Get-SafeFiles "$prefix*.sql"
+    $migrationsV += $files
+}
+
+
 
 # ================= LOAD VERSIONED FILES IN ORDER =================
 $migrationsV = foreach ($prefix in $orderedGroups) {
@@ -149,6 +148,7 @@ VALUES
 }
 
 # ================= MAIN EXECUTION =================
+foreach ($file in $migrationsV)
 foreach ($db in $databases) {
 
     $timeStamp = Get-Date -Format "yyyyMMdd_HHmmss"
