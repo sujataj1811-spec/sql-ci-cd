@@ -46,7 +46,17 @@ $order = & "$env:GITHUB_WORKSPACE\scripts\Build-Dependency-Engine-V3.ps1"
 
 $migrationsV = Get-Content ".\execution-order.txt" |
     ForEach-Object {
-        Get-Item (Join-Path $migrationPath $_)
+        $migrationsV = Get-Content ".\execution-order.txt" |
+ForEach-Object {
+    $path = Join-Path $migrationPath $_
+
+    if (Test-Path $path) {
+        Get-Item $path
+    }
+    else {
+        Write-Host "⚠ Missing file skipped: $_"
+    }
+} | Where-Object { $_ -ne $null }
     }
 
 Write-Output "===== ORDER RESOLVED: $($migrationsV.Count) FILES ====="

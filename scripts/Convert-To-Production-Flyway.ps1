@@ -51,7 +51,18 @@ function Add-ContentSafe($key, $text) {
 $allFiles = Get-ChildItem -Path $basePath -Recurse -Filter *.sql -File -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -notmatch "\\migrations\\" }
 
+$executionList = @()
+
 foreach ($file in $allFiles) {
+
+    if (Test-Path $file.FullName) {
+        $executionList += $file.Name
+    }
+    else {
+        Write-Host "Skipping missing file: $($file.FullName)"
+    }
+}
+ {
 
     $content = Get-Content $file.FullName -Raw
 
