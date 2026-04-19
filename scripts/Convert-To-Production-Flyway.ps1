@@ -1,15 +1,15 @@
+   
+
 Write-Output "===== ENTERPRISE FLYWAY CONVERSION STARTED ====="
 
-# ================= BASE PATH (IMPORTANT FIX) =================
-$basePath = Split-Path -Parent $MyInvocation.MyCommand.Path
-if (-not $basePath) { $basePath = Split-Path -Parent $MyInvocation.MyCommand.Path }
-
+$basePath = Get-Location  
 $migrationPath = Join-Path $basePath "migrations"
 
-# Clean output
+ # Clean output
 if (Test-Path $migrationPath) {
-    Remove-Item -Recurse -Force $migrationPath
-}
+		Remove-Item -Recurse -Force $migrationPath
+ }
+
 New-Item -ItemType Directory -Path $migrationPath | Out-Null
 
 # ================= STORAGE =================
