@@ -1,17 +1,17 @@
-Write-Output "===== AUTO FLYWAY CONVERSION (SAFE MODE) ====="
+Write-Output "===== ENTERPRISE FLYWAY CONVERSION STARTED ====="
 
 $basePath = Get-Location
 $migrationPath = Join-Path $basePath "migrations"
 
-# Clean migrations
+# Clean output
 if (Test-Path $migrationPath) {
     Remove-Item -Recurse -Force $migrationPath
 }
 New-Item -ItemType Directory -Path $migrationPath | Out-Null
 
 # ================= STORAGE =================
-$schemas = @()
-$types   = @()
+$schemas = New-Object System.Collections.Generic.HashSet[string]
+$types   = New-Object System.Collections.Generic.HashSet[string]
 
 $files = @{
     "V1__schemas.sql" = ""
@@ -29,9 +29,8 @@ $files = @{
 }
 
 function Add-ContentSafe($key, $text) {
-    if ($text -and $text.Trim() -ne "") {
-        $files[$key] += "`n$text`nGO`n"
-    }
+    if ([string]::IsNullOrWhiteSpace($text)) { return }
+    $files[$key] += "`r`n" + $text + "`r`nGO`r`n"
 }
 
 # ================= LOAD FILES =================
@@ -41,42 +40,42 @@ foreach ($file in $allFiles) {
 
     $content = Get-Content $file.FullName -Raw
 
-    # ================= SCHEMA EXTRACTION (SAFE) =================
-    $schemaMatches = [regex]::Matches($content, "\b(\w+)\.\w+")
+    # ================= SAFE SCHEMA DETECTION =================
+    # ONLY real SQL object patterns: [schema].[object]
+    $schemaMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[")
 
     foreach ($m in $schemaMatches) {
-        $schema = $m.Groups[1].Value
-
-        if ($schema -and $schema -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$") {
-            $schemas += $schema
-        }
+        $schemas.Add($m.Groups[1].Value) | Out-Null
     }
 
-    # ================= TYPE EXTRACTION =================
-    $typeMatches = [regex]::Matches($content, "\[(\w+)\]\.\[(\w+)\]")
+    # ================= SAFE TYPE DETECTION =================
+    $typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
 
     foreach ($m in $typeMatches) {
+
         $schema = $m.Groups[1].Value
         $name   = $m.Groups[2].Value
 
+        # only user-defined types
         if ($schema -eq "dbo") {
-            $types += "$schema.$name"
+
+            if ($name -notmatch "^(int|bigint|smallint|tinyint|bit|nvarchar|varchar|datetime|decimal|float|uniqueidentifier)$") {
+                $types.Add("$schema.$name") | Out-Null
+            }
         }
     }
 
     # ================= XML SCHEMA COLLECTION =================
     if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
 
-        Write-Output "XML Schema found in $($file.Name)"
-
-        $xmlMatches = [regex]::Matches(
+        $matches = [regex]::Matches(
             $content,
             "CREATE\s+XML\s+SCHEMA\s+COLLECTION\s+[\[\]\w\.]+\s+AS\s+N?'[\s\S]*?'",
             "IgnoreCase"
         )
 
-        foreach ($m in $xmlMatches) {
-            Add-ContentSafe "V3__xml_schema_collections.sql" $m.Value
+        foreach ($match in $matches) {
+            Add-ContentSafe "V3__xml_schema_collections.sql" $match.Value
         }
     }
 
@@ -103,37 +102,29 @@ foreach ($file in $allFiles) {
     }
 
     elseif ($file.FullName -match "02_Views") {
-        $c = $content -replace "CREATE\s+VIEW", "CREATE OR ALTER VIEW"
-        Add-ContentSafe "R__views.sql" $c
+        Add-ContentSafe "R__views.sql" ($content -replace "CREATE\s+VIEW", "CREATE OR ALTER VIEW")
     }
 
     elseif ($file.FullName -match "03_Procedures") {
-        $c = $content -replace "CREATE\s+PROCEDURE", "CREATE OR ALTER PROCEDURE"
-        Add-ContentSafe "R__procedures.sql" $c
+        Add-ContentSafe "R__procedures.sql" ($content -replace "CREATE\s+PROCEDURE", "CREATE OR ALTER PROCEDURE")
     }
 
     elseif ($file.FullName -match "04_Functions") {
-        $c = $content -replace "CREATE\s+FUNCTION", "CREATE OR ALTER FUNCTION"
-        Add-ContentSafe "R__functions.sql" $c
+        Add-ContentSafe "R__functions.sql" ($content -replace "CREATE\s+FUNCTION", "CREATE OR ALTER FUNCTION")
     }
 
     elseif ($file.FullName -match "05_Triggers") {
-        $c = $content -replace "CREATE\s+TRIGGER", "CREATE OR ALTER TRIGGER"
-        Add-ContentSafe "R__triggers.sql" $c
+        Add-ContentSafe "R__triggers.sql" ($content -replace "CREATE\s+TRIGGER", "CREATE OR ALTER TRIGGER")
     }
 }
 
-# ===== BUILD SCHEMA FILE =====
-$schemas = $schemas |
-    Where-Object { $_ -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$" } |
-    Select-Object -Unique
-
+# ================= SCHEMAS OUTPUT =================
 foreach ($s in $schemas) {
 
-    if (-not $s) { continue }
+    if ([string]::IsNullOrWhiteSpace($s)) { continue }
 
     $files["V1__schemas.sql"] += @"
-IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')
+IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = '$s')
 BEGIN
     EXEC('CREATE SCHEMA [$s]');
 END
@@ -142,10 +133,10 @@ GO
 "@
 }
 
-# ================= BUILD TYPES =================
-foreach ($t in ($types | Select-Object -Unique)) {
+# ================= TYPES OUTPUT =================
+foreach ($t in $types) {
 
-    if (-not $t) { continue }
+    if ([string]::IsNullOrWhiteSpace($t)) { continue }
 
     $parts = $t.Split('.')
     if ($parts.Count -ne 2) { continue }
@@ -172,4 +163,4 @@ foreach ($k in $files.Keys) {
     Write-Output "Created $k"
 }
 
-Write-Output "===== AUTO CONVERSION COMPLETED ====="
+Write-Output "===== ENTERPRISE FLYWAY CONVERSION COMPLETED ====="
