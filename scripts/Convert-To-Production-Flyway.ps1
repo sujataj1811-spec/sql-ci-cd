@@ -29,25 +29,18 @@ $fileOrder = @(
     "V12__triggers.sql"
 )
 
-$files = @{}
 function Add-ContentSafe($key, $text) {
 
     if ([string]::IsNullOrWhiteSpace($text)) { return }
 
-    # clean extra whitespace
     $clean = $text.Trim()
 
-    # ensure proper GO separation
+    # ensure safe separation
+    if (-not $files.ContainsKey($key)) {
+        $files[$key] = ""
+    }
+
     $files[$key] += "`r`n$clean`r`nGO`r`n"
-}
-
-foreach ($f in $fileOrder) {
-    $files[$f] = ""
-}
-
-function Add-ContentSafe($key, $text) {
-    if ([string]::IsNullOrWhiteSpace($text)) { return }
-    $files[$key] += "`r`n" + $text + "`r`nGO`r`n"
 }
 
 # ================= LOAD SQL FILES =================
@@ -160,7 +153,11 @@ GO
 }
 
 # ================= WRITE FILES =================
-foreach ($k in $fileOrder) {
+foreach ($k in $files.Keys) {
+    $files[$k] = $files[$k] -replace "GO\s*IF", "GO`r`nIF"
+    $files[$k] = $files[$k] -replace "GOIF", "GO`r`nIF"
+}
+ {
 
     $path = Join-Path $migrationPath $k
     Set-Content -Path $path -Value $files[$k] -Encoding UTF8
