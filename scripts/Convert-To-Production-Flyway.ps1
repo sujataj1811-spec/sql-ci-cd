@@ -15,11 +15,12 @@ $types = @()
 $files = @{
     "V1__schemas.sql" = ""
     "V2__types.sql" = ""
-    "V2_1__xml_schema_collections.sql" = ""
-    "V3__tables.sql" = ""
-    "V5__foreign_keys.sql" = ""
-    "V6__constraints.sql" = ""
-    "V7__indexes.sql" = ""
+    "V3__xml_schema_collections.sql" = ""
+    "V4__tables.sql" = ""
+    "V5__primary_keys.sql" = ""
+    "V6__foreign_keys.sql" = ""
+    "V7__constraints.sql" = ""
+    "V8__indexes.sql" = ""
     "R__views.sql" = ""
     "R__procedures.sql" = ""
     "R__functions.sql" = ""
@@ -71,39 +72,51 @@ foreach ($file in $allFiles) {
         )
 
         foreach ($match in $matches) {
-            Add-ContentSafe "V2_1__xml_schema_collections.sql" $match.Value
+            Add-ContentSafe "V3__xml_schema_collections.sql" $match.Value
         }
     }
 
-    # ===== CLASSIFY =====
+    # ===== TABLES =====
     if ($file.FullName -match "01_Tables") {
 
-        Add-ContentSafe "V3__tables.sql" $content
+        Add-ContentSafe "V4__tables.sql" $content
 
+        # PRIMARY KEY
+        if ($content -match "PRIMARY\s+KEY") {
+            Add-ContentSafe "V5__primary_keys.sql" $content
+        }
+
+        # FOREIGN KEY
         if ($content -match "FOREIGN\s+KEY") {
-            Add-ContentSafe "V5__foreign_keys.sql" $content
+            Add-ContentSafe "V6__foreign_keys.sql" $content
         }
 
+        # DEFAULT / CHECK
         if ($content -match "DEFAULT|CHECK") {
-            Add-ContentSafe "V6__constraints.sql" $content
+            Add-ContentSafe "V7__constraints.sql" $content
         }
 
+        # INDEX
         if ($content -match "INDEX") {
-            Add-ContentSafe "V7__indexes.sql" $content
+            Add-ContentSafe "V8__indexes.sql" $content
         }
     }
+
     elseif ($file.FullName -match "02_Views") {
         $c = $content -replace "CREATE\s+VIEW", "CREATE OR ALTER VIEW"
         Add-ContentSafe "R__views.sql" $c
     }
+
     elseif ($file.FullName -match "03_Procedures") {
         $c = $content -replace "CREATE\s+PROCEDURE", "CREATE OR ALTER PROCEDURE"
         Add-ContentSafe "R__procedures.sql" $c
     }
+
     elseif ($file.FullName -match "04_Functions") {
         $c = $content -replace "CREATE\s+FUNCTION", "CREATE OR ALTER FUNCTION"
         Add-ContentSafe "R__functions.sql" $c
     }
+
     elseif ($file.FullName -match "05_Triggers") {
         $c = $content -replace "CREATE\s+TRIGGER", "CREATE OR ALTER TRIGGER"
         Add-ContentSafe "R__triggers.sql" $c
