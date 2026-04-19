@@ -54,20 +54,15 @@ $executionList = @()
 
 foreach ($file in $allFiles) {
 
-    if (Test-Path $file.FullName) {
-        $executionList += $file.Name
-    }
-    else {
+    if (-not (Test-Path $file.FullName)) {
         Write-Host "Skipping missing file: $($file.FullName)"
+        continue
     }
-}
- {
 
     $content = Get-Content $file.FullName -Raw
 
     # ================= SCHEMAS =================
     $schemaMatches = [regex]::Matches($content, "(?:\[(\w+)\]\.|\b(\w+)\.)")
-
     foreach ($m in $schemaMatches) {
         $schema = $m.Groups[1].Value
         if (-not $schema) { $schema = $m.Groups[2].Value }
