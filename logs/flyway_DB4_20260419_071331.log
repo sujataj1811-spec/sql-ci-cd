@@ -1,0 +1,9 @@
+2026-04-19 07:13:31 - ===== START DB: DB4 =====
+2026-04-19 07:13:31 - Checking: V1__schemas.sql
+2026-04-19 07:13:31 - Executing: V1__schemas.sql
+2026-04-19 07:13:32 - 
+2026-04-19 07:13:32 - SUCCESS: V1__schemas.sql (0.535597 sec)
+2026-04-19 07:13:32 - Checking: V2__types.sql
+2026-04-19 07:13:32 - Executing: V2__types.sql
+2026-04-19 07:13:32 - The specified schema name "OrganizationNode" either does not exist or you do not have permission to use it.
+2026-04-19 07:13:32 - FAILED: V2__types.sql

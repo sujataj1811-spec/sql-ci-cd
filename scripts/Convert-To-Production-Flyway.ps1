@@ -44,17 +44,23 @@ foreach ($file in $allFiles) {
         $schemas += $m.Groups[1].Value
     }
 
-   # ================= EXTRACT TYPES (FIXED) =================
+# ================= EXTRACT TYPES (STRICT SAFE) =================
 
 $typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
 
 foreach ($m in $typeMatches) {
-    $schema = $m.Groups[1].Value
-    $typeName = $m.Groups[2].Value
 
-    # Ignore common system types
-    if ($typeName -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float") {
-        $types += "$schema.$typeName"
+    $schema = $m.Groups[1].Value
+    $name = $m.Groups[2].Value
+
+    # ONLY allow dbo custom types (VERY IMPORTANT)
+    if ($schema -eq "dbo") {
+
+        # ignore system types
+        if ($name -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float|hierarchyid|uniqueidentifier") {
+
+            $types += "$schema.$name"
+        }
     }
 }
 
@@ -108,11 +114,7 @@ GO
 "
 }
 
-# ================= BUILD TYPES FILE =================
-
-$types = $types | Select-Object -Unique
-
-foreach ($t in $types) {
+foreach ($t in $types | Select-Object -Unique) {
 
     $schema, $name = $t.Split('.')
 
