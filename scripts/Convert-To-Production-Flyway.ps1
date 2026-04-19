@@ -36,15 +36,14 @@ foreach ($f in $fileOrder) {
 }
 
 function Add-ContentSafe($key, $text) {
-    if ([string]::IsNullOrWhiteSpace($text)) { return }
 
-    $clean = $text.Trim()
+    if ([string]::IsNullOrWhiteSpace($text)) { return }
 
     if (-not $files.ContainsKey($key)) {
         $files[$key] = ""
     }
 
-    $files[$key] += "`r`n$clean`r`nGO`r`n"
+    $files[$key] += "`r`n" + $text.Trim() + "`r`nGO`r`n"
 }
 
 # ================= LOAD SQL FILES =================
