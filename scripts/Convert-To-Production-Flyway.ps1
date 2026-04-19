@@ -9,9 +9,10 @@ if (Test-Path $migrationPath) {
 }
 New-Item -ItemType Directory -Path $migrationPath | Out-Null
 
-# Storage
+# ================= STORAGE =================
 $schemas = @()
-$types = @()
+$types   = @()
+
 $files = @{
     "V1__schemas.sql" = ""
     "V2__types.sql" = ""
@@ -29,7 +30,7 @@ $files = @{
 
 function Add-ContentSafe($key, $text) {
     if ($text -and $text.Trim() -ne "") {
-        $files[$key] += "`n" + $text + "`nGO`n"
+        $files[$key] += "`n$text`nGO`n"
     }
 }
 
@@ -40,79 +41,62 @@ foreach ($file in $allFiles) {
 
     $content = Get-Content $file.FullName -Raw
 
-$schemas = $schemas |
-    Where-Object {
-        $_ -notmatch "dbo|sys|INFORMATION_SCHEMA"
-    } |
-    Select-Object -Unique
-# ===== SCHEMA EXTRACT (FIXED) =====
+    # ================= SCHEMA EXTRACTION (SAFE) =================
+    $schemaMatches = [regex]::Matches($content, "\b(\w+)\.\w+")
 
-# Match [schema].[object]
-$schemaMatches1 = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[")
+    foreach ($m in $schemaMatches) {
+        $schema = $m.Groups[1].Value
 
-foreach ($m in $schemaMatches1) {
-    $schemas += $m.Groups[1].Value
-}
+        if ($schema -and $schema -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$") {
+            $schemas += $schema
+        }
+    }
 
-# Match schema.object (fallback)
-$schemaMatches2 = [regex]::Matches($content, "\b(\w+)\.(\w+)")
+    # ================= TYPE EXTRACTION =================
+    $typeMatches = [regex]::Matches($content, "\[(\w+)\]\.\[(\w+)\]")
 
-foreach ($m in $schemaMatches2) {
-    $schemas += $m.Groups[1].Value
-}
+    foreach ($m in $typeMatches) {
+        $schema = $m.Groups[1].Value
+        $name   = $m.Groups[2].Value
 
-# ===== TYPE EXTRACT (NO CHANGE NEEDED) =====
-$typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
-
-foreach ($m in $typeMatches) {
-
-    $schema = $m.Groups[1].Value
-    $name = $m.Groups[2].Value
-
-    if ($schema -eq "dbo") {
-        if ($name -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float|hierarchyid|uniqueidentifier") {
+        if ($schema -eq "dbo") {
             $types += "$schema.$name"
         }
     }
-}
 
-    # ===== XML SCHEMA COLLECTION =====
+    # ================= XML SCHEMA COLLECTION =================
     if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
 
-        Write-Output ("XML Schema found in " + $file.Name)
+        Write-Output "XML Schema found in $($file.Name)"
 
-        $matches = [regex]::Matches(
+        $xmlMatches = [regex]::Matches(
             $content,
             "CREATE\s+XML\s+SCHEMA\s+COLLECTION\s+[\[\]\w\.]+\s+AS\s+N?'[\s\S]*?'",
             "IgnoreCase"
         )
 
-        foreach ($match in $matches) {
-            Add-ContentSafe "V3__xml_schema_collections.sql" $match.Value
+        foreach ($m in $xmlMatches) {
+            Add-ContentSafe "V3__xml_schema_collections.sql" $m.Value
         }
     }
 
-    # ===== TABLES =====
+    # ================= TABLES =================
     if ($file.FullName -match "01_Tables") {
 
         Add-ContentSafe "V4__tables.sql" $content
 
-        # PRIMARY KEY
         if ($content -match "PRIMARY\s+KEY") {
             Add-ContentSafe "V5__primary_keys.sql" $content
         }
 
-        # FOREIGN KEY
         if ($content -match "FOREIGN\s+KEY") {
             Add-ContentSafe "V6__foreign_keys.sql" $content
         }
 
-        # DEFAULT / CHECK
         if ($content -match "DEFAULT|CHECK") {
             Add-ContentSafe "V7__constraints.sql" $content
         }
 
-        # INDEX
         if ($content -match "INDEX") {
             Add-ContentSafe "V8__indexes.sql" $content
         }
@@ -139,39 +123,42 @@ foreach ($m in $typeMatches) {
     }
 }
 
-# ===== BUILD SCHEMA FILE =====
+# ================= BUILD SCHEMAS =================
 $schemas = $schemas |
-    Where-Object {
-        $_ -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$"
-    } |
+    Where-Object { $_ -and $_ -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$" } |
     Select-Object -Unique
 
 foreach ($s in $schemas) {
-    $sql = "IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')`n"
-    $sql += "EXEC('CREATE SCHEMA [$s]');`nGO`n"
-    $files["V1__schemas.sql"] += $sql
+    $files["V1__schemas.sql"] += @"
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')
+EXEC('CREATE SCHEMA [$s]');
+GO
+"@
 }
 
-# ===== BUILD TYPES FILE =====
+# ================= BUILD TYPES =================
 foreach ($t in $types | Select-Object -Unique) {
 
     $parts = $t.Split('.')
     $schema = $parts[0]
     $name = $parts[1]
 
-    $sql = "IF TYPE_ID('$schema.$name') IS NULL`n"
-    $sql += "BEGIN`n"
-    $sql += "    EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');`n"
-    $sql += "END`nGO`n"
-
-    $files["V2__types.sql"] += $sql
+    $files["V2__types.sql"] += @"
+IF TYPE_ID('$schema.$name') IS NULL
+BEGIN
+    EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');
+END
+GO
+"@
 }
 
-# ===== WRITE FILES =====
+# ================= WRITE FILES =================
 foreach ($k in $files.Keys) {
+
     $path = Join-Path $migrationPath $k
     Set-Content -Path $path -Value $files[$k]
-    Write-Output ("Created " + $k)
+
+    Write-Output "Created $k"
 }
 
 Write-Output "===== AUTO CONVERSION COMPLETED ====="
