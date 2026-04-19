@@ -62,7 +62,7 @@ foreach ($file in $allFiles) {
     # ===== XML SCHEMA COLLECTION =====
     if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
 
-        Write-Output ("✔ XML Schema found in " + $file.Name)
+        Write-Output ("XML Schema found in " + $file.Name)
 
         $matches = [regex]::Matches(
             $content,
