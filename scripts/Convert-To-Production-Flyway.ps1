@@ -157,11 +157,12 @@ GO
 }
 
 # ================= WRITE FILES =================
-foreach ($k in $files.Keys) {
+$keys = @($files.Keys)
+
+foreach ($k in $keys) {
+
     $files[$k] = $files[$k] -replace "GO\s*IF", "GO`r`nIF"
     $files[$k] = $files[$k] -replace "GOIF", "GO`r`nIF"
-}
- {
 
     $path = Join-Path $migrationPath $k
     Set-Content -Path $path -Value $files[$k] -Encoding UTF8
