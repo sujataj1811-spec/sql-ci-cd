@@ -37,14 +37,24 @@ function Get-SafeFiles($pattern) {
     return @()
 }
 
-# ================= LOAD FILES =================
-$migrationsV = Get-SafeFiles "V*.sql" | Sort-Object Name
-$migrationsR = Get-SafeFiles "R*.sql" | Sort-Object Name
 
-if ($migrationsV.Count -eq 0 -and $migrationsR.Count -eq 0) {
-    Write-Host "⚠ No migration files found. Exiting safely."
-    exit 0
-}
+# ===== ENTERPRISE ORDER FIX =====
+$orderedGroups = @(
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12"
+)
+
+
 
 # ================= DB LIST =================
 $dbListFile = Join-Path $basePath "scripts\databases.txt"
@@ -61,10 +71,10 @@ function Run-Script {
 
     $fileName = $file.Name
 
-    if ($fileName -match "^V(\d+)__(.+)\.sql$") {
-        $version = $matches[1]
-        $desc = $matches[2].Replace("_"," ")
-    }
+if ($fileName -match "^V(\d+)__(.+)\.sql$") {
+    $version = $matches[1]
+    $desc = $matches[2].Replace("_"," ")
+}
     elseif ($fileName -match "^R__(.+)\.sql$") {
         $version = "R"
         $desc = $matches[1].Replace("_"," ")
@@ -168,10 +178,6 @@ END
         Run-Script $file $db
     }
 
-    # RUN REPEATABLE (always)
-    foreach ($file in $migrationsR) {
-        Run-Script $file $db
-    }
 
     Write-Log "===== END DB: $db ====="
 }
