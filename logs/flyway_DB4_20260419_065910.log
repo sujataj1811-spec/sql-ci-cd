@@ -1,0 +1,13 @@
+2026-04-19 06:59:10 - ===== START DB: DB4 =====
+2026-04-19 06:59:10 - Checking: V1__schemas.sql
+2026-04-19 06:59:11 - Executing: V1__schemas.sql
+2026-04-19 06:59:12 - 
+2026-04-19 06:59:12 - SUCCESS: V1__schemas.sql (0.9906099 sec)
+2026-04-19 06:59:12 - Checking: V2__types.sql
+2026-04-19 06:59:12 - Executing: V2__types.sql
+2026-04-19 06:59:12 - 
+2026-04-19 06:59:12 - SUCCESS: V2__types.sql (0.0045583 sec)
+2026-04-19 06:59:12 - Checking: V3__tables.sql
+2026-04-19 06:59:12 - Executing: V3__tables.sql
+2026-04-19 06:59:12 - Column, parameter, or variable #2: Cannot find data type dbo.Name.
+2026-04-19 06:59:12 - FAILED: V3__tables.sql

@@ -44,13 +44,19 @@ foreach ($file in $allFiles) {
         $schemas += $m.Groups[1].Value
     }
 
-    # ================= EXTRACT TYPES =================
-    $typeMatches = [regex]::Matches($content, "\b(\w+)\.(\w+)\b")
-    foreach ($m in $typeMatches) {
-        if ($m.Groups[2].Value -eq "Name") {
-            $types += $m.Groups[2].Value
-        }
+   # ================= EXTRACT TYPES (FIXED) =================
+
+$typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
+
+foreach ($m in $typeMatches) {
+    $schema = $m.Groups[1].Value
+    $typeName = $m.Groups[2].Value
+
+    # Ignore common system types
+    if ($typeName -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float") {
+        $types += "$schema.$typeName"
     }
+}
 
     # ================= CLASSIFY FILE =================
     if ($file.FullName -match "01_Tables") {
@@ -103,12 +109,18 @@ GO
 }
 
 # ================= BUILD TYPES FILE =================
+
 $types = $types | Select-Object -Unique
 
 foreach ($t in $types) {
+
+    $schema, $name = $t.Split('.')
+
     $files["V2__types.sql"] += "
-IF NOT EXISTS (SELECT * FROM sys.types WHERE name = '$t')
-    CREATE TYPE dbo.$t FROM NVARCHAR(50);
+IF TYPE_ID('$schema.$name') IS NULL
+BEGIN
+    EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');
+END
 GO
 "
 }
