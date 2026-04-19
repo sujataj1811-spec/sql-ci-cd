@@ -2,7 +2,7 @@ Write-Output "===== ENTERPRISE FLYWAY CONVERSION STARTED ====="
 
 # ================= BASE PATH (IMPORTANT FIX) =================
 $basePath = Split-Path -Parent $MyInvocation.MyCommand.Path
-if (-not $basePath) { $basePath = Get-Location }
+if (-not $basePath) { $basePath = Split-Path -Parent $MyInvocation.MyCommand.Path }
 
 $migrationPath = Join-Path $basePath "migrations"
 
