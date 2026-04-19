@@ -65,11 +65,27 @@ foreach ($m in $typeMatches) {
     }
 }
 
-    # ================= XML SCHEMA COLLECTIONS =================
-    if ($content -match "XML\s+SCHEMA\s+COLLECTION") {
-        Add-ContentSafe "V2_1__xml_schema_collections.sql" $content
+    # ================= DEBUG =================
+    if ($content -match "XML") {
+        Write-Output "XML keyword found in $($file.FullName)"
     }
+# ================= XML SCHEMA COLLECTIONS (FIXED) =================
 
+if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
+
+    Write-Output "XML Schema found in $($file.Name)"
+
+    # Extract full CREATE XML block (safe multiline)
+    $xmlMatch = [regex]::Match(
+        $content,
+        "CREATE\s+XML\s+SCHEMA\s+COLLECTION[\s\S]+?GO",
+        "IgnoreCase"
+    )
+
+    if ($xmlMatch.Success) {
+        Add-ContentSafe "V2_1__xml_schema_collections.sql" $xmlMatch.Value
+    }
+}
     # ================= CLASSIFY FILE =================
     if ($file.FullName -match "01_Tables") {
 
