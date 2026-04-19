@@ -1,0 +1,13 @@
+2026-04-19 10:06:29 - ===== START DB: DB4 =====
+2026-04-19 10:06:30 - Checking: V1__schemas.sql
+2026-04-19 10:06:30 - Skipping already applied: V1__schemas.sql
+2026-04-19 10:06:30 - Checking: V2__types.sql
+2026-04-19 10:06:31 - Skipping already applied: V2__types.sql
+2026-04-19 10:06:31 - Checking: V3__xml_schema_collections.sql
+2026-04-19 10:06:31 - Executing: V3__xml_schema_collections.sql
+2026-04-19 10:06:32 - 
+2026-04-19 10:06:32 - SUCCESS: V3__xml_schema_collections.sql (0.8609132 sec)
+2026-04-19 10:06:32 - Checking: V4__tables.sql
+2026-04-19 10:06:32 - Executing: V4__tables.sql
+2026-04-19 10:06:32 - There is already an object named 'AWBuildVersion' in the database.
+2026-04-19 10:06:32 - FAILED: V4__tables.sql

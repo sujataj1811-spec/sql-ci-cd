@@ -1,0 +1,17 @@
+2026-04-19 10:08:51 - ===== START DB: DB4 =====
+2026-04-19 10:08:52 - Checking: V1__schemas.sql
+2026-04-19 10:08:52 - Executing: V1__schemas.sql
+2026-04-19 10:08:53 - 
+2026-04-19 10:08:53 - SUCCESS: V1__schemas.sql (0.7738915 sec)
+2026-04-19 10:08:53 - Checking: V2__types.sql
+2026-04-19 10:08:53 - Executing: V2__types.sql
+2026-04-19 10:08:54 - 
+2026-04-19 10:08:54 - SUCCESS: V2__types.sql (0.0671004 sec)
+2026-04-19 10:08:54 - Checking: V3__xml_schema_collections.sql
+2026-04-19 10:08:54 - Executing: V3__xml_schema_collections.sql
+2026-04-19 10:08:54 - 
+2026-04-19 10:08:55 - SUCCESS: V3__xml_schema_collections.sql (0.3307584 sec)
+2026-04-19 10:08:55 - Checking: V4__tables.sql
+2026-04-19 10:08:55 - Executing: V4__tables.sql
+2026-04-19 10:08:58 - The specified schema name "Purchasing" either does not exist or you do not have permission to use it.
+2026-04-19 10:08:59 - FAILED: V4__tables.sql

@@ -40,25 +40,41 @@ foreach ($file in $allFiles) {
 
     $content = Get-Content $file.FullName -Raw
 
-    # ===== SCHEMA EXTRACT =====
-    $schemaMatches = [regex]::Matches($content, "\b(\w+)\.(\w+)")
-    foreach ($m in $schemaMatches) {
-        $schemas += $m.Groups[1].Value
-    }
+$schemas = $schemas |
+    Where-Object {
+        $_ -notmatch "dbo|sys|INFORMATION_SCHEMA"
+    } |
+    Select-Object -Unique
+# ===== SCHEMA EXTRACT (FIXED) =====
 
-    # ===== TYPE EXTRACT =====
-    $typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
-    foreach ($m in $typeMatches) {
+# Match [schema].[object]
+$schemaMatches1 = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[")
 
-        $schema = $m.Groups[1].Value
-        $name = $m.Groups[2].Value
+foreach ($m in $schemaMatches1) {
+    $schemas += $m.Groups[1].Value
+}
 
-        if ($schema -eq "dbo") {
-            if ($name -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float|hierarchyid|uniqueidentifier") {
-                $types += "$schema.$name"
-            }
+# Match schema.object (fallback)
+$schemaMatches2 = [regex]::Matches($content, "\b(\w+)\.(\w+)")
+
+foreach ($m in $schemaMatches2) {
+    $schemas += $m.Groups[1].Value
+}
+
+# ===== TYPE EXTRACT (NO CHANGE NEEDED) =====
+$typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
+
+foreach ($m in $typeMatches) {
+
+    $schema = $m.Groups[1].Value
+    $name = $m.Groups[2].Value
+
+    if ($schema -eq "dbo") {
+        if ($name -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float|hierarchyid|uniqueidentifier") {
+            $types += "$schema.$name"
         }
     }
+}
 
     # ===== XML SCHEMA COLLECTION =====
     if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
@@ -124,7 +140,11 @@ foreach ($file in $allFiles) {
 }
 
 # ===== BUILD SCHEMA FILE =====
-$schemas = $schemas | Where-Object { $_ -ne "dbo" } | Select-Object -Unique
+$schemas = $schemas |
+    Where-Object {
+        $_ -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$"
+    } |
+    Select-Object -Unique
 
 foreach ($s in $schemas) {
     $sql = "IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')`n"
