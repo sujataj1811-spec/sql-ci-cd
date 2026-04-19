@@ -151,6 +151,15 @@ VALUES
 foreach ($file in $migrationsV)
 foreach ($db in $databases) {
 
+    Write-Log "===== START DB: $db ====="
+
+    foreach ($file in $migrationsV) {
+        Run-Script $file $db
+    }
+
+   } 
+{
+
     $timeStamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $logFile = Join-Path $logDir "flyway_${db}_$timeStamp.log"
 
