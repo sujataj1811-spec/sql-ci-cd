@@ -1,0 +1,17 @@
+2026-04-19 20:17:11 - ===== START DB: DB4 =====
+2026-04-19 20:17:11 - Checking: V1__schemas.sql
+2026-04-19 20:17:11 - Executing: V1__schemas.sql
+2026-04-19 20:17:13 - 
+2026-04-19 20:17:13 - SUCCESS: V1__schemas.sql (1.9966612 sec)
+2026-04-19 20:17:13 - Checking: V2__types.sql
+2026-04-19 20:17:14 - Executing: V2__types.sql
+2026-04-19 20:17:14 - 
+2026-04-19 20:17:14 - SUCCESS: V2__types.sql (0.0481849 sec)
+2026-04-19 20:17:14 - Checking: V3__xml_schema_collections.sql
+2026-04-19 20:17:14 - Executing: V3__xml_schema_collections.sql
+2026-04-19 20:17:14 - 
+2026-04-19 20:17:15 - SUCCESS: V3__xml_schema_collections.sql (0.2485883 sec)
+2026-04-19 20:17:15 - Checking: V4__tables.sql
+2026-04-19 20:17:15 - Executing: V4__tables.sql
+2026-04-19 20:17:18 - Cannot find either column "dbo" or the user-defined function or aggregate "dbo.ufnLeadingZeros", or the name is ambiguous.
+2026-04-19 20:17:18 - FAILED: V4__tables.sql

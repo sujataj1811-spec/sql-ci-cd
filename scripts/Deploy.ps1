@@ -37,19 +37,19 @@ function Get-SafeFiles($pattern) {
     return @()
 }
 
-# ================= STRICT ORDER LOADER =================
-$migrationsV = @()
 
-$orderedGroups = 1..12 | ForEach-Object { "V$_" }
+# ================= DEPENDENCY ENGINE v3 =================
 
-foreach ($prefix in $orderedGroups) {
+Write-Output "===== BUILDING EXECUTION ORDER USING DEPENDENCY ENGINE ====="
 
-    $files = Get-ChildItem -Path $migrationPath -Filter "$prefix*.sql" -ErrorAction SilentlyContinue
+$order = & ".\Build-Dependency-Engine-V3.ps1"
 
-    if ($files) {
-        $migrationsV += ($files | Sort-Object Name)
+$migrationsV = Get-Content ".\execution-order.txt" |
+    ForEach-Object {
+        Get-Item (Join-Path $migrationPath $_)
     }
-}
+
+Write-Output "===== ORDER RESOLVED: $($migrationsV.Count) FILES ====="
 
 # FINAL SAFETY SORT (IMPORTANT)
 $migrationsV = $migrationsV | Sort-Object {
