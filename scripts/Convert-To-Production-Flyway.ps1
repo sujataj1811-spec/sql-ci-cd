@@ -28,7 +28,7 @@ $files = @{
 
 function Add-ContentSafe($key, $text) {
     if ($text -and $text.Trim() -ne "") {
-        $files[$key] += "`n" + $text + "`nGO`n"
+        $files[$key] += "`n$text`nGO`n"
     }
 }
 
@@ -45,46 +45,42 @@ foreach ($file in $allFiles) {
         $schemas += $m.Groups[1].Value
     }
 
-# ================= EXTRACT TYPES (STRICT SAFE) =================
+    # ================= EXTRACT TYPES (STRICT SAFE) =================
+    $typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
 
-$typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
+    foreach ($m in $typeMatches) {
 
-foreach ($m in $typeMatches) {
+        $schema = $m.Groups[1].Value
+        $name = $m.Groups[2].Value
 
-    $schema = $m.Groups[1].Value
-    $name = $m.Groups[2].Value
-
-    # ONLY allow dbo custom types (VERY IMPORTANT)
-    if ($schema -eq "dbo") {
-
-        # ignore system types
-        if ($name -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float|hierarchyid|uniqueidentifier") {
-
-            $types += "$schema.$name"
+        if ($schema -eq "dbo") {
+            if ($name -notmatch "int|bigint|smallint|tinyint|nvarchar|varchar|datetime|bit|decimal|float|hierarchyid|uniqueidentifier") {
+                $types += "$schema.$name"
+            }
         }
     }
-}
 
     # ================= DEBUG =================
     if ($content -match "XML") {
         Write-Output "XML keyword found in $($file.FullName)"
     }
-# ================= XML SCHEMA COLLECTION EXTRACTION =================
 
-if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
+    # ================= XML SCHEMA COLLECTION EXTRACTION =================
+    if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
 
-    Write-Output "✔ XML Schema detected in $($file.Name)"
+        Write-Output "✔ XML Schema detected in $($file.Name)"
 
-    $matches = [regex]::Matches(
-        $content,
-        "CREATE\s+XML\s+SCHEMA\s+COLLECTION\s+[\[\]\w\.]+\s+AS\s+N?'[\s\S]*?'",
-        "IgnoreCase"
-    )
+        $xmlMatch = [regex]::Match(
+            $content,
+            "CREATE\s+XML\s+SCHEMA\s+COLLECTION[\s\S]+?GO",
+            "IgnoreCase"
+        )
 
-    foreach ($match in $matches) {
-        Add-ContentSafe "V2_1__xml_schema_collections.sql" ($match.Value + "`nGO")
+        if ($xmlMatch.Success) {
+            Add-ContentSafe "V2_1__xml_schema_collections.sql" $xmlMatch.Value
+        }
     }
-}
+
     # ================= CLASSIFY FILE =================
     if ($file.FullName -match "01_Tables") {
 
@@ -102,22 +98,18 @@ if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
             Add-ContentSafe "V7__indexes.sql" $content
         }
     }
-
     elseif ($file.FullName -match "02_Views") {
         $c = $content -replace "CREATE\s+VIEW", "CREATE OR ALTER VIEW"
         Add-ContentSafe "R__views.sql" $c
     }
-
     elseif ($file.FullName -match "03_Procedures") {
         $c = $content -replace "CREATE\s+PROCEDURE", "CREATE OR ALTER PROCEDURE"
         Add-ContentSafe "R__procedures.sql" $c
     }
-
     elseif ($file.FullName -match "04_Functions") {
         $c = $content -replace "CREATE\s+FUNCTION", "CREATE OR ALTER FUNCTION"
         Add-ContentSafe "R__functions.sql" $c
     }
-
     elseif ($file.FullName -match "05_Triggers") {
         $c = $content -replace "CREATE\s+TRIGGER", "CREATE OR ALTER TRIGGER"
         Add-ContentSafe "R__triggers.sql" $c
@@ -128,24 +120,25 @@ if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
 $schemas = $schemas | Where-Object { $_ -ne "dbo" } | Select-Object -Unique
 
 foreach ($s in $schemas) {
-    $files["V1__schemas.sql"] += "
+    $files["V1__schemas.sql"] += @"
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')
     EXEC('CREATE SCHEMA [$s]');
 GO
-"
+"@
 }
 
+# ================= BUILD TYPES FILE =================
 foreach ($t in $types | Select-Object -Unique) {
 
     $schema, $name = $t.Split('.')
 
-    $files["V2__types.sql"] += "
+    $files["V2__types.sql"] += @"
 IF TYPE_ID('$schema.$name') IS NULL
 BEGIN
     EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');
 END
 GO
-"
+"@
 }
 
 # ================= WRITE FILES =================
