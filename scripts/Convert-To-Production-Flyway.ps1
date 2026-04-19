@@ -1,4 +1,4 @@
-Write-Output "===== AUTO FLYWAY CONVERSION (SCHEMA + TYPES INCLUDED) ====="
+Write-Output "===== AUTO FLYWAY CONVERSION (SAFE MODE) ====="
 
 $basePath = Get-Location
 $migrationPath = Join-Path $basePath "migrations"
@@ -28,26 +28,25 @@ $files = @{
 
 function Add-ContentSafe($key, $text) {
     if ($text -and $text.Trim() -ne "") {
-        $files[$key] += "`n$text`nGO`n"
+        $files[$key] += "`n" + $text + "`nGO`n"
     }
 }
 
-# ================= LOAD ALL SQL FILES =================
+# ================= LOAD FILES =================
 $allFiles = Get-ChildItem -Recurse -Filter *.sql
 
 foreach ($file in $allFiles) {
 
     $content = Get-Content $file.FullName -Raw
 
-    # ================= EXTRACT SCHEMAS =================
+    # ===== SCHEMA EXTRACT =====
     $schemaMatches = [regex]::Matches($content, "\b(\w+)\.(\w+)")
     foreach ($m in $schemaMatches) {
         $schemas += $m.Groups[1].Value
     }
 
-    # ================= EXTRACT TYPES (STRICT SAFE) =================
+    # ===== TYPE EXTRACT =====
     $typeMatches = [regex]::Matches($content, "\[\s*(\w+)\s*\]\.\[\s*(\w+)\s*\]")
-
     foreach ($m in $typeMatches) {
 
         $schema = $m.Groups[1].Value
@@ -60,28 +59,23 @@ foreach ($file in $allFiles) {
         }
     }
 
-    # ================= DEBUG =================
-    if ($content -match "XML") {
-        Write-Output "XML keyword found in $($file.FullName)"
-    }
-
-    # ================= XML SCHEMA COLLECTION EXTRACTION =================
+    # ===== XML SCHEMA COLLECTION =====
     if ($content -match "CREATE\s+XML\s+SCHEMA\s+COLLECTION") {
 
-        Write-Output "✔ XML Schema detected in $($file.Name)"
+        Write-Output ("✔ XML Schema found in " + $file.Name)
 
-        $xmlMatch = [regex]::Match(
+        $matches = [regex]::Matches(
             $content,
-            "CREATE\s+XML\s+SCHEMA\s+COLLECTION[\s\S]+?GO",
+            "CREATE\s+XML\s+SCHEMA\s+COLLECTION\s+[\[\]\w\.]+\s+AS\s+N?'[\s\S]*?'",
             "IgnoreCase"
         )
 
-        if ($xmlMatch.Success) {
-            Add-ContentSafe "V2_1__xml_schema_collections.sql" $xmlMatch.Value
+        foreach ($match in $matches) {
+            Add-ContentSafe "V2_1__xml_schema_collections.sql" $match.Value
         }
     }
 
-    # ================= CLASSIFY FILE =================
+    # ===== CLASSIFY =====
     if ($file.FullName -match "01_Tables") {
 
         Add-ContentSafe "V3__tables.sql" $content
@@ -116,7 +110,7 @@ foreach ($file in $allFiles) {
     }
 }
 
-# ================= BUILD SCHEMA FILE =================
+# ===== BUILD SCHEMA FILE =====
 $schemas = $schemas | Where-Object { $_ -ne "dbo" } | Select-Object -Unique
 
 foreach ($s in $schemas) {
@@ -125,10 +119,12 @@ foreach ($s in $schemas) {
     $files["V1__schemas.sql"] += $sql
 }
 
-# ================= BUILD TYPES FILE =================
+# ===== BUILD TYPES FILE =====
 foreach ($t in $types | Select-Object -Unique) {
 
-    $schema, $name = $t.Split('.')
+    $parts = $t.Split('.')
+    $schema = $parts[0]
+    $name = $parts[1]
 
     $sql = "IF TYPE_ID('$schema.$name') IS NULL`n"
     $sql += "BEGIN`n"
@@ -138,7 +134,7 @@ foreach ($t in $types | Select-Object -Unique) {
     $files["V2__types.sql"] += $sql
 }
 
-# ================= WRITE FILES =================
+# ===== WRITE FILES =====
 foreach ($k in $files.Keys) {
     $path = Join-Path $migrationPath $k
     Set-Content -Path $path -Value $files[$k]
