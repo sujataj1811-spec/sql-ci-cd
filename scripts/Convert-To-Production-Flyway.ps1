@@ -120,11 +120,9 @@ foreach ($file in $allFiles) {
 $schemas = $schemas | Where-Object { $_ -ne "dbo" } | Select-Object -Unique
 
 foreach ($s in $schemas) {
-    $files["V1__schemas.sql"] += @"
-IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')
-    EXEC('CREATE SCHEMA [$s]');
-GO
-"@
+    $sql = "IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')`n"
+    $sql += "EXEC('CREATE SCHEMA [$s]');`nGO`n"
+    $files["V1__schemas.sql"] += $sql
 }
 
 # ================= BUILD TYPES FILE =================
@@ -132,20 +130,19 @@ foreach ($t in $types | Select-Object -Unique) {
 
     $schema, $name = $t.Split('.')
 
-    $files["V2__types.sql"] += @"
-IF TYPE_ID('$schema.$name') IS NULL
-BEGIN
-    EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');
-END
-GO
-"@
+    $sql = "IF TYPE_ID('$schema.$name') IS NULL`n"
+    $sql += "BEGIN`n"
+    $sql += "    EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');`n"
+    $sql += "END`nGO`n"
+
+    $files["V2__types.sql"] += $sql
 }
 
 # ================= WRITE FILES =================
 foreach ($k in $files.Keys) {
     $path = Join-Path $migrationPath $k
-    Set-Content $path $files[$k]
-    Write-Output "Created $k"
+    Set-Content -Path $path -Value $files[$k]
+    Write-Output ("Created " + $k)
 }
 
 Write-Output "===== AUTO CONVERSION COMPLETED ====="
