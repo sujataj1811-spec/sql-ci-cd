@@ -1,0 +1,5 @@
+2026-04-19 01:21:58 - ===== START DB: DB4 =====
+2026-04-19 01:21:59 - Checking: V1__baseline_schema.sql
+2026-04-19 01:21:59 - Executing: V1__baseline_schema.sql
+2026-04-19 01:21:59 - There is already an object named 'AWBuildVersion' in the database.
+2026-04-19 01:22:00 - FAILED: V1__baseline_schema.sql

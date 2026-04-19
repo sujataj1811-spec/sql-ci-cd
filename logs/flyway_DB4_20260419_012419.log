@@ -1,0 +1,5 @@
+2026-04-19 01:24:19 - ===== START DB: DB4 =====
+2026-04-19 01:24:19 - Checking: V1__baseline_schema.sql
+2026-04-19 01:24:19 - Executing: V1__baseline_schema.sql
+2026-04-19 01:24:20 - Column, parameter, or variable #2: Cannot find data type dbo.Name.
+2026-04-19 01:24:20 - FAILED: V1__baseline_schema.sql
