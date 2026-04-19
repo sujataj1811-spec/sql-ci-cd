@@ -42,7 +42,7 @@ function Get-SafeFiles($pattern) {
 
 Write-Output "===== BUILDING EXECUTION ORDER USING DEPENDENCY ENGINE ====="
 
-$order = & ".\Build-Dependency-Engine-V3.ps1"
+$order = & "$env:GITHUB_WORKSPACE\scripts\Build-Dependency-Engine-V3.ps1"
 
 $migrationsV = Get-Content ".\execution-order.txt" |
     ForEach-Object {
