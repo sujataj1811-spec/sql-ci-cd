@@ -15,6 +15,7 @@ $types = @()
 $files = @{
     "V1__schemas.sql" = ""
     "V2__types.sql" = ""
+    "V2_1__xml_schema_collections.sql" = ""
     "V3__tables.sql" = ""
     "V5__foreign_keys.sql" = ""
     "V6__constraints.sql" = ""
@@ -63,6 +64,11 @@ foreach ($m in $typeMatches) {
         }
     }
 }
+
+    # ================= XML SCHEMA COLLECTIONS =================
+    if ($content -match "XML\s+SCHEMA\s+COLLECTION") {
+        Add-ContentSafe "V2_1__xml_schema_collections.sql" $content
+    }
 
     # ================= CLASSIFY FILE =================
     if ($file.FullName -match "01_Tables") {
