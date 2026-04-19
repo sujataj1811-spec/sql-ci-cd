@@ -30,6 +30,17 @@ $fileOrder = @(
 )
 
 $files = @{}
+function Add-ContentSafe($key, $text) {
+
+    if ([string]::IsNullOrWhiteSpace($text)) { return }
+
+    # clean extra whitespace
+    $clean = $text.Trim()
+
+    # ensure proper GO separation
+    $files[$key] += "`r`n$clean`r`nGO`r`n"
+}
+
 foreach ($f in $fileOrder) {
     $files[$f] = ""
 }
