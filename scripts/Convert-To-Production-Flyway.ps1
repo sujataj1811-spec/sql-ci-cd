@@ -123,25 +123,35 @@ foreach ($file in $allFiles) {
     }
 }
 
-# ================= BUILD SCHEMAS =================
+# ===== BUILD SCHEMA FILE =====
 $schemas = $schemas |
-    Where-Object { $_ -and $_ -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$" } |
+    Where-Object { $_ -notmatch "^(dbo|sys|INFORMATION_SCHEMA)$" } |
     Select-Object -Unique
 
 foreach ($s in $schemas) {
+
+    if (-not $s) { continue }
+
     $files["V1__schemas.sql"] += @"
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '$s')
-EXEC('CREATE SCHEMA [$s]');
+BEGIN
+    EXEC('CREATE SCHEMA [$s]');
+END
 GO
+
 "@
 }
 
 # ================= BUILD TYPES =================
-foreach ($t in $types | Select-Object -Unique) {
+foreach ($t in ($types | Select-Object -Unique)) {
+
+    if (-not $t) { continue }
 
     $parts = $t.Split('.')
+    if ($parts.Count -ne 2) { continue }
+
     $schema = $parts[0]
-    $name = $parts[1]
+    $name   = $parts[1]
 
     $files["V2__types.sql"] += @"
 IF TYPE_ID('$schema.$name') IS NULL
@@ -149,6 +159,7 @@ BEGIN
     EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');
 END
 GO
+
 "@
 }
 
