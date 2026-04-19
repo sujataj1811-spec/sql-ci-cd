@@ -16,19 +16,24 @@ New-Item -ItemType Directory -Path $migrationPath | Out-Null
 $schemas = New-Object System.Collections.Generic.HashSet[string]
 $types   = New-Object System.Collections.Generic.HashSet[string]
 
-$files = @{
-    "V1__schemas.sql" = ""
-    "V2__types.sql" = ""
-    "V3__xml_schema_collections.sql" = ""
-    "V4__tables.sql" = ""
-    "V5__primary_keys.sql" = ""
-    "V6__foreign_keys.sql" = ""
-    "V7__constraints.sql" = ""
-    "V8__indexes.sql" = ""
-    "V9__functions.sql" = ""
-    "V10__views.sql" = ""
-    "V11__procedures.sql" = ""
-    "V12__triggers.sql" = ""
+$fileOrder = @(
+    "V1__schemas.sql",
+    "V2__types.sql",
+    "V3__xml_schema_collections.sql",
+    "V4__tables.sql",
+    "V5__primary_keys.sql",
+    "V6__foreign_keys.sql",
+    "V7__constraints.sql",
+    "V8__indexes.sql",
+    "V9__functions.sql",
+    "V10__views.sql",
+    "V11__procedures.sql",
+    "V12__triggers.sql"
+)
+
+$files = @{}
+foreach ($f in $fileOrder) {
+    $files[$f] = ""
 }
 
 function Add-ContentSafe($key, $text) {
@@ -148,7 +153,12 @@ GO
 }
 
 # ================= WRITE FILES =================
-foreach ($k in $files.Keys) {
+foreach ($k in $fileOrder)
+{
+    $path = Join-Path $migrationPath $k
+    Set-Content -Path $path -Value $files[$k]
+    Write-Output "Created $k"
+} {
 
     $path = Join-Path $migrationPath $k
     Set-Content -Path $path -Value $files[$k] -Encoding UTF8
