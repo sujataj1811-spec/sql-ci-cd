@@ -37,15 +37,27 @@ function Get-SafeFiles($pattern) {
     return @()
 }
 
-# ================= STRICT ORDER FIX (IMPORTANT) =================
-$orderedGroups = @(
-    "V1","V2","V3","V4","V5","V6",
-    "V7","V8","V9","V10","V11","V12"
-)
-
+# ================= STRICT ORDER LOADER =================
 $migrationsV = @()
+
+$orderedGroups = 1..12 | ForEach-Object { "V$_" }
+
 foreach ($prefix in $orderedGroups) {
-    $migrationsV += Get-SafeFiles "$prefix*.sql"
+
+    $files = Get-ChildItem -Path $migrationPath -Filter "$prefix*.sql" -ErrorAction SilentlyContinue
+
+    if ($files) {
+        $migrationsV += ($files | Sort-Object Name)
+    }
+}
+
+# FINAL SAFETY SORT (IMPORTANT)
+$migrationsV = $migrationsV | Sort-Object {
+    if ($_.Name -match "^V(\d+)__") {
+        [int]$matches[1]
+    } else {
+        999999
+    }
 }
 
 # ================= DB LIST =================
