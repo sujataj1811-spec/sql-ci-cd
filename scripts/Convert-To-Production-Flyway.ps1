@@ -29,13 +29,17 @@ $fileOrder = @(
     "V12__triggers.sql"
 )
 
-function Add-ContentSafe($key, $text) {
+$files = @{}
 
+foreach ($f in $fileOrder) {
+    $files[$f] = ""
+}
+
+function Add-ContentSafe($key, $text) {
     if ([string]::IsNullOrWhiteSpace($text)) { return }
 
     $clean = $text.Trim()
 
-    # ensure safe separation
     if (-not $files.ContainsKey($key)) {
         $files[$key] = ""
     }
