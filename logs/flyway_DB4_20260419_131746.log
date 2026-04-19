@@ -1,0 +1,5 @@
+2026-04-19 13:17:46 - ===== START DB: DB4 =====
+2026-04-19 13:17:46 - Checking: V10__views.sql
+2026-04-19 13:17:46 - Executing: V10__views.sql
+2026-04-19 13:17:47 - Invalid object name 'HumanResources.Employee'.
+2026-04-19 13:17:47 - FAILED: V10__views.sql

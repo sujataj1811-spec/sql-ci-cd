@@ -29,7 +29,7 @@ function Write-Log {
     Add-Content -Path $logFile -Value $line
 }
 
-# ================= GET FILES SAFELY =================
+# ================= GET FILES =================
 function Get-SafeFiles($pattern) {
     if (Test-Path $migrationPath) {
         return Get-ChildItem "$migrationPath\$pattern" -ErrorAction SilentlyContinue
@@ -37,20 +37,15 @@ function Get-SafeFiles($pattern) {
     return @()
 }
 
-# ===== ENTERPRISE ORDER FIX =====
+# ================= STRICT ORDER FIX (IMPORTANT) =================
 $orderedGroups = @(
     "V1","V2","V3","V4","V5","V6",
     "V7","V8","V9","V10","V11","V12"
 )
 
-# ================= LOAD VERSIONED FILES IN ORDER =================
 $migrationsV = @()
-
 foreach ($prefix in $orderedGroups) {
-    $files = Get-SafeFiles "$prefix*.sql"
-    if ($files) {
-        $migrationsV += $files
-    }
+    $migrationsV += Get-SafeFiles "$prefix*.sql"
 }
 
 # ================= DB LIST =================
@@ -82,11 +77,11 @@ function Run-Script {
     }
 
     $checksum = (Get-FileHash $file.FullName).Hash
-
     Write-Log "Checking: $fileName"
 
-    # skip only versioned
+    # skip already executed
     if ($version -ne "R") {
+
         $checkQuery = @"
 SET NOCOUNT ON;
 IF EXISTS (SELECT 1 FROM FlywaySchemaHistory WHERE Version = '$version' AND Success = 1)
@@ -124,7 +119,6 @@ SELECT 1 ELSE SELECT 0
     $duration = ((Get-Date) - $start).TotalSeconds
     Write-Log $output
 
-    # history insert
     $insert = @"
 INSERT INTO FlywaySchemaHistory
 (Version, Description, ScriptName, Checksum, InstalledBy, ExecutionTime, Success)
@@ -150,7 +144,6 @@ foreach ($db in $databases) {
 
     Write-Log "===== START DB: $db ====="
 
-    # ensure history table
     $historyTable = @"
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'FlywaySchemaHistory')
 BEGIN
@@ -170,7 +163,7 @@ END
 
     sqlcmd -S $server -d $db -U $user -P $password -Q $historyTable
 
-    # RUN VERSIONED FIRST
+    # ================= ORDERED EXECUTION (FIX APPLIED HERE) =================
     foreach ($file in $migrationsV) {
         Run-Script $file $db
     }

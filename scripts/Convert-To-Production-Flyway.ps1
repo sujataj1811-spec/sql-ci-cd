@@ -1,14 +1,12 @@
-   
-
 Write-Output "===== ENTERPRISE FLYWAY CONVERSION STARTED ====="
 
 $basePath = Get-Location  
 $migrationPath = Join-Path $basePath "migrations"
 
- # Clean output
+# ================= CLEAN OUTPUT =================
 if (Test-Path $migrationPath) {
-		Remove-Item -Recurse -Force $migrationPath
- }
+    Remove-Item -Recurse -Force $migrationPath
+}
 
 New-Item -ItemType Directory -Path $migrationPath | Out-Null
 
@@ -41,15 +39,15 @@ function Add-ContentSafe($key, $text) {
     $files[$key] += "`r`n" + $text + "`r`nGO`r`n"
 }
 
-# ================= SAFE FILE LOADING (CRITICAL FIX) =================
+# ================= LOAD SQL FILES =================
 $allFiles = Get-ChildItem -Path $basePath -Recurse -Filter *.sql -File -ErrorAction SilentlyContinue |
-    Where-Object { $_.FullName -notmatch "migrations" }
+    Where-Object { $_.FullName -notmatch "\\migrations\\" }
 
 foreach ($file in $allFiles) {
 
     $content = Get-Content $file.FullName -Raw
 
-    # ================= SAFE SCHEMA DETECTION =================
+    # ================= SCHEMAS =================
     $schemaMatches = [regex]::Matches($content, "(?:\[(\w+)\]\.|\b(\w+)\.)")
 
     foreach ($m in $schemaMatches) {
@@ -61,7 +59,7 @@ foreach ($file in $allFiles) {
         }
     }
 
-    # ================= SAFE TYPE DETECTION =================
+    # ================= TYPES =================
     $typeMatches = [regex]::Matches($content, "\[(\w+)\]\.\[(\w+)\]")
 
     foreach ($m in $typeMatches) {
@@ -129,7 +127,6 @@ BEGIN
     EXEC('CREATE SCHEMA [$s]');
 END
 GO
-
 "@
 }
 
@@ -148,17 +145,11 @@ BEGIN
     EXEC('CREATE TYPE [$schema].[$name] FROM NVARCHAR(50)');
 END
 GO
-
 "@
 }
 
 # ================= WRITE FILES =================
-foreach ($k in $fileOrder)
-{
-    $path = Join-Path $migrationPath $k
-    Set-Content -Path $path -Value $files[$k]
-    Write-Output "Created $k"
-} {
+foreach ($k in $fileOrder) {
 
     $path = Join-Path $migrationPath $k
     Set-Content -Path $path -Value $files[$k] -Encoding UTF8
