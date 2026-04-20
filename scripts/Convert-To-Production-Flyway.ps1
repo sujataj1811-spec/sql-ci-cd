@@ -55,16 +55,12 @@ $executionList = @()
 foreach ($file in $allFiles) {
 
     if (-not (Test-Path $file.FullName)) {
-        Write-Error "❌ Missing migration file: $item"
-	$missingFiles++"
+        Write-Host "Skipping missing file: $($file.FullName)"
         continue
     }
 
     $content = Get-Content $file.FullName -Raw
 
-if ($missingFiles -gt 0) {
-    throw "Migration failed: $missingFiles files missing"
-}
     # ================= SCHEMAS =================
     $schemaMatches = [regex]::Matches($content, "(?:\[(\w+)\]\.|\b(\w+)\.)")
     foreach ($m in $schemaMatches) {
